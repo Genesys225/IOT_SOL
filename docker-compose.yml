@@ -74,3 +74,19 @@ services:
       - influxdb:database
       - emqtt:emqtt-broker
       - mysql:mysql
+
+
+  node-microservices:
+    image: node:12-alpine
+    restart: on-failure:10
+    volumes:
+      - ./microservices:/app/
+    # depends_on:
+    #   - emqtt
+    #   - influxdb
+    # links:
+    #   - influxdb:database
+    #   - emqtt:emqtt-broker
+    #   - mysql:mysql
+
+    command: ["ash", "-c", "npm install pm2 -g && cd /app/ && yarn && pm2-runtime start --watch"]
