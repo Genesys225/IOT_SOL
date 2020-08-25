@@ -24,6 +24,20 @@ services:
       - INFLUXDB_USERNAME=${INFLUXDB_USERNAME}
       - INFLUXDB_PASSWORD=${INFLUXDB_PASSWORD}
 
+  mysql:
+    image: mysql:latest
+    ports:
+      - 3306:3306
+    volumes:
+      - ./dump.sql:/docker-entrypoint-initdb.d/dump.sql
+    restart: always
+    environment:
+      TZ: "Asia/Jerusalem"
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_USER: "testuser"
+      MYSQL_PASSWORD: "123456"
+      MYSQL_DATABASE: "sol_db"
+
   grafana:
     image: grafana/grafana:latest
     ports:
@@ -59,3 +73,4 @@ services:
     links:
       - influxdb:database
       - emqtt:emqtt-broker
+      - mysql:mysql
