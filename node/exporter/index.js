@@ -15,13 +15,13 @@ const influx = new Influx.InfluxDB({
       fields: {
         value: Influx.FieldType.FLOAT,
       },
-      tags: ["temp"],
+      tags: ["temp", "humidity", "co2", "lux"],
     },
   ],
 });
 
 client.on("connect", function () {
-  client.subscribe("SOL-38:2b:78:3:ec:df-54/#", function (err) {
+  client.subscribe("sensors/#", function (err) {
     if (!err) {
       client.publish("presence", "Hello mqtt");
     } else console.log(err);
@@ -50,13 +50,13 @@ influx
   .then(() => {
     client.on("message", function (topic, value) {
       // value is Buffer
-      console.log(value.toString());
-      console.log(`Request to ${topic} took ${value}ms`);
-      const [measurement, tag] = topic.split("/");
+      console.log(topic);
+      const [_sensors, measurement, tag] = topic.split("/");
+      console.log(`${measurement}/${tag} => ${value}`);
       const result = influx
         .writePoints([
           {
-            measurement: topic,
+            measurement: `${measurement}/${tag}`,
             fields: {
               value: +value,
             },
