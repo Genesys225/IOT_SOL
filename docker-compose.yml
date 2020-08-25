@@ -33,17 +33,17 @@ services:
     restart: always
     environment:
       TZ: "Asia/Jerusalem"
-      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_USER: "testuser"
-      MYSQL_PASSWORD: "123456"
-      MYSQL_DATABASE: "sol_db"
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
 
   grafana:
     image: grafana/grafana:latest
     ports:
       - "3000:3000"
     volumes:
-      - ./grafana//:/var/lib/grafana
+      - ./grafana_1/:/var/lib/grafana
       - ./grafana-provisioning/:/etc/grafana/provisioning
     depends_on:
       - influxdb
