@@ -32,11 +32,12 @@ SoftwareSerial mySerial(RX_PIN, TX_PIN);
 
 unsigned long getDataTimer = 0;
 // Topic
-char *topic = "test";
 int test_para = 2000;
 unsigned long startMills;
-char buf[100];
-String clientName;
+char topicPrefix[100];
+char clientName[100];
+String clientNameStr;
+String topicStr;
 
 void verifyRange(int range);
 
@@ -70,13 +71,20 @@ void setup()
 
   // myMHZ19.printCommunication(true, true); // *Shows communication between MHZ19 and Device.
   // use printCommunication(true, false) to print as HEX
-  myMHZ19.setRange(2000);
-  myMHZ19.calibrateZero();
-  myMHZ19.setSpan(2000);
-  myMHZ19.getABC() ? Serial.println("ON") : Serial.println("OFF");
+  myMHZ19.setRange(5000);
+  myMHZ19.setSpan(5000);
   Wire.begin();
   WiFi.mode(WIFI_STA); // explicitly set mode, esp defaults to STA+AP
   Serial.begin(115200);
+  clientNameStr += "SOL-";
+  topicStr += "sensors/SOL-";
+
+  uint8_t mac[6];
+  WiFi.macAddress(mac);
+  clientNameStr += macToStr(mac);
+  topicStr += macToStr(mac);
+  clientNameStr.toCharArray(clientName, 100);
+  topicStr.toCharArray(topicPrefix, 100);
   Serial.setDebugOutput(true);
   Serial.println("\n Starting");
   pinMode(TRIGGER_PIN, INPUT);
@@ -187,15 +195,6 @@ void checkButton()
         Serial.println("connected...yeey :)");
         client.setServer(mqtt_server, 1883);
         client.setCallback(callback);
-
-        clientName += "esp8266-";
-        uint8_t mac[6];
-        WiFi.macAddress(mac);
-        clientName += macToStr(mac);
-        clientName += "-";
-        clientName += String(micros() & 0xff, 16);
-
-        clientName.toCharArray(buf, 100);
       }
     }
   }
@@ -231,7 +230,7 @@ void loop()
   {
     /* both printed under unlimited CO2 share command  133 */
     int CO2Unlim = myMHZ19.getCO2(true, true);
-    strcpy(currentTopic, topic);
+    strcpy(currentTopic, topicPrefix);
     strcat(currentTopic, "/co2");
     sendmqttMsg(currentTopic, String(CO2Unlim));
     Serial.println(CO2Unlim); // unlimimted value, new request
@@ -245,17 +244,18 @@ void loop()
 
     float hum = SHT2x.GetHumidity();
     float temp = SHT2x.GetTemperature();
-    strcpy(currentTopic, topic);
+    strcpy(currentTopic, "sensors/");
+    strcpy(currentTopic, topicPrefix);
     strcat(currentTopic, "/temp");
     // use the string then delete it when you're done.
     sendmqttMsg(currentTopic, String(temp));
 
-    strcpy(currentTopic, topic);
+    strcpy(currentTopic, topicPrefix);
     strcat(currentTopic, "/humidity");
     sendmqttMsg(currentTopic, String(hum));
     // use the string then delete it when you're done.
     float lux = lightMeter.readLightLevel(true);
-    strcpy(currentTopic, topic);
+    strcpy(currentTopic, topicPrefix);
     strcat(currentTopic, "/lux");
     sendmqttMsg(currentTopic, String(lux));
     // strcpy(currentTopic, topic);
@@ -315,7 +315,7 @@ void reconnect()
   {
     Serial.print("Attempting MQTT connection...");
     // Attempt to connect
-    if (client.connect(buf))
+    if (client.connect(clientName))
     {
       Serial.println("connected");
       // Once connected, publish an announcement...
