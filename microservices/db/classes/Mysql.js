@@ -1,9 +1,9 @@
 var mysql = require("mysql");
 var connection = mysql.createConnection({
-  host: "localhost",
+  host: "mysql",
   user: "root",
-  password: "123456",
-  database: "motke_docker",
+  password: 'password',
+  database: "sol_db",
 });
 connection.connect();
 //connection.end();
@@ -28,7 +28,6 @@ class Mysql {
         }
       );
     })
-    console.log(id, value)
 
 
   }

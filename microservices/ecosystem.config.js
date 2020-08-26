@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: "baseTemplete",
+      name: "baseTempletes",
       script: "./baseTemplete/main.js",
     },
     {

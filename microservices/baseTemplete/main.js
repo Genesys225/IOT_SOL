@@ -6,7 +6,7 @@ const clientConnectionParams = {
   services: { helloWorld },
   name: "baseTemplete",
   mqttSetting: {
-    url: "mqtt://localhost",
+    url: "mqtt://emqtt",
     port: 1883,
   },
 };

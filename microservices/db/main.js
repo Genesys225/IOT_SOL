@@ -9,7 +9,7 @@ const clientConnectionParams = {
   services: { helloWorld, mysql },
   name: "db",
   mqttSetting: {
-    url: "mqtt://localhost",
+    url: "mqtt://emqtt",
     port: 1883,
   },
 };
@@ -20,7 +20,7 @@ mqttClient.init().then((client) => {
   mqttClient
     .exec(
       "baseTemplete/helloWorld.hello",
-      { uri: "XXXXXXXXXXXXXXXXXXXXXXXXX" },
+      { uri: "XXXXXXXXXXXXXXXXXXXXXX" },
       { timeout: 5555 }
     )
     .then((res) => {
