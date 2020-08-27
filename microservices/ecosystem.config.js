@@ -8,5 +8,9 @@ module.exports = {
       name: "db",
       script: "./db/main.js",
     },
+    {
+      name: "grabber",
+      script: "./Grabber/main.js",
+    },
   ],
 };

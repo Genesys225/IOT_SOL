@@ -33,11 +33,11 @@ services:
       - ./dump.sql:/docker-entrypoint-initdb.d/dump.sql
     restart: always
     environment:
-      TZ: "Asia/Jerusalem"
-      MYSQL_ROOT_PASSWORD: "password"
-      MYSQL_USER: "testuser"
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      - TZ=Asia/Jerusalem"=
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_USER=testuser
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
 
   grafana:
     image: grafana/grafana:latest

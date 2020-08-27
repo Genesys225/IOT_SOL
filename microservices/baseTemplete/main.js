@@ -12,17 +12,18 @@ const clientConnectionParams = {
 };
   
 const mqttClient = new mqtt(clientConnectionParams);
-setTimeout(() => {
-  mqttClient.init().then((client) => {
-    mqttClient
-      .exec( 
-        "db/mysql.writeDeviceData",
-        { id: "https://restcountries.eu/rest/v2/all", value: "dasdsadassad" },
-        { timeout: 5555 }
-      )
-      .then((res) => { 
-        console.log(res);
-      });
-  });
+// setTimeout(() => {
+//   mqttClient.init().then((client) => {
+//     // console.log(client)
+//     mqttClient
+//       .exec( 
+//         "db/mysql.writeDeviceData",
+//         { sensor_id: "httpsrestco", value: "dasdsadassad" },
+//         { timeout: 5555 }
+//       )
+//       .then((res) => { 
+//         console.log(res);
+//       });
+//   });
   
-}, 2000);
+// }, 2000);
