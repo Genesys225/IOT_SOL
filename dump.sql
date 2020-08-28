@@ -22,8 +22,7 @@ CREATE TABLE IF NOT EXISTS `measurements` (
   `sensor_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `value` varchar(50) DEFAULT NULL,
   `ts` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  KEY `FK__devices` (`sensor_id`) USING BTREE
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=46595 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Dumping data for table sol_db.measurements: ~0 rows (approximately)
