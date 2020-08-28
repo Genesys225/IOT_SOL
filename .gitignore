@@ -7,6 +7,5 @@ chronograf/
 grafana/
 influxdb/
 grafana-provisioning/
-microservices/db/node_modules/
-microservices/baseTemplete/node_modules/
-microservices/node_modules/
+**/**/node_modules/
+**/**/*yarn.lock
