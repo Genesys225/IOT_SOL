@@ -1,4 +1,4 @@
 {
     "private": true,
-    "workspaces": ["db", "baseTemplate", "Grabber"]
+    "workspaces": ["db", "baseTemplate", "Grabber", "MockSensor"]
 }
