@@ -29,7 +29,8 @@ mqttClient.init().then((client) => {
       { timeout: 500 }
       )
       .then((res) => { 
-        // console.log(res);
+        console.log(res);
+        return res
       });
     })
   });

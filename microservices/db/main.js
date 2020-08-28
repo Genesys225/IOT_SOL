@@ -21,9 +21,10 @@ mqttClient.init().then((client) => {
     .exec(
       "baseTemplete/helloWorld.hello",
       { uri: "XXXXXXXXXXXXXXXXXXXXXX" },
-      { timeout: 5555 }
+      { timeout: 500 }
     )
     .then((res) => {
       console.log(res);
+      return res
     });
 });
