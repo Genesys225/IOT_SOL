@@ -51,6 +51,9 @@ services:
     environment:
       - GF_SECURITY_ADMIN_USER=${GRAFANA_USERNAME}
       - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
+      - GF_RENDERING_SERVER_URL=http://renderer:8081/render
+      - GF_RENDERING_CALLBACK_URL=http://grafana:3000/
+      - GF_LOG_FILTERS=rendering:debug
 
   emqtt:
     image: raymondmm/emqtt
@@ -75,7 +78,11 @@ services:
       - influxdb:database
       - emqtt:emqtt-broker
       - mysql:mysql
-
+    
+  renderer:
+    image: grafana/grafana-image-renderer:latest
+    ports:
+      - 8081
 
   node-microservices:
     image: node:12-alpine
