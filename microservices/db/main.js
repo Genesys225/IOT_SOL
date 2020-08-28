@@ -19,7 +19,7 @@ const mqttClient = new mqtt(clientConnectionParams);
 mqttClient.init().then((client) => {
   mqttClient
     .exec(
-      "baseTemplete/helloWorld.hello",
+      "Grabber/grabber.hello",
       { uri: "XXXXXXXXXXXXXXXXXXXXXX" },
       { timeout: 500 }
     )

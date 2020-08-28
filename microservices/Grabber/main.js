@@ -23,6 +23,7 @@ const mqttClient = new Mqtt(clientConnectionParams);
 // message is Buffer
 mqttClient.init().then((client) => {
   grabberClient.on('message', function (topic, message) {
+    // temp, co2, humidity, lux
     const [_sensors, deviceId, sensorType] = topic.split('/')
     mqttClient.exec("db/mysql.writeDeviceData",
       { sensor_id: `${deviceId}/${sensorType}`, value: message.toString() },
