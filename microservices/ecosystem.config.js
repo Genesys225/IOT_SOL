@@ -12,5 +12,9 @@ module.exports = {
       name: "grabber",
       script: "./Grabber/main.js",
     },
+    {
+      name: "MockSensor",
+      script: "./MockSensor/main.js",
+    },
   ],
 };
