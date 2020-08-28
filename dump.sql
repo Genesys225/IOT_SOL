@@ -46617,7 +46617,7 @@ INSERT INTO `measurements` (`id`, `sensor_id`, `value`, `ts`) VALUES
 -- Dumping structure for table sol_db.sensors
 CREATE TABLE IF NOT EXISTS `sensors` (
   `id` varchar(255) NOT NULL,
-  `device_id` varchar(255) NOT NULL DEFAULT '',
+  `device_id` varchar(255) NOT NULL,
   `type` varchar(50) NOT NULL,
   `meta` json NOT NULL,
   PRIMARY KEY (`id`)
