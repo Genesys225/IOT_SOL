@@ -1,4 +1,5 @@
 const Grabber = require("./classes/Grabber");
+const Registration = require('./classes/registerDivece');
 const Mqtt = require("exec-mqtt");
 const mqtt = require("mqtt")
 
@@ -18,22 +19,41 @@ grabberClient.on('connect', function () {
     }
   })
 })
-  
+
+
+
+
 const mqttClient = new Mqtt(clientConnectionParams);
+
+
+
+
 // message is Buffer
+
 mqttClient.init().then((client) => {
+ 
+  var registration = new Registration(mqttClient);
+ 
   grabberClient.on('message', function (topic, message) {
+   
+ 
     // sensors/SOL-XXX/type
     // types: temp, co2, humidity, lux
     const [_sensors, deviceId, sensorType] = topic.split('/')
-    mqttClient.exec("db/mysql.writeDeviceData",
+    if (registration.isDeviceExist(deviceId, sensorType)){
+      mqttClient.exec("db/mysql.writeDeviceData",
       { sensor_id: `${deviceId}/${sensorType}`, value: message.toString() },
       { timeout: 500 }
       )
       .then((res) => { 
-        console.log(res);
+        //console.log(res);
         return res
       });
+    }else{
+      registration.registerDevice(_sensors, deviceId, sensorType)
+    }
+
+ 
     })
   });
   
