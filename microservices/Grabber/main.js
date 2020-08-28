@@ -28,7 +28,7 @@ mqttClient.init().then((client) => {
     const [_sensors, deviceId, sensorType] = topic.split('/')
     mqttClient.exec("db/mysql.writeDeviceData",
       { sensor_id: `${deviceId}/${sensorType}`, value: message.toString() },
-      { timeout: 500 }
+      { timeout: 1000 }
       )
       .then((res) => { 
         console.log(res);
