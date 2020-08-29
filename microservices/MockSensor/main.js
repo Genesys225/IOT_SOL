@@ -16,7 +16,7 @@ mockDevice.on('connect', function () {
     if (!err) {
       setInterval(() => {
      
-        mockDevice.publish('sensors/SOL-11:11:11:11:11:11/temp', Math.floor(Math.random() * 10).toString())
+        mockDevice.publish('sensors/SOL-14:11:11:11:11:11/temp', Math.floor(Math.random() * 10).toString())
       }, 1000);
      
     }
