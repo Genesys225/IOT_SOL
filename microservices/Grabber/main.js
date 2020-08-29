@@ -15,7 +15,7 @@ const grabberClient = mqtt.connect(url)
 grabberClient.on('connect', function () {
   grabberClient.subscribe('sensors/#', function (err) {
     if (!err) {
-      grabberClient.publish('presence', 'Grabber')
+      grabberClient.publish('presence', 'Grabber');
     }
   })
 })
@@ -35,25 +35,12 @@ mqttClient.init().then((client) => {
   var registration = new Registration(mqttClient);
  
   grabberClient.on('message', function (topic, message) {
-   
- 
     // sensors/SOL-XXX/type
     // types: temp, co2, humidity, lux
-    const [_sensors, deviceId, sensorType] = topic.split('/')
-    if (registration.isDeviceExist(deviceId, sensorType)){
-      mqttClient.exec("db/mysql.writeDeviceData",
-      { sensor_id: `${deviceId}/${sensorType}`, value: message.toString() },
-      { timeout: 500 }
-      )
-      .then((res) => { 
-        //console.log(res);
-        return res
-      });
-    }else{
-      registration.registerDevice(_sensors, deviceId, sensorType)
-    }
-
- 
+    const [_sensors, deviceId, sensorType] = topic.split('/');
+    registration.getSensorInst(`${deviceId}/${sensorType}`).then((sensor) => {
+      return sensor.write(message.toString());
     })
-  });
+  })
+});
   

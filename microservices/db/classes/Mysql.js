@@ -26,12 +26,13 @@ class Mysql {
       );
     })
   }
-  addSensor({_sensors, deviceId, sensorType}){
+
+  addSensor({deviceId, sensorType}){
     return new Promise((resolve, reject)=>{
-      console.log(_sensors, deviceId, sensorType)
+      console.log(deviceId, sensorType)
       connection.query({
-          sql: "INSERT INTO `sol_db`.`sensors` (`id`, `device_id`, `type`, `meta`) VALUES (?,?,?,?);",
-          values: [deviceId, deviceId, sensorType, "{}"],
+          sql: "INSERT INTO sensors (id, device_id, type, meta) VALUES (?,?,?,?)",
+          values: [`${deviceId}/${sensorType}`, deviceId, sensorType, JSON.stringify({})],
         },
         function (error, results, fields) {
          
@@ -42,14 +43,13 @@ class Mysql {
     })
   }
   
-  getDevices(){
+  getSensors(_a){
     return new Promise((resolve)=>{
       connection.query({
-          sql: "SELECT * FROM sol_db.sensors"
+          sql: "SELECT * FROM sensors"
         }, 
         function (error, results, fields) { 
-         
-          console.log("error, results," , results,  results.filter)
+           console.log("error, results," , results,  results.filter)
           if (error) throw error;
           resolve(results)
         }

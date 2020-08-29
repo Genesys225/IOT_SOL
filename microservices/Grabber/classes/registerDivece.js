@@ -1,37 +1,62 @@
-class registerDevice{
-    constructor(mqttClient){
-        console.log('CONSTRUCTOR', mqttClient.exec)
-        this.setDevices(3123131); 
+class Sensor {
+    constructor(sensorObj, mqttClient) {
         this.mqttClient = mqttClient
-        this.mqttClient.exec("db/mysql.getDevices",{a:1},{ timeout: 5000 })
-        .then((res) => {
-          
-            console.log(111,  res, 222)
-            this.setDevices(res);  
-          return res 
+        this.id = sensorObj.id
+        this.type = sensorObj.type
+        this.meta = JSON.parse(sensorObj.meta)
+    }
+   
+    write(value) {
+        this.mqttClient.exec("db/mysql.writeDeviceData",
+        { sensor_id: this.id, value },
+        { timeout: 500 }
+        )
+        .then((res) => { 
+          //console.log(res);
+          return res
+        })
+    }
+}
+
+class registerDevice {
+    constructor(mqttClient){
+        this.sensorsList = {}
+        this.mqttClient = mqttClient
+        this.mqttClient.exec("db/mysql.getSensors",{a:1},{ timeout: 5000 })
+        .then((sensors) => {
+            this.setSensors(sensors);  
+            return sensors 
         }); 
 
     }  
-    setDevices(devices){
-        this.devices = devices
-    } 
 
-    getDevices(){
-        return this.devices 
-    } 
-    isDeviceExist(deviceId, sensorType){
-        var foundDevices = 0
-        this.getDevices().filter((device)=>{
-            if (device.device_id==deviceId) foundDevices = 1
-        })
-        if(foundDevices==0) {return false} else {return true}
+    /** @returns Sensor */
+    async getSensorInst(sensor_id) {
+        const [deviceId, sensorType] = sensor_id.split('/')
+        if (this.isDeviceExist(sensor_id))
+            return this.sensorsList[sensor_id]
+        else return this.registerDevice(deviceId, sensorType)
     }
 
-    registerDevice(_sensors, deviceId, sensorType){
-        this.mqttClient.exec("db/mysql.addSensor",{_sensors, deviceId, sensorType},{ timeout: 5000 })
-        .then((res) => {
-            this.setDevices(res); 
-          return res 
+    setSensors(sensors){
+        sensors.foreach((sensor) => {
+            this.sensorsList[sensor.id] = new Sensor(sensor, this.mqttClient)
+        })
+    } 
+
+    getSensors(){
+        return this.sensorsList 
+    } 
+
+    isDeviceExist(sensor_id){
+        return Object.keys(this.sensorsList).indexOf(sensor_id) !== -1
+    }
+
+    registerDevice(deviceId, sensorType){
+        this.mqttClient.exec("db/mysql.addSensor",{deviceId, sensorType},{ timeout: 5000 })
+        .then((sensor) => {
+            this.sensorsList[sensor.id] = new Sensor(sensor, this.mqttClient)
+            return sensor 
         });
     }
 }
