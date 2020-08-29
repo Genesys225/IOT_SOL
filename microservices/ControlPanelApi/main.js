@@ -5,8 +5,9 @@ const SensorsApi = require("./classes/SensorsApi")
 
 const HelloWorld = require("./classes/HelloWorld");
 
-const sensorsApi  = new SensorsApi()
 
+
+const sensorsApi  = new SensorsApi();
 
 const clientConnectionParams = {
   services: { sensorsApi },
@@ -17,13 +18,15 @@ const clientConnectionParams = {
   },
 };
 const mqttClient = new mqtt(clientConnectionParams);
+
 (async () => {
-
+   
   await mqttClient.init()
+  sensorsApi.mqttClient = mqttClient
   const app = setupExpress()
-  app.post('/getSensors', async (req, res) => res.send(await sensorsApi.getSensors()))
+  app.get('/getSensors', async (req, res) => res.send(await sensorsApi.getSensors()))
 })()
-
+  
 
 
 function setupExpress(){
@@ -32,7 +35,7 @@ function setupExpress(){
   const bodyParser = require('body-parser');
   const cors = require('cors');
   const app = express();
-  const port = 3000;
+  const port = 6000;
 
   // Where we will keep books
   let books = [];
@@ -43,6 +46,9 @@ function setupExpress(){
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(bodyParser.json());
 
+  app.post('/book', (req, res) => {
+    // We will be coding here
+  });
   app.post('/book', (req, res) => {
     // We will be coding here
   });

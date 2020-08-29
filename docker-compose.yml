@@ -59,6 +59,8 @@ services:
     image: raymondmm/emqtt
     ports:
       - "1883:1883"
+      - "8083:8083"
+      - "8084:8084"
       - "18083:18083"
     environment:
       - "EMQ_NAME=emq"
@@ -89,6 +91,9 @@ services:
     restart: on-failure:10
     volumes:
       - ./microservices:/app/
+    ports:
+      - "9000:9000"
+      - "6000:6000"
     # depends_on:
     #   - emqtt
     #   - influxdb
@@ -97,4 +102,4 @@ services:
       - emqtt:emqtt-broker
       - mysql:mysql
 
-    command: ["ash", "-c", "npm install pm2 -g && cd /app/ && yarn install --production && pm2 start --watch && pm2 logs -f"]
+    command: ["ash", "-c", "npm install pm2 -g && cd /app/ && yarn install --production && pm2 start && pm2 logs -f"]

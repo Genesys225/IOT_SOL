@@ -1,7 +1,7 @@
 class SensorsApi{
 
     constructor(mqttClient){
-        this.mqttClient = mqttClient
+       // this.mqttClient = mqttClient
     } 
 
     async getSensors(){

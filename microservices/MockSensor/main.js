@@ -17,7 +17,7 @@ mockDevice.on('connect', function () {
       setInterval(() => {
      
         mockDevice.publish('sensors/SOL-14:11:11:11:11:11/temp', Math.floor(Math.random() * 10).toString())
-      }, 1000);
+      }, 10000);
      
     }
   })

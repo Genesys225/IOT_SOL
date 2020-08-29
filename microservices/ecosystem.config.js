@@ -1,24 +1,31 @@
 module.exports = {
   apps: [
     {
-      name: "baseTempletes",
-      script: "./baseTemplete/main.js",
-    },
-    {
       name: "db",
       script: "./db/main.js",
+      watch       : true,
     },
     {
       name: "grabber",
       script: "./Grabber/main.js",
+      watch       : true,
     },
     {
       name: "MockSensor",
       script: "./MockSensor/main.js",
+      watch       : true,
     },
     {
       name: "ControlPanelApi",
-      script: "./MockSensor/main.js",
+      script: "./ControlPanelApi/main.js",
+      watch       : true,
+    },
+    { 
+      name: "control-panel-frontend",
+      "cwd": "./control-panel-frontend/",
+      "script": "npm",
+      watch       : false,
+      "args": "start"
     },
   ],
 };
