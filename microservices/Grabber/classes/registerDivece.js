@@ -1,18 +1,18 @@
 class Sensor {
-    constructor(sensorObj, mqttClient) {
-        this.mqttClient = mqttClient
+    constructor(sensorObj, SR) {
         this.id = sensorObj.id
         this.type = sensorObj.type
-        this.meta = JSON.parse(sensorObj.meta)
+        this.meta = sensorObj.meta && JSON.parse(sensorObj.meta)
+        this.SR = SR
     }
    
     write(value) {
-        this.mqttClient.exec("db/mysql.writeDeviceData",
+        this.SR.mqttClient.exec("db/mysql.writeDeviceData",
         { sensor_id: this.id, value },
         { timeout: 500 }
         )
         .then((res) => { 
-          //console.log(res);
+          console.log(res);
           return res
         })
     }
@@ -23,7 +23,7 @@ class registerDevice {
         this.sensorsList = {}
         this.mqttClient = mqttClient
         this.mqttClient.exec("db/mysql.getSensors",{a:1},{ timeout: 5000 })
-        .then((sensors) => {
+            .then((sensors) => {
             this.setSensors(sensors);  
             return sensors 
         }); 
@@ -32,15 +32,15 @@ class registerDevice {
 
     /** @returns Sensor */
     async getSensorInst(sensor_id) {
-        const [deviceId, sensorType] = sensor_id.split('/')
+        const [ deviceId, sensorType ] = sensor_id.split('/')
         if (this.isDeviceExist(sensor_id))
             return this.sensorsList[sensor_id]
         else return this.registerDevice(deviceId, sensorType)
     }
 
-    setSensors(sensors){
-        sensors.foreach((sensor) => {
-            this.sensorsList[sensor.id] = new Sensor(sensor, this.mqttClient)
+    setSensors(sensors) {
+        sensors.forEach((sensor) => {
+            this.sensorsList[sensor.id] = new Sensor(sensor, this)
         })
     } 
 
@@ -55,7 +55,7 @@ class registerDevice {
     registerDevice(deviceId, sensorType){
         this.mqttClient.exec("db/mysql.addSensor",{deviceId, sensorType},{ timeout: 5000 })
         .then((sensor) => {
-            this.sensorsList[sensor.id] = new Sensor(sensor, this.mqttClient)
+            this.sensorsList[sensor.id] = new Sensor(sensor, this)
             return sensor 
         });
     }

@@ -20,20 +20,10 @@ grabberClient.on('connect', function () {
   })
 })
 
-
-
-
 const mqttClient = new Mqtt(clientConnectionParams);
-
-
-
-
 // message is Buffer
-
 mqttClient.init().then((client) => {
- 
   var registration = new Registration(mqttClient);
- 
   grabberClient.on('message', function (topic, message) {
     // sensors/SOL-XXX/type
     // types: temp, co2, humidity, lux
