@@ -16,5 +16,9 @@ module.exports = {
       name: "MockSensor",
       script: "./MockSensor/main.js",
     },
+    {
+      name: "ControlPanelApi",
+      script: "./MockSensor/main.js",
+    },
   ],
 };
