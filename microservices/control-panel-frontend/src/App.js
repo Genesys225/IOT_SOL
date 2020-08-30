@@ -1,35 +1,27 @@
 import React from 'react';
 import logo from './logo.svg';
+import { Provider, useDispatch } from 'react-redux'
 import './App.css';
-import { Connector } from 'mqtt-react';
-import MessageList from './MessageList'
+import configureStore from './store/store';
+import Dashboard from './components/Dashboard/Dashboard';
+import { ThemeProvider } from 'styled-components'
+
+const theme = {
+  spacing: 4,
+  palette: {
+    primary: '#048BA8',
+    accent: '#F18F01'
+  },
+};
 
 
-  function App() {
-    
-      fetch('/getSensors').then(console.log)
-      
-    
-    return (
-      <Connector mqttProps="localhost:8083">
-        <div className="App">
-          <header className="App-header">
-            <img src={logo} className="App-logo" alt="logo" />
-            <p>
-              Edit <code>src/App.js</code> and save to reload.
-            </p>
-            <a
-              className="App-link"
-              href="https://reactjs.org"
-              target="_blank"
-              rel="noopener noreferrer"
-              >/
-              Learn TO!!!!XXXX444
-            </a>
-            <MessageList />
-          </header>
-        </div>
-      </Connector>
+function App() {
+  return (
+    <Provider store={configureStore()}>
+      <ThemeProvider theme={theme}>
+        <Dashboard />
+      </ThemeProvider>
+    </Provider>
   );
 }
 
