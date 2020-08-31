@@ -5,6 +5,7 @@ import './App.css';
 import configureStore from './store/store';
 import Dashboard from './components/Dashboard/Dashboard';
 import { ThemeProvider } from 'styled-components'
+import { BrowserRouter as Router } from 'react-router-dom';
 
 const theme = {
   spacing: 4,
@@ -17,11 +18,13 @@ const theme = {
 
 function App() {
   return (
-    <Provider store={configureStore()}>
-      <ThemeProvider theme={theme}>
-        <Dashboard />
-      </ThemeProvider>
-    </Provider>
+		<Router>
+      <Provider store={configureStore()}>
+        <ThemeProvider theme={theme}>
+          <Dashboard />
+        </ThemeProvider>
+      </Provider>
+		</Router>
   );
 }
 

@@ -15,9 +15,10 @@ import {
   Route,
   Link
 } from "react-router-dom";
+import SensorsList from '../sensors/SensorsList';
 
 export const mainListItems = (
-  <Router>
+  <div>
     <ListItem button>
       <ListItemIcon>
         <Link to="/"><DashboardIcon /></Link>
@@ -25,10 +26,12 @@ export const mainListItems = (
       <ListItemText primary="Dashboard" />
     </ListItem>
     <ListItem button>
-      <ListItemIcon>
-        <Link to="/about"><ShoppingCartIcon /></Link>
-      </ListItemIcon>
-      <ListItemText primary="Orders" />
+      <Link to="/sensors">
+        <ListItemIcon>
+          <ShoppingCartIcon />
+        </ListItemIcon>
+      </Link>
+      <ListItemText primary="Sensors" />
     </ListItem>
     <ListItem button>
       <ListItemIcon>
@@ -48,7 +51,7 @@ export const mainListItems = (
       </ListItemIcon>
       <ListItemText primary="Integrations" />
     </ListItem>
-  </Router>
+  </div>
 );
 
 export const secondaryListItems = (
