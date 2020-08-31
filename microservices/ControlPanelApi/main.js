@@ -25,6 +25,7 @@ const mqttClient = new mqtt(clientConnectionParams);
   sensorsApi.mqttClient = mqttClient
   const app = setupExpress()
   app.get('/getSensors', async (req, res) => res.send(await sensorsApi.getSensors()))
+  app.post('/updateSensor', async (req, res) => res.send(await sensorsApi.updateSensor(req.body.id, req.body.meta)))
 })()
   
 

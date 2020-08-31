@@ -1,5 +1,6 @@
 var mysql = require("mysql");
 var connection = mysql.createConnection({
+  // debug: true,
   host: "mysql",
   user: "root",
   password: 'password',
@@ -26,7 +27,21 @@ class Mysql {
       );
     })
   }
-
+  updateSensor({id, meta}){
+    return new Promise((resolve, reject)=>{
+      connection.query({
+        sql: `UPDATE sol_db.sensors SET meta = ? WHERE (id = ?);`,
+        values: [  JSON.stringify({meta}), id ],
+      },
+      function (error, results, fields) {
+        if (error) throw error;
+        console.log(results)
+          resolve(results)        
+        }
+      );
+    })
+  }
+  
   addSensor({deviceId, sensorType}){
     return new Promise((resolve, reject)=>{
       connection.query({
