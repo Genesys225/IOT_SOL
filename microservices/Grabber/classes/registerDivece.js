@@ -9,10 +9,9 @@ class Sensor {
     write(value) {
         this.SR.mqttClient.exec("db/mysql.writeDeviceData",
         { sensor_id: this.id, value },
-        { timeout: 500 }
+        { timeout: 5000 }
         )
         .then((res) => { 
-          console.log(res);
           return res
         })
     }
