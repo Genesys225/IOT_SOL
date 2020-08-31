@@ -9,3 +9,4 @@ influxdb/
 grafana-provisioning/
 **/**/node_modules/
 **/**/*yarn.lock
+tmp
