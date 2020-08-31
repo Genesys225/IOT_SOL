@@ -12,6 +12,18 @@ class Mysql {
   constructor() {
 
   }
+  getLastData(){
+    return new Promise((resolve)=>{
+      connection.query({
+          sql: "select sensor_id, max(ts) from sol_db.measurements GROUP by sensor_id"
+        }, 
+        function (error, results, fields) { 
+          if (error) throw error;
+          resolve(results)
+        }
+      );
+    })
+  }
 
   writeDeviceData({ sensor_id, value }) {
     return new Promise((resolve)=>{
