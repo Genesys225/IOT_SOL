@@ -27,45 +27,6 @@ export default function SensorsList() {
 		await dispatch(getSensors());
 	};
 
-	const [checked, setChecked] = React.useState(['wifi']);
-
-	const handleToggle = (value) => () => {
-		const currentIndex = checked.indexOf(value);
-		const newChecked = [...checked];
-
-		if (currentIndex === -1) {
-			newChecked.push(value);
-		} else {
-			newChecked.splice(currentIndex, 1);
-		}
-
-		setChecked(newChecked);
-	};
-	const RenderSensorListItem = (props) => {
-		return (
-			<ListItem key={props.id}>
-				<ListItemIcon>
-					<WifiIcon />
-				</ListItemIcon>
-				<ListItemText
-					id="switch-list-label-wifi"
-					primary={props.type}
-					secondary={props.id}
-				/>
-				<ListItemSecondaryAction>
-					<Switch
-						edge="end"
-						onChange={handleToggle(props.id)}
-						checked={checked.indexOf(props.id) !== -1}
-						inputProps={{
-							'aria-labelledby': 'switch-list-label-wifi',
-						}}
-					/>
-				</ListItemSecondaryAction>
-			</ListItem>
-		);
-	};
-
 	useEffect(() => {
 		if (Object.keys(sensors).length <= 0) fetchSensors();
 		/** @todo dispatch get sensor data */
@@ -82,25 +43,48 @@ export default function SensorsList() {
 			subheader={<ListSubheader>Settings</ListSubheader>}
 			className={classes.root}
 		>
-			<ListItem>
-				<ListItemIcon>
-					<WifiIcon />
-				</ListItemIcon>
-				<ListItemText id="switch-list-label-wifi" primary="Wi-Fi" />
-				<ListItemSecondaryAction>
-					<Switch
-						edge="end"
-						onChange={handleToggle('wifi')}
-						checked={checked.indexOf('wifi') !== -1}
-						inputProps={{
-							'aria-labelledby': 'switch-list-label-wifi',
-						}}
-					/>
-				</ListItemSecondaryAction>
-			</ListItem>
 			{sensors.map((sensor) => (
 				<RenderSensorListItem {...sensor} />
 			))}
 		</List>
 	);
 }
+
+const RenderSensorListItem = (props) => {
+	const [checked, setChecked] = React.useState(['wifi']);
+
+	const handleToggle = (value) => () => {
+		const currentIndex = checked.indexOf(value);
+		const newChecked = [...checked];
+
+		if (currentIndex === -1) {
+			newChecked.push(value);
+		} else {
+			newChecked.splice(currentIndex, 1);
+		}
+
+		setChecked(newChecked);
+	};
+	return (
+		<ListItem key={props.id}>
+			<ListItemIcon>
+				<WifiIcon />
+			</ListItemIcon>
+			<ListItemText
+				id="switch-list-label-wifi"
+				primary={props.type}
+				secondary={props.id}
+			/>
+			<ListItemSecondaryAction>
+				<Switch
+					edge="end"
+					onChange={handleToggle(props.id)}
+					checked={checked.indexOf(props.id) !== -1}
+					inputProps={{
+						'aria-labelledby': 'switch-list-label-wifi',
+					}}
+				/>
+			</ListItemSecondaryAction>
+		</ListItem>
+	);
+};

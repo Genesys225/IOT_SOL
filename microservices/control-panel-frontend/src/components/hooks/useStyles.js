@@ -3,6 +3,10 @@ import { makeStyles } from '@material-ui/core';
 const drawerWidth = 240;
 
 export const useStyles = makeStyles((theme) => ({
+	palette: {
+		primary: '#048BA8',
+		accent: '#F18F01',
+	},
 	root: {
 		display: 'flex',
 	},
