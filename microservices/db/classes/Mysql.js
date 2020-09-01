@@ -14,14 +14,17 @@ class Mysql {
 		return new Promise((resolve) => {
 			connection.query(
 				{
-					sql: `SELECT s1.* 
-                FROM measurements s1
-                INNER JOIN 
-                (
-                  SELECT sensor_id, max(ts) as mts
-                  FROM measurements 
-                  GROUP BY sensor_id 
-                ) s2 on s2.sensor_id = s1.sensor_id and s1.ts = s2.mts`,
+					sql: `SELECT sensor_id, value 
+								FROM measurements
+								WHERE (sensor_id, ts) IN (
+									SELECT
+										sensor_id, MAX(ts)
+									FROM
+										measurements
+									GROUP BY
+										sensor_id
+								)
+								ORDER BY sensor_id`,
 				},
 				function(error, results, fields) {
 					if (error) throw error;
@@ -96,7 +99,7 @@ class Mysql {
 		return new Promise((resolve) => {
 			connection.query(
 				{
-					sql: 'SELECT * FROM sensors',
+					sql: 'SELECT * FROM sensors ORDER BY id',
 				},
 				function(error, results, fields) {
 					if (error) throw error;

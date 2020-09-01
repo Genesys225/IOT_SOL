@@ -38,11 +38,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SensorsList() {
-	// @ts-ignore
-	const sensors = useSelector((state) => state.sensors);
+	const sensors = useSelector(
+		(state) =>
+			// @ts-ignore
+			state.sensors
+	);
 	const classes = useStyles();
 	const dispatch = useDispatch();
-
 	const fetchSensors = async () => {
 		await dispatch(getSensors());
 	};
@@ -50,8 +52,8 @@ export default function SensorsList() {
 	useEffect(() => {
 		if (sensors.length <= 0) fetchSensors();
 		/** @todo dispatch get sensor data */
-		const interval = setInterval(() => {
-			fetchSensors();
+		const interval = setInterval(async () => {
+			await fetchSensors();
 			dispatch(getLastData());
 		}, 3000);
 		return () => clearInterval(interval);
@@ -60,7 +62,6 @@ export default function SensorsList() {
 	if (sensors.length <= 0) {
 		return <CenteredCircular />;
 	}
-
 	return (
 		<Suspense fallback={<CenteredCircular />}>
 			<Card>
@@ -68,10 +69,10 @@ export default function SensorsList() {
 					subheader={<ListSubheader>Settings</ListSubheader>}
 					className={classes.root}
 				>
-					<Divider />
+					<Divider key="0" />
 
 					{sensors.map((sensor) => (
-						<RenderSensorListItem {...sensor} />
+						<RenderSensorListItem {...sensor} key={sensor.id} />
 					))}
 				</List>
 			</Card>
@@ -99,8 +100,8 @@ const RenderSensorListItem = (props) => {
 		setChecked(newChecked);
 	};
 	return (
-		<div key={props.id}>
-			<ListItem key={props.id}>
+		<div>
+			<ListItem>
 				<ListItemIcon>
 					<WifiIcon />
 				</ListItemIcon>
@@ -134,10 +135,9 @@ const RenderSensorListItem = (props) => {
 
 						<FormControl className={classes.formControl}>
 							<TextField
-								id="value"
+								id={props.id + '-value'}
 								label="Current value"
-								value={'value'}
-								defaultValue="waiting..."
+								value={props.value || ''}
 							/>
 						</FormControl>
 						<Switch

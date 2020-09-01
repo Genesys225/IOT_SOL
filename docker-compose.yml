@@ -36,7 +36,7 @@ services:
             - ./tmp/:/var/lib/mysql
         restart: always
         environment:
-            - TZ=Asia/Jerusalem"=
+            - TZ=Asia/Jerusalem
             - MYSQL_ROOT_PASSWORD=password
             - MYSQL_USER=testuser
             - MYSQL_PASSWORD=${MYSQL_PASSWORD}
@@ -52,6 +52,7 @@ services:
         depends_on:
             - mysql
         environment:
+            - TZ=Asia/Jerusalem
             - GF_SECURITY_ADMIN_USER=${GRAFANA_USERNAME}
             - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
             - GF_RENDERING_SERVER_URL=http://renderer:8081/render
@@ -66,6 +67,7 @@ services:
             - '8084:8084'
             - '18083:18083'
         environment:
+            - TZ=Asia/Jerusalem
             - 'EMQ_NAME=emq'
             - 'EMQ_NODE__COOKIE=ef16498f66804df1cc6172f6996d5492'
             - 'EMQ_WAIT_TIME=60'
@@ -104,7 +106,8 @@ services:
         links:
             - emqtt:emqtt-broker
             - mysql:mysql
-
+        environment:
+            - TZ=Asia/Jerusalem
         command:
             [
                 'ash',
