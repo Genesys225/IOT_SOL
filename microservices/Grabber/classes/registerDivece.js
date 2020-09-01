@@ -21,19 +21,22 @@ class registerDevice {
     constructor(mqttClient){
         this.sensorsList = {}
         this.mqttClient = mqttClient
-        this.mqttClient.exec("db/mysql.getSensors",{a:1},{ timeout: 5000 })
-            .then((sensors) => {
-            this.setSensors(sensors);  
-            return sensors 
-        }); 
 
     }  
+
+
+    async initAllSensorsData(){
+        var sensors = await this.mqttClient.exec("db/mysql.getSensors",{a:1},{ timeout: 5000 })
+        //console.log(sensors)
+        this.setSensors(sensors);       
+        return sensors
+    }
 
     /** @returns Sensor */
     async getSensorInst(sensor_id) {
         const [ deviceId, sensorType ] = sensor_id.split('/')
         if (this.isDeviceExist(sensor_id))
-            return this.sensorsList[sensor_id]
+            return this.sensorsList[sensor_id] 
         else return this.registerDevice(deviceId, sensorType)
     }
 
