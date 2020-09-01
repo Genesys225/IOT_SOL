@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getSensors } from '../../store/actions/sensorsActions';
+import { getSensors, getLastData } from '../../store/actions/sensorsActions';
 import { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
@@ -49,10 +49,10 @@ export default function SensorsList() {
 	useEffect(() => {
 		if (sensors.length <= 0) fetchSensors();
 		/** @todo dispatch get sensor data */
-		// const interval = setInterval(() => {
-		// 	console.log('This will run every second!');
-		// }, 1000);
-		// return () => clearInterval(interval);
+		const interval = setInterval(() => {
+			dispatch(getLastData());
+		}, 3000);
+		return () => clearInterval(interval);
 	}, [dispatch, sensors]);
 
 	if (sensors.length <= 0) return null;
@@ -77,7 +77,6 @@ const RenderSensorListItem = (props) => {
 	const classes = useStyles();
 	const [checked, setChecked] = React.useState(['wifi']);
 	const [zone, setZone] = React.useState('');
-	const [value, setValue] = React.useState('');
 
 	const handleChange = (event) => {
 		setZone(event.target.value);
@@ -105,47 +104,46 @@ const RenderSensorListItem = (props) => {
 					primary={props.type}
 					secondary={props.id}
 				/>
-
-				<Box flexDirection="row" justifyContent="end">
-					<FormControl className={classes.formControl}>
-						<InputLabel shrink id="zone-label">
-							Zone
-						</InputLabel>
-						<Select
-							labelId="zone-label"
-							id="zone"
-							value={zone}
-							onChange={handleChange}
-							displayEmpty
-							className={classes.selectEmpty}
-						>
-							<MenuItem value="">
-								<em>None</em>
-							</MenuItem>
-							<MenuItem value={10}>Ten</MenuItem>
-							<MenuItem value={20}>Twenty</MenuItem>
-							<MenuItem value={30}>Thirty</MenuItem>
-						</Select>
-					</FormControl>
-
-					<FormControl className={classes.formControl}>
-						<TextField
-							id="value"
-							label="Current value"
-							value={value}
-							defaultValue="waiting..."
-						/>
-					</FormControl>
-				</Box>
 				<ListItemSecondaryAction>
-					<Switch
-						edge="end"
-						onChange={handleToggle(props.id)}
-						checked={checked.indexOf(props.id) !== -1}
-						inputProps={{
-							'aria-labelledby': 'switch-list-label-wifi',
-						}}
-					/>
+					<Box flexDirection="row" justifyContent="end">
+						<FormControl className={classes.formControl}>
+							<InputLabel shrink id="zone-label">
+								Zone
+							</InputLabel>
+							<Select
+								labelId="zone-label"
+								id="zone"
+								value={zone}
+								onChange={handleChange}
+								displayEmpty
+								className={classes.selectEmpty}
+							>
+								<MenuItem value="">
+									<em>None</em>
+								</MenuItem>
+								<MenuItem value={10}>Ten</MenuItem>
+								<MenuItem value={20}>Twenty</MenuItem>
+								<MenuItem value={30}>Thirty</MenuItem>
+							</Select>
+						</FormControl>
+
+						<FormControl className={classes.formControl}>
+							<TextField
+								id="value"
+								label="Current value"
+								value={'value'}
+								defaultValue="waiting..."
+							/>
+						</FormControl>
+						<Switch
+							edge="end"
+							onChange={handleToggle(props.id)}
+							checked={checked.indexOf(props.id) !== -1}
+							inputProps={{
+								'aria-labelledby': 'switch-list-label-wifi',
+							}}
+						/>
+					</Box>
 				</ListItemSecondaryAction>
 			</ListItem>
 			<Divider />
