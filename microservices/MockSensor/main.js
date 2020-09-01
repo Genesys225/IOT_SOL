@@ -15,11 +15,20 @@ mockDevice.on('connect', function () {
   mockDevice.subscribe('sensors/#', function (err) {
     if (!err) {
       setInterval(() => {
-     
         mockDevice.publish('sensors/SOL-14:11:11:11:11:11/temp', Math.floor(Math.random() * 10).toString())
+      }, 5000); 
+ 
+
+      setInterval(() => {
+        mockDevice.publish('sensors/SOL-15:11:11:11:11:11/hum', Math.floor(Math.random() * 10).toString())
+      }, 10000); 
+ 
+
+      setInterval(() => {
+        mockDevice.publish('sensors/SOL-16:11:11:11:11:11/light', Math.floor(Math.random() * 10).toString())
       }, 10000);
      
     }
   })
 })
-  
+   
