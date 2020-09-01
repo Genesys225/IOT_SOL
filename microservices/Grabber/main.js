@@ -22,15 +22,18 @@ grabberClient.on('connect', function () {
 
 const mqttClient = new Mqtt(clientConnectionParams);
 // message is Buffer
-mqttClient.init().then((client) => {
+mqttClient.init().then(async (client) => {
   var registration = new Registration(mqttClient);
+  await registration.initAllSensorsData()
   grabberClient.on('message', function (topic, message) {
     // sensors/SOL-XXX/type
     // types: temp, co2, humidity, lux
     const [_sensors, deviceId, sensorType] = topic.split('/');
     registration.getSensorInst(`${deviceId}/${sensorType}`).then((sensor) => {
+      console.log({topic, message})
       return sensor.write(message.toString());
     })
   })
 });
-  
+   
+ 
