@@ -21,7 +21,7 @@ mqttClient.init().then((client) => {
     .exec(
       "Grabber/grabber.hello",
       { uri: "XXXXXXXXXXXXXXXXXXXXXX" },
-      { timeout: 500 }
+      { timeout: 1000 }
     )
     .then((res) => {
       console.log(res);
