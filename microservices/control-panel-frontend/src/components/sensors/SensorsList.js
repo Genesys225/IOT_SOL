@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getSensors, getLastData } from '../../store/actions/sensorsActions';
 import { useEffect } from 'react';
@@ -21,6 +21,7 @@ import {
 	TextField,
 	Box,
 } from '@material-ui/core';
+import CenteredCircular from '../common/CenteredCircular';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -50,26 +51,31 @@ export default function SensorsList() {
 		if (sensors.length <= 0) fetchSensors();
 		/** @todo dispatch get sensor data */
 		const interval = setInterval(() => {
+			fetchSensors();
 			dispatch(getLastData());
 		}, 3000);
 		return () => clearInterval(interval);
 	}, [dispatch, sensors]);
 
-	if (sensors.length <= 0) return null;
+	if (sensors.length <= 0) {
+		return <CenteredCircular />;
+	}
 
 	return (
-		<Card>
-			<List
-				subheader={<ListSubheader>Settings</ListSubheader>}
-				className={classes.root}
-			>
-				<Divider />
+		<Suspense fallback={<CenteredCircular />}>
+			<Card>
+				<List
+					subheader={<ListSubheader>Settings</ListSubheader>}
+					className={classes.root}
+				>
+					<Divider />
 
-				{sensors.map((sensor) => (
-					<RenderSensorListItem {...sensor} />
-				))}
-			</List>
-		</Card>
+					{sensors.map((sensor) => (
+						<RenderSensorListItem {...sensor} />
+					))}
+				</List>
+			</Card>
+		</Suspense>
 	);
 }
 
@@ -77,7 +83,6 @@ const RenderSensorListItem = (props) => {
 	const classes = useStyles();
 	const [checked, setChecked] = React.useState(['wifi']);
 	const [zone, setZone] = React.useState('');
-
 	const handleChange = (event) => {
 		setZone(event.target.value);
 	};
