@@ -17,14 +17,6 @@ const clientConnectionParams = {
 const mqttClient = new mqtt(clientConnectionParams);
 
 mqttClient.init().then((client) => {
-	mqttClient
-		.exec(
-			'Grabber/grabber.hello',
-			{ uri: 'XXXXXXXXXXXXXXXXXXXXXX' },
-			{ timeout: 5000 }
-		)
-		.then((res) => {
-			console.log(res);
-			return res;
-		});
+
+	
 });
