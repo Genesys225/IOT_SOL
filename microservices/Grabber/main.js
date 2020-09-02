@@ -26,6 +26,7 @@ const mqttClient = new Mqtt(clientConnectionParams);
 mqttClient.init().then(async (client) => {
 	var registration = new Registration(mqttClient);
 	await registration.initAllSensorsData();
+	await new Promise((resolve)=>setTimeout(() => {resolve()}, 1000))
 	grabberClient.on('message', function(topic, message) {
 		// sensors/SOL-XXX/type
 		// types: temp, co2, humidity, lux
