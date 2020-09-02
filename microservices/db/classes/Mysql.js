@@ -14,7 +14,7 @@ class Mysql {
 		return new Promise((resolve) => {
 			connection.query(
 				{
-					sql: `SELECT sensor_id, value 
+					sql: `SELECT sensor_id AS id, value 
 								FROM measurements
 								WHERE (sensor_id, ts) IN (
 									SELECT
