@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 	formControl: {
 		margin: theme.spacing(1),
-		minWidth: 120,
+		minWidth: 30,
 	},
 	selectEmpty: {
 		marginTop: theme.spacing(2),
@@ -138,16 +138,21 @@ const RenderSensorListItem = (props) => {
 								id={props.id + '-value'}
 								label="Current value"
 								value={props.value || ''}
+								InputProps={{
+									readOnly: true,
+								}}
 							/>
 						</FormControl>
-						<Switch
-							edge="end"
-							onChange={handleToggle(props.id)}
-							checked={checked.indexOf(props.id) !== -1}
-							inputProps={{
-								'aria-labelledby': 'switch-list-label-wifi',
-							}}
-						/>
+						<FormControl className={classes.formControl}>
+							<Switch
+								edge="end"
+								onChange={handleToggle(props.id)}
+								checked={checked.indexOf(props.id) !== -1}
+								inputProps={{
+									'aria-labelledby': 'switch-list-label-wifi',
+								}}
+							/>
+						</FormControl>
 					</Box>
 				</ListItemSecondaryAction>
 			</ListItem>
