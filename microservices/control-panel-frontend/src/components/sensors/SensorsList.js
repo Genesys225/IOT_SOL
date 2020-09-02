@@ -57,7 +57,7 @@ export default function SensorsList() {
 			dispatch(getLastData());
 		}, 3000);
 		return () => clearInterval(interval);
-	}, [dispatch, sensors]);
+	}, [dispatch, sensors, fetchSensors, getLastData]);
 
 	if (sensors.length <= 0) {
 		return <CenteredCircular />;
