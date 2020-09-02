@@ -22,6 +22,7 @@ import {
 	Box,
 } from '@material-ui/core';
 import CenteredCircular from '../common/CenteredCircular';
+import { Icon } from '../Icons/Icon-Library';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -103,7 +104,7 @@ const RenderSensorListItem = (props) => {
 		<div>
 			<ListItem>
 				<ListItemIcon>
-					<WifiIcon />
+					<Icon icon={props.type} />
 				</ListItemIcon>
 				<ListItemText
 					id="switch-list-label-wifi"
