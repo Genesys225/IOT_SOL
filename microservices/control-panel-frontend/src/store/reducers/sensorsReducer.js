@@ -18,8 +18,6 @@ export const sensorsReducer = (state = initialState, action) => {
 		case LAST_SENSORS_DATA:
 			let newSensorState = { ...state };
 			newSensorState = action.payload.map((sensorData) => {
-				console.log(sensorData)
-				delete sensorData.ts;
 				const updatedSensor = Object.assign(
 					state.find((sensor) => {
 						const res = sensor.id === sensorData.id;
