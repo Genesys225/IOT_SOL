@@ -3,7 +3,9 @@ import thunkMiddleware from 'redux-thunk'
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { sensorsReducer } from "./reducers/sensorsReducer";
 
-const rootReducer = combineReducers({sensors: sensorsReducer})
+const rootReducer = combineReducers({
+  sensors: sensorsReducer
+})
 export default function configureStore(preloadedState = {}) {
   const middlewares = [thunkMiddleware]
 

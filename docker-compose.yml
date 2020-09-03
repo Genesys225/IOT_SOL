@@ -34,7 +34,7 @@ services:
             - SYS_NICE # CAP_SYS_NICE
         volumes:
             - ./dump.sql:/docker-entrypoint-initdb.d/dump.sql
-            - ./tmp/:/var/lib/mysql
+            - ./tmp/mysql/:/var/lib/mysql
         restart: always
         environment:
             - TZ=Asia/Jerusalem

@@ -20,10 +20,10 @@ USE `sol_db`;
 CREATE TABLE IF NOT EXISTS `measurements` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `sensor_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `value` varchar(50) DEFAULT NULL,
+  `value` FLOAT(12) DEFAULT NULL,
   `ts` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=46595 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=46598 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- Dumping data for table sol_db.measurements: ~0 rows (approximately)
 /*!40000 ALTER TABLE `measurements` DISABLE KEYS */;
@@ -46610,7 +46610,10 @@ INSERT INTO `measurements` (`id`, `sensor_id`, `value`, `ts`) VALUES
 	(46591, 'SOL-38:2b:78:3:ec:df/lux', '52.50', '2020-08-28 11:45:37'),
 	(46592, 'SOL-38:2b:78:3:ec:df/temp', '30.37', '2020-08-28 11:45:40'),
 	(46593, 'SOL-38:2b:78:3:ec:df/humidity', '63.95', '2020-08-28 11:45:40'),
-	(46594, 'SOL-38:2b:78:3:ec:df/lux', '52.50', '2020-08-28 11:45:40');
+	(46594, 'SOL-38:2b:78:3:ec:df/lux', '52.50', '2020-08-28 11:45:40'),
+	(46595, 'SOL-14:11:11:11:11:11/temp', '52.50', '2020-08-28 11:45:40'),
+	(46596, 'SOL-15:11:11:11:11:11/hum', '52.50', '2020-08-28 11:45:40'),
+	(46597, 'SOL-16:11:11:11:11:11/light', '52.50', '2020-08-28 11:45:40');
 /*!40000 ALTER TABLE `measurements` ENABLE KEYS */;
 
 -- Dumping structure for table sol_db.sensors
@@ -46622,6 +46625,14 @@ CREATE TABLE IF NOT EXISTS `sensors` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+INSERT INTO `sensors` (`id`, `device_id`, `type`, `meta`) VALUES
+	('SOL-38:2b:78:3:ec:df/lux', 'SOL-38:2b:78:3:ec:df', 'lux', '{}'),
+	('SOL-38:2b:78:3:ec:df/temp', 'SOL-38:2b:78:3:ec:df', 'temp', '{}'),
+	('SOL-38:2b:78:3:ec:df/humidity', 'SOL-38:2b:78:3:ec:df', 'humidity', '{}'),
+	('SOL-38:2b:78:3:ec:df/co2', 'SOL-38:2b:78:3:ec:df', 'co2', '{}'),
+	('SOL-14:11:11:11:11:11/temp', 'SOL-14:11:11:11:11:11', 'temp', '{}'),
+	('SOL-15:11:11:11:11:11/hum', 'SOL-15:11:11:11:11:11', 'hum', '{}'),
+	('SOL-16:11:11:11:11:11/light', 'SOL-16:11:11:11:11:11', 'light', '{}');
 -- Dumping data for table sol_db.sensors: ~0 rows (approximately)
 /*!40000 ALTER TABLE `sensors` DISABLE KEYS */;
 /*!40000 ALTER TABLE `sensors` ENABLE KEYS */;
