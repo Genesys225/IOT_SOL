@@ -1,29 +1,5 @@
 version: '3'
 services:
-    # influxdb:
-    #     image: influxdb:latest
-    #     ports:
-    #         - '8086:8086'
-    #     volumes:
-    #         - ./influxdb/:/var/lib/influxdb
-    #     environment:
-    #         - INFLUXDB_DB=db0
-    #         - INFLUXDB_ADMIN_USER=${INFLUXDB_USERNAME}
-    #         - INFLUXDB_ADMIN_PASSWORD=${INFLUXDB_PASSWORD}
-
-    # chronograf:
-    #     image: chronograf:latest
-    #     ports:
-    #         - '127.0.0.1:8888:8888'
-    #     volumes:
-    #         - ./chronograf/:/var/lib/chronograf
-    #     depends_on:
-    #         - influxdb
-    #     environment:
-    #         - INFLUXDB_URL=http://influxdb:8086
-    #         - INFLUXDB_USERNAME=${INFLUXDB_USERNAME}
-    #         - INFLUXDB_PASSWORD=${INFLUXDB_PASSWORD}
-
     mysql:
         user: '$UID:$GID'
         image: mysql:latest
@@ -42,7 +18,6 @@ services:
             - MYSQL_USER=testuser
             - MYSQL_PASSWORD=${MYSQL_PASSWORD}
             - MYSQL_DATABASE=${MYSQL_DATABASE}
-
     grafana:
         image: grafana/grafana:latest
         user: '$UID:$GID'
@@ -60,7 +35,6 @@ services:
             - GF_RENDERING_SERVER_URL=http://renderer:8081/render
             - GF_RENDERING_CALLBACK_URL=http://grafana:3000/
             - GF_LOG_FILTERS=rendering:debug
-
     emqtt:
         user: '$UID:$GID'
         image: raymondmm/emqtt
@@ -74,33 +48,22 @@ services:
             - 'EMQ_NAME=emq'
             - 'EMQ_NODE__COOKIE=ef16498f66804df1cc6172f6996d5492'
             - 'EMQ_WAIT_TIME=60'
-
-    # node:
-    #     build: ./node/
-    #     command: yarn start
-    #     restart: on-failure:10
-    #     volumes:
-    #         - ./node/exporter/index.js:/usr/app/index.js:rw
-    #     depends_on:
-    #         - emqtt
-    #         - influxdb
-    #     links:
-    #         - influxdb:database
-    #         - emqtt:emqtt-broker
-    #         - mysql:mysql
-
-    renderer:
-        image: grafana/grafana-image-renderer:latest
+    frontend:
+        stdin_open: true
+        image: node:12-alpine
+        entrypoint:
+            ['ash', '-c', 'cd /app/ && ls -la && yarn && PORT=9000 npm start && sleep 10']
+        volumes:
+            - ./microservices/control-panel-frontend/:/app/
         ports:
-            - 8081
-
-    node-microservices:
+            - '9000:9000'
+        restart: always
+    microservices:
         user: '$UID:$GID'
         image: node:12-alpine
         volumes:
             - ./microservices:/app/
         ports:
-            - '9000:9000'
             - '6000:6000'
         depends_on:
             - grafana

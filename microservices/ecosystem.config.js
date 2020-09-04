@@ -19,13 +19,6 @@ module.exports = {
       name: "ControlPanelApi",
       script: "./ControlPanelApi/main.js",
       watch       : true,
-    },
-    { 
-      name: "control-panel-frontend",
-      "cwd": "./control-panel-frontend/",
-      "script": "npm",
-      watch       : false,
-      "args": "start"
-    },
+    }
   ],
 };
