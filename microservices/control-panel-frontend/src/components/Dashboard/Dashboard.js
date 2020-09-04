@@ -25,7 +25,6 @@ export default function Dashboard() {
 
 	return (
 		<div className={classes.root}>
-			<CssBaseline />
 			<TopBar handleDrawerOpen={handleDrawerOpen} open={open} />
 			<Drawer
 				variant="permanent"

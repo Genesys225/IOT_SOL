@@ -1,0 +1,829 @@
+{
+	"dashboard": {
+		"id": 4,
+		"panels": [
+			{
+				"alert": {
+					"alertRuleTags": {},
+					"conditions": [
+						{
+							"evaluator": {
+								"params": [55],
+								"type": "gt"
+							},
+							"operator": {
+								"type": "and"
+							},
+							"query": {
+								"params": ["D", "5m", "now"]
+							},
+							"reducer": {
+								"params": [],
+								"type": "avg"
+							},
+							"type": "query"
+						}
+					],
+					"executionErrorState": "alerting",
+					"for": "5m",
+					"frequency": "1m",
+					"handler": 1,
+					"name": "Panel Title alert",
+					"noDataState": "no_data",
+					"notifications": []
+				},
+				"aliasColors": {},
+				"bars": false,
+				"dashLength": 10,
+				"dashes": false,
+				"datasource": "MySQL",
+				"fieldConfig": {
+					"defaults": {
+						"custom": {}
+					},
+					"overrides": []
+				},
+				"fill": 1,
+				"fillGradient": 0,
+				"gridPos": {
+					"h": 8,
+					"w": 12,
+					"x": 0,
+					"y": 0
+				},
+				"hiddenSeries": false,
+				"id": 6,
+				"legend": {
+					"avg": false,
+					"current": false,
+					"max": false,
+					"min": false,
+					"show": true,
+					"total": false,
+					"values": false
+				},
+				"lines": true,
+				"linewidth": 1,
+				"nullPointMode": "null",
+				"percentage": false,
+				"pluginVersion": "7.1.4",
+				"pointradius": 2,
+				"points": false,
+				"renderer": "flot",
+				"seriesOverrides": [],
+				"spaceLength": 10,
+				"stack": false,
+				"steppedLine": false,
+				"targets": [
+					{
+						"format": "time_series",
+						"group": [
+							{
+								"params": ["$__interval", "none"],
+								"type": "time"
+							}
+						],
+						"hide": true,
+						"metricColumn": "sensor_id",
+						"rawQuery": false,
+						"rawSql": "SELECT\n  $__timeGroupAlias(ts,$__interval),\n  sensor_id AS metric,\n  avg(value) AS \"value\"\nFROM measurements\nWHERE\n  $__timeFilter(ts) AND\n  sensor_id = 'SOL-38:2b:78:3:ec:df/temp'\nGROUP BY 1,2\nORDER BY $__timeGroup(ts,$__interval)",
+						"refId": "A",
+						"select": [
+							[
+								{
+									"params": ["value"],
+									"type": "column"
+								},
+								{
+									"params": ["avg"],
+									"type": "aggregate"
+								},
+								{
+									"params": ["value"],
+									"type": "alias"
+								}
+							]
+						],
+						"table": "measurements",
+						"timeColumn": "ts",
+						"timeColumnType": "timestamp",
+						"where": [
+							{
+								"name": "$__timeFilter",
+								"params": [],
+								"type": "macro"
+							},
+							{
+								"datatype": "varchar",
+								"name": "",
+								"params": [
+									"sensor_id",
+									"=",
+									"'SOL-38:2b:78:3:ec:df/temp'"
+								],
+								"type": "expression"
+							}
+						]
+					},
+					{
+						"format": "time_series",
+						"group": [
+							{
+								"params": ["$__interval", "none"],
+								"type": "time"
+							}
+						],
+						"hide": true,
+						"metricColumn": "sensor_id",
+						"rawQuery": false,
+						"rawSql": "SELECT\n  $__timeGroupAlias(ts,$__interval),\n  sensor_id AS metric,\n  avg(value) AS \"value\"\nFROM measurements\nWHERE\n  $__timeFilter(ts) AND\n  sensor_id = 'SOL-38:2b:78:3:ec:df/humidity'\nGROUP BY 1,2\nORDER BY $__timeGroup(ts,$__interval)",
+						"refId": "B",
+						"select": [
+							[
+								{
+									"params": ["value"],
+									"type": "column"
+								},
+								{
+									"params": ["avg"],
+									"type": "aggregate"
+								},
+								{
+									"params": ["value"],
+									"type": "alias"
+								}
+							]
+						],
+						"table": "measurements",
+						"timeColumn": "ts",
+						"timeColumnType": "timestamp",
+						"where": [
+							{
+								"name": "$__timeFilter",
+								"params": [],
+								"type": "macro"
+							},
+							{
+								"datatype": "varchar",
+								"name": "",
+								"params": [
+									"sensor_id",
+									"=",
+									"'SOL-38:2b:78:3:ec:df/humidity'"
+								],
+								"type": "expression"
+							}
+						]
+					},
+					{
+						"format": "time_series",
+						"group": [
+							{
+								"params": ["$__interval", "none"],
+								"type": "time"
+							}
+						],
+						"hide": true,
+						"metricColumn": "sensor_id",
+						"rawQuery": false,
+						"rawSql": "SELECT\n  $__timeGroupAlias(ts,$__interval),\n  sensor_id AS metric,\n  avg(value) AS \"value\"\nFROM measurements\nWHERE\n  $__timeFilter(ts) AND\n  sensor_id = 'SOL-38:2b:78:3:ec:df/co2'\nGROUP BY 1,2\nORDER BY $__timeGroup(ts,$__interval)",
+						"refId": "C",
+						"select": [
+							[
+								{
+									"params": ["value"],
+									"type": "column"
+								},
+								{
+									"params": ["avg"],
+									"type": "aggregate"
+								},
+								{
+									"params": ["value"],
+									"type": "alias"
+								}
+							]
+						],
+						"table": "measurements",
+						"timeColumn": "ts",
+						"timeColumnType": "timestamp",
+						"where": [
+							{
+								"name": "$__timeFilter",
+								"params": [],
+								"type": "macro"
+							},
+							{
+								"datatype": "varchar",
+								"name": "",
+								"params": [
+									"sensor_id",
+									"=",
+									"'SOL-38:2b:78:3:ec:df/co2'"
+								],
+								"type": "expression"
+							}
+						]
+					},
+					{
+						"format": "time_series",
+						"group": [],
+						"metricColumn": "sensor_id",
+						"rawQuery": false,
+						"rawSql": "SELECT\n  ts AS \"time\",\n  sensor_id AS metric,\n  value AS \"value\"\nFROM measurements\nWHERE\n  $__timeFilter(ts) AND\n  sensor_id = 'SOL-38:2b:78:3:ec:df/lux'\nORDER BY ts",
+						"refId": "D",
+						"select": [
+							[
+								{
+									"params": ["value"],
+									"type": "column"
+								},
+								{
+									"params": ["value"],
+									"type": "alias"
+								}
+							]
+						],
+						"table": "measurements",
+						"timeColumn": "ts",
+						"timeColumnType": "timestamp",
+						"where": [
+							{
+								"name": "$__timeFilter",
+								"params": [],
+								"type": "macro"
+							},
+							{
+								"datatype": "varchar",
+								"name": "",
+								"params": [
+									"sensor_id",
+									"=",
+									"'SOL-38:2b:78:3:ec:df/lux'"
+								],
+								"type": "expression"
+							}
+						]
+					}
+				],
+				"thresholds": [
+					{
+						"colorMode": "critical",
+						"fill": true,
+						"line": true,
+						"op": "gt",
+						"value": 55
+					}
+				],
+				"timeFrom": null,
+				"timeRegions": [],
+				"timeShift": null,
+				"title": "Panel Title",
+				"tooltip": {
+					"shared": true,
+					"sort": 0,
+					"value_type": "individual"
+				},
+				"transformations": [],
+				"type": "graph",
+				"xaxis": {
+					"buckets": null,
+					"mode": "time",
+					"name": null,
+					"show": true,
+					"values": []
+				},
+				"yaxes": [
+					{
+						"format": "short",
+						"label": null,
+						"logBase": 1,
+						"max": null,
+						"min": null,
+						"show": true
+					},
+					{
+						"format": "short",
+						"label": null,
+						"logBase": 1,
+						"max": null,
+						"min": null,
+						"show": true
+					}
+				],
+				"yaxis": {
+					"align": false,
+					"alignLevel": null
+				}
+			},
+			{
+				"aliasColors": {},
+				"bars": false,
+				"dashLength": 10,
+				"dashes": false,
+				"datasource": "MySQL",
+				"fieldConfig": {
+					"defaults": {
+						"custom": {}
+					},
+					"overrides": []
+				},
+				"fill": 1,
+				"fillGradient": 0,
+				"gridPos": {
+					"h": 8,
+					"w": 12,
+					"x": 12,
+					"y": 0
+				},
+				"hiddenSeries": false,
+				"id": 7,
+				"legend": {
+					"avg": false,
+					"current": false,
+					"max": false,
+					"min": false,
+					"show": true,
+					"total": false,
+					"values": false
+				},
+				"lines": true,
+				"linewidth": 1,
+				"nullPointMode": "null",
+				"percentage": false,
+				"pluginVersion": "7.1.4",
+				"pointradius": 2,
+				"points": false,
+				"renderer": "flot",
+				"seriesOverrides": [],
+				"spaceLength": 10,
+				"stack": false,
+				"steppedLine": false,
+				"targets": [
+					{
+						"format": "table",
+						"group": [],
+						"metricColumn": "sensor_id",
+						"rawQuery": false,
+						"rawSql": "SELECT\n  ts AS \"time\",\n  sensor_id AS metric,\n  value AS \"temperature\"\nFROM measurements\nWHERE\n  $__timeFilter(ts) AND\n  sensor_id = 'SOL-38:2b:78:3:ec:df/temp'\nORDER BY ts",
+						"refId": "A",
+						"select": [
+							[
+								{
+									"params": ["value"],
+									"type": "column"
+								},
+								{
+									"params": ["temperature"],
+									"type": "alias"
+								}
+							]
+						],
+						"table": "measurements",
+						"timeColumn": "ts",
+						"timeColumnType": "timestamp",
+						"where": [
+							{
+								"name": "$__timeFilter",
+								"params": [],
+								"type": "macro"
+							},
+							{
+								"datatype": "varchar",
+								"name": "",
+								"params": [
+									"sensor_id",
+									"=",
+									"'SOL-38:2b:78:3:ec:df/temp'"
+								],
+								"type": "expression"
+							}
+						]
+					}
+				],
+				"thresholds": [],
+				"timeFrom": null,
+				"timeRegions": [],
+				"timeShift": null,
+				"title": "Temperture",
+				"tooltip": {
+					"shared": true,
+					"sort": 0,
+					"value_type": "individual"
+				},
+				"type": "graph",
+				"xaxis": {
+					"buckets": null,
+					"mode": "time",
+					"name": null,
+					"show": true,
+					"values": []
+				},
+				"yaxes": [
+					{
+						"format": "short",
+						"label": null,
+						"logBase": 1,
+						"max": null,
+						"min": null,
+						"show": true
+					},
+					{
+						"format": "short",
+						"label": null,
+						"logBase": 1,
+						"max": null,
+						"min": null,
+						"show": true
+					}
+				],
+				"yaxis": {
+					"align": false,
+					"alignLevel": null
+				}
+			},
+			{
+				"aliasColors": {},
+				"bars": false,
+				"dashLength": 10,
+				"dashes": false,
+				"datasource": "MySQL",
+				"fieldConfig": {
+					"defaults": {
+						"custom": {}
+					},
+					"overrides": []
+				},
+				"fill": 1,
+				"fillGradient": 0,
+				"gridPos": {
+					"h": 8,
+					"w": 12,
+					"x": 0,
+					"y": 8
+				},
+				"hiddenSeries": false,
+				"id": 4,
+				"legend": {
+					"avg": false,
+					"current": false,
+					"max": false,
+					"min": false,
+					"show": true,
+					"total": false,
+					"values": false
+				},
+				"lines": true,
+				"linewidth": 1,
+				"nullPointMode": "null",
+				"percentage": false,
+				"pluginVersion": "7.1.4",
+				"pointradius": 2,
+				"points": false,
+				"renderer": "flot",
+				"seriesOverrides": [],
+				"spaceLength": 10,
+				"stack": false,
+				"steppedLine": false,
+				"targets": [
+					{
+						"format": "time_series",
+						"group": [],
+						"metricColumn": "sensor_id",
+						"rawQuery": false,
+						"rawSql": "SELECT\n  ts AS \"time\",\n  sensor_id AS metric,\n  value AS \"value\"\nFROM measurements\nWHERE\n  $__timeFilter(ts) AND\n  sensor_id = 'SOL-38:2b:78:3:ec:df/humidity'\nORDER BY ts",
+						"refId": "A",
+						"select": [
+							[
+								{
+									"params": ["value"],
+									"type": "column"
+								},
+								{
+									"params": ["value"],
+									"type": "alias"
+								}
+							]
+						],
+						"table": "measurements",
+						"timeColumn": "ts",
+						"timeColumnType": "timestamp",
+						"where": [
+							{
+								"name": "$__timeFilter",
+								"params": [],
+								"type": "macro"
+							},
+							{
+								"datatype": "varchar",
+								"name": "",
+								"params": [
+									"sensor_id",
+									"=",
+									"'SOL-38:2b:78:3:ec:df/humidity'"
+								],
+								"type": "expression"
+							}
+						]
+					}
+				],
+				"thresholds": [],
+				"timeFrom": null,
+				"timeRegions": [],
+				"timeShift": null,
+				"title": "Humidity",
+				"tooltip": {
+					"shared": true,
+					"sort": 0,
+					"value_type": "individual"
+				},
+				"type": "graph",
+				"xaxis": {
+					"buckets": null,
+					"mode": "time",
+					"name": null,
+					"show": true,
+					"values": []
+				},
+				"yaxes": [
+					{
+						"format": "short",
+						"label": null,
+						"logBase": 1,
+						"max": null,
+						"min": null,
+						"show": true
+					},
+					{
+						"format": "short",
+						"label": null,
+						"logBase": 1,
+						"max": null,
+						"min": null,
+						"show": true
+					}
+				],
+				"yaxis": {
+					"align": false,
+					"alignLevel": null
+				}
+			},
+			{
+				"aliasColors": {},
+				"bars": false,
+				"dashLength": 10,
+				"dashes": false,
+				"datasource": "MySQL",
+				"fieldConfig": {
+					"defaults": {
+						"custom": {}
+					},
+					"overrides": []
+				},
+				"fill": 1,
+				"fillGradient": 0,
+				"gridPos": {
+					"h": 8,
+					"w": 12,
+					"x": 12,
+					"y": 8
+				},
+				"hiddenSeries": false,
+				"id": 8,
+				"legend": {
+					"avg": false,
+					"current": false,
+					"max": false,
+					"min": false,
+					"show": true,
+					"total": false,
+					"values": false
+				},
+				"lines": true,
+				"linewidth": 1,
+				"nullPointMode": "null",
+				"percentage": false,
+				"pluginVersion": "7.1.4",
+				"pointradius": 2,
+				"points": false,
+				"renderer": "flot",
+				"seriesOverrides": [],
+				"spaceLength": 10,
+				"stack": false,
+				"steppedLine": false,
+				"targets": [
+					{
+						"format": "time_series",
+						"group": [],
+						"metricColumn": "sensor_id",
+						"rawQuery": false,
+						"rawSql": "SELECT\n  ts AS \"time\",\n  sensor_id AS metric,\n  value AS \"value\"\nFROM measurements\nWHERE\n  $__timeFilter(ts) AND\n  sensor_id = 'SOL-38:2b:78:3:ec:df/lux'\nORDER BY ts",
+						"refId": "A",
+						"select": [
+							[
+								{
+									"params": ["value"],
+									"type": "column"
+								},
+								{
+									"params": ["value"],
+									"type": "alias"
+								}
+							]
+						],
+						"table": "measurements",
+						"timeColumn": "ts",
+						"timeColumnType": "timestamp",
+						"where": [
+							{
+								"name": "$__timeFilter",
+								"params": [],
+								"type": "macro"
+							},
+							{
+								"datatype": "varchar",
+								"name": "",
+								"params": [
+									"sensor_id",
+									"=",
+									"'SOL-38:2b:78:3:ec:df/lux'"
+								],
+								"type": "expression"
+							}
+						]
+					}
+				],
+				"thresholds": [],
+				"timeFrom": null,
+				"timeRegions": [],
+				"timeShift": null,
+				"title": "Lux",
+				"tooltip": {
+					"shared": true,
+					"sort": 0,
+					"value_type": "individual"
+				},
+				"transformations": [],
+				"type": "graph",
+				"xaxis": {
+					"buckets": null,
+					"mode": "time",
+					"name": null,
+					"show": true,
+					"values": []
+				},
+				"yaxes": [
+					{
+						"format": "short",
+						"label": null,
+						"logBase": 1,
+						"max": null,
+						"min": null,
+						"show": true
+					},
+					{
+						"format": "short",
+						"label": null,
+						"logBase": 1,
+						"max": null,
+						"min": null,
+						"show": true
+					}
+				],
+				"yaxis": {
+					"align": false,
+					"alignLevel": null
+				}
+			},
+			{
+				"aliasColors": {},
+				"bars": false,
+				"dashLength": 10,
+				"dashes": false,
+				"datasource": "MySQL",
+				"fieldConfig": {
+					"defaults": {
+						"custom": {}
+					},
+					"overrides": []
+				},
+				"fill": 1,
+				"fillGradient": 0,
+				"gridPos": {
+					"h": 8,
+					"w": 12,
+					"x": 0,
+					"y": 16
+				},
+				"hiddenSeries": false,
+				"id": 2,
+				"legend": {
+					"avg": false,
+					"current": false,
+					"max": false,
+					"min": false,
+					"show": true,
+					"total": false,
+					"values": false
+				},
+				"lines": true,
+				"linewidth": 1,
+				"nullPointMode": "null",
+				"percentage": false,
+				"pluginVersion": "7.1.4",
+				"pointradius": 2,
+				"points": false,
+				"renderer": "flot",
+				"seriesOverrides": [],
+				"spaceLength": 10,
+				"stack": false,
+				"steppedLine": false,
+				"targets": [
+					{
+						"format": "time_series",
+						"group": [],
+						"metricColumn": "sensor_id",
+						"rawQuery": true,
+						"rawSql": "SELECT\n  ts AS \"time\",\n  sensor_id AS metric,\n  value AS \"value\"\nFROM measurements\nINNER JOIN sensors ON sensors.id = sensor_id\nWHERE\n  $__timeFilter(ts) AND\n  sensor_id = 'SOL-38:2b:78:3:ec:df/co2'\nORDER BY ts",
+						"refId": "A",
+						"select": [
+							[
+								{
+									"params": ["value"],
+									"type": "column"
+								},
+								{
+									"params": ["value"],
+									"type": "alias"
+								}
+							]
+						],
+						"table": "measurements",
+						"timeColumn": "ts",
+						"timeColumnType": "timestamp",
+						"where": [
+							{
+								"name": "$__timeFilter",
+								"params": [],
+								"type": "macro"
+							},
+							{
+								"datatype": "varchar",
+								"name": "",
+								"params": [
+									"sensor_id",
+									"=",
+									"'SOL-38:2b:78:3:ec:df/co2'"
+								],
+								"type": "expression"
+							}
+						]
+					}
+				],
+				"thresholds": [],
+				"timeFrom": null,
+				"timeRegions": [],
+				"timeShift": null,
+				"title": "CO2",
+				"tooltip": {
+					"shared": true,
+					"sort": 0,
+					"value_type": "individual"
+				},
+				"type": "graph",
+				"xaxis": {
+					"buckets": null,
+					"mode": "time",
+					"name": null,
+					"show": true,
+					"values": []
+				},
+				"yaxes": [
+					{
+						"format": "short",
+						"label": null,
+						"logBase": 1,
+						"max": null,
+						"min": null,
+						"show": true
+					},
+					{
+						"format": "short",
+						"label": null,
+						"logBase": 1,
+						"max": null,
+						"min": null,
+						"show": true
+					}
+				],
+				"yaxis": {
+					"align": false,
+					"alignLevel": null
+				}
+			}
+		],
+		"title": "Update alsdle via API",
+		"uid": "dHE542zGz",
+		"version": 1
+	}
+}
