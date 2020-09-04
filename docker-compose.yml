@@ -54,7 +54,6 @@ services:
         depends_on:
             - mysql
         environment:
-            - TZ=Asia/Jerusalem
             - GF_SECURITY_ADMIN_USER=${GRAFANA_USERNAME}
             - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
             - GF_RENDERING_SERVER_URL=http://renderer:8081/render

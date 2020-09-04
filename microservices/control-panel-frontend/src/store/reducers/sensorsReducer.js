@@ -8,8 +8,8 @@ export const sensorsReducer = (state = initialState, action) => {
 			let newSensorState = { ...state };
 			newSensorState = action.payload.map((sensorData) =>
 				Object.assign(
-					sensorData,
-					state.find((sensor) => sensor.id === sensorData.id)
+					state.find((sensor) => sensor.id === sensorData.id) || {},
+					sensorData
 				)
 			);
 

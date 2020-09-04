@@ -5,7 +5,7 @@ const initialState = [];
 export const controlsReducer = (state = initialState, { type, payload }) => {
 	switch (type) {
 		case SEND_COMMAND:
-			break;
+			return [...state, payload];
 
 		default:
 			return state;
