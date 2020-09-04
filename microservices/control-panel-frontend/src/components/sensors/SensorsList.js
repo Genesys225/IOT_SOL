@@ -1,6 +1,6 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getSensors, getLastData } from '../../store/actions/sensorsActions';
+import { getSensors, getLastData, updateSensor } from '../../store/actions/sensorsActions';
 import { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
@@ -23,6 +23,7 @@ import {
 } from '@material-ui/core';
 import CenteredCircular from '../common/CenteredCircular';
 import { Icon } from '../Icons/Icon-Library';
+import { sendCommand } from '../../store/actions/controls';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -83,15 +84,17 @@ export default function SensorsList() {
 
 const RenderSensorListItem = (props) => {
 	const classes = useStyles();
-	const [checked, setChecked] = React.useState(['wifi']);
-	const [zone, setZone] = React.useState('');
+	const dispatch = useDispatch();
+	const [checked, setChecked] = useState([]);
+	const [zone, setZone] = useState('');
 	const handleChange = (event) => {
 		setZone(event.target.value);
+		dispatch(updateSensor({ id: props.id, meta: { zone: event.target.value } }))
 	};
 	const handleToggle = (value) => () => {
 		const currentIndex = checked.indexOf(value);
 		const newChecked = [...checked];
-
+		dispatch(sendCommand({ id: props.id, params: { command: currentIndex === -1 ? 'ON' : 'OFF' } }))
 		if (currentIndex === -1) {
 			newChecked.push(value);
 		} else {
@@ -128,9 +131,9 @@ const RenderSensorListItem = (props) => {
 								<MenuItem value="">
 									<em>None</em>
 								</MenuItem>
-								<MenuItem value={10}>Ten</MenuItem>
-								<MenuItem value={20}>Twenty</MenuItem>
-								<MenuItem value={30}>Thirty</MenuItem>
+								<MenuItem value='zone_1'>Zone 1</MenuItem>
+								<MenuItem value='zone_2'>Zone 2</MenuItem>
+								<MenuItem value='zone_3'>Zone 3</MenuItem>
 							</Select>
 						</FormControl>
 
