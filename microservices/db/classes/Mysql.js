@@ -13,19 +13,29 @@ class Mysql {
 	getLastData() {
 		return new Promise((resolve) => {
 			connection.query(
-				`SELECT sensor_id AS id, ROUND(AVG(value), 2) AS value
-				FROM measurements
-				WHERE (sensor_id, ts) IN (
-					SELECT
-						sensor_id, MAX(ts)
+				`SELECT id, ROUND(AVG(value), 2) as value
 					FROM
-						measurements
-					GROUP BY
-						sensor_id
-				)
-				GROUP BY
-						sensor_id
-				ORDER BY sensor_id`,
+						(SELECT 
+							DISTINCT(sensor_id) AS id, 
+							value
+						FROM measurements
+						WHERE ts >= DATE_SUB(NOW(), INTERVAL 30 SECOND)
+						) t1
+					GROUP BY id
+					ORDER BY id`,
+				// `SELECT sensor_id AS id, ROUND(AVG(value), 2) AS value
+				// FROM measurements
+				// WHERE (sensor_id, ts) IN (
+				// 	SELECT
+				// 		sensor_id, MAX(ts)
+				// 	FROM
+				// 		measurements
+				// 	GROUP BY
+				// 		sensor_id
+				// )
+				// GROUP BY
+				// 		sensor_id
+				// ORDER BY sensor_id`,
 				function(error, results, fields) {
 					if (error) throw error;
 					resolve(results);
@@ -51,7 +61,6 @@ class Mysql {
 	}
 	updateSensor({ id, meta }) {
 		return new Promise((resolve, reject) => {
-			console.log(JSON.stringify({ meta }), id);
 			connection.query(
 				{
 					sql: `UPDATE sol_db.sensors SET meta = ? WHERE (id = ?);`,

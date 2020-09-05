@@ -18,6 +18,7 @@ services:
             - MYSQL_USER=testuser
             - MYSQL_PASSWORD=${MYSQL_PASSWORD}
             - MYSQL_DATABASE=${MYSQL_DATABASE}
+
     grafana:
         image: grafana/grafana:latest
         user: '$UID:$GID'
@@ -34,6 +35,7 @@ services:
             - GF_RENDERING_SERVER_URL=http://renderer:8081/render
             - GF_RENDERING_CALLBACK_URL=http://grafana:3000/
             - GF_LOG_FILTERS=rendering:debug
+
     emqtt:
         user: '$UID:$GID'
         image: raymondmm/emqtt
@@ -47,6 +49,7 @@ services:
             - 'EMQ_NAME=emq'
             - 'EMQ_NODE__COOKIE=ef16498f66804df1cc6172f6996d5492'
             - 'EMQ_WAIT_TIME=60'
+
     frontend:
         stdin_open: true
         image: node:12-alpine
@@ -61,6 +64,7 @@ services:
         ports:
             - '9000:9000'
         restart: always
+        
     microservices:
         user: '$UID:$GID'
         image: node:12-alpine
