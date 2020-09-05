@@ -1,8 +1,12 @@
-import { GET_SENSORS, LAST_SENSORS_DATA, UPDATE_SENSOR } from '../actions/sensorsActions';
+import {
+	GET_SENSORS,
+	LAST_SENSORS_DATA,
+	UPDATE_SENSOR,
+} from '../actions/sensorsActions';
 
 const initialState = [];
 
-export const sensorsReducer = (state = initialState, {type, payload}) => {
+export const sensorsReducer = (state = initialState, { type, payload }) => {
 	switch (type) {
 		case GET_SENSORS: {
 			let newSensorState = { ...state };
@@ -32,9 +36,11 @@ export const sensorsReducer = (state = initialState, {type, payload}) => {
 			return newSensorState;
 
 		case UPDATE_SENSOR: {
-			const newSensorState = state.payload.map((sensorState) => {
+			const newSensorState = state.map((sensorState) => {
 				if (payload.id === sensorState.id)
-					return Object.assign({}, sensorState, { meta: payload.meta })
+					return Object.assign({}, sensorState, {
+						meta: payload.meta,
+					});
 				return sensorState;
 			});
 

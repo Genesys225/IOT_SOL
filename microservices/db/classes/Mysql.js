@@ -13,19 +13,19 @@ class Mysql {
 	getLastData() {
 		return new Promise((resolve) => {
 			connection.query(
-				{
-					sql: `SELECT sensor_id AS id, value 
-								FROM measurements
-								WHERE (sensor_id, ts) IN (
-									SELECT
-										sensor_id, MAX(ts)
-									FROM
-										measurements
-									GROUP BY
-										sensor_id
-								)
-								ORDER BY sensor_id`,
-				},
+				`SELECT sensor_id AS id, ROUND(AVG(value), 2) AS value
+				FROM measurements
+				WHERE (sensor_id, ts) IN (
+					SELECT
+						sensor_id, MAX(ts)
+					FROM
+						measurements
+					GROUP BY
+						sensor_id
+				)
+				GROUP BY
+						sensor_id
+				ORDER BY sensor_id`,
 				function(error, results, fields) {
 					if (error) throw error;
 					resolve(results);
@@ -51,10 +51,11 @@ class Mysql {
 	}
 	updateSensor({ id, meta }) {
 		return new Promise((resolve, reject) => {
+			console.log(JSON.stringify({ meta }), id);
 			connection.query(
 				{
 					sql: `UPDATE sol_db.sensors SET meta = ? WHERE (id = ?);`,
-					values: [JSON.stringify({ meta }), id],
+					values: [JSON.stringify(meta), id],
 				},
 				function(error, results, fields) {
 					if (error) throw error;

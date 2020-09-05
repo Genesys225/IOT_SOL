@@ -23,11 +23,10 @@ const clientConnectionParams = {
 const mqttClient = new mqtt(clientConnectionParams);
 const app = setupExpress();
 
-
 (async () => {
 	await executeApi.initcMqtt();
 	await mqttClient.init();
-	
+
 	sensorsApi.mqttClient = mqttClient;
 
 	app.get('/getSensors', async (req, res) =>
@@ -35,10 +34,13 @@ const app = setupExpress();
 	);
 	app.post('/sensorExecute', async (req, res) =>
 		res.send(await executeApi.sensorExecute(req.body.id, req.body.message))
-	);	
-	app.post('/updateSensor', async (req, res) =>
-		res.send(await sensorsApi.updateSensor(req.body.id, req.body.meta))
 	);
+	app.post('/updateSensor', async (req, res) => {
+		console.log(req.body);
+		return res.send(
+			await sensorsApi.updateSensor(req.body.id, req.body.meta)
+		);
+	});
 	app.get('/getLastData', async (req, res) =>
 		res.send(await sensorsApi.getLastData())
 	);

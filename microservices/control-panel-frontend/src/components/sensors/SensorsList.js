@@ -1,6 +1,10 @@
 import React, { Suspense, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getSensors, getLastData, updateSensor } from '../../store/actions/sensorsActions';
+import {
+	getSensors,
+	getLastData,
+	updateSensor,
+} from '../../store/actions/sensorsActions';
 import { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
@@ -10,7 +14,6 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import Switch from '@material-ui/core/Switch';
-import WifiIcon from '@material-ui/icons/Wifi';
 import {
 	Divider,
 	Card,
@@ -47,19 +50,18 @@ export default function SensorsList() {
 	);
 	const classes = useStyles();
 	const dispatch = useDispatch();
-	const fetchSensors = async () => {
-		await dispatch(getSensors());
-	};
 
 	useEffect(() => {
+		const fetchSensors = async () => {
+			await dispatch(getSensors());
+		};
+		const fetchSensorsData = async () => {
+			const res = await dispatch(getLastData());
+			console.log(res);
+		};
 		if (sensors.length <= 0) fetchSensors();
-		/** @todo dispatch get sensor data */
-		const interval = setInterval(async () => {
-			await fetchSensors();
-			dispatch(getLastData());
-		}, 3000);
-		return () => clearInterval(interval);
-	}, [dispatch, sensors, fetchSensors, getLastData]);
+		if (sensors.length > 0) fetchSensorsData();
+	}, [dispatch, sensors]);
 
 	if (sensors.length <= 0) {
 		return <CenteredCircular />;
@@ -86,15 +88,22 @@ const RenderSensorListItem = (props) => {
 	const classes = useStyles();
 	const dispatch = useDispatch();
 	const [checked, setChecked] = useState([]);
-	const [zone, setZone] = useState('');
+	const [zone, setZone] = useState(props.meta.zone || '');
 	const handleChange = (event) => {
 		setZone(event.target.value);
-		dispatch(updateSensor({ id: props.id, meta: { zone: event.target.value } }))
+		dispatch(
+			updateSensor({ id: props.id, meta: { zone: event.target.value } })
+		);
 	};
 	const handleToggle = (value) => () => {
 		const currentIndex = checked.indexOf(value);
 		const newChecked = [...checked];
-		dispatch(sendCommand({ id: props.id, params: { command: currentIndex === -1 ? 'ON' : 'OFF' } }))
+		dispatch(
+			sendCommand({
+				id: props.id,
+				params: { command: currentIndex === -1 ? 'ON' : 'OFF' },
+			})
+		);
 		if (currentIndex === -1) {
 			newChecked.push(value);
 		} else {
@@ -131,9 +140,9 @@ const RenderSensorListItem = (props) => {
 								<MenuItem value="">
 									<em>None</em>
 								</MenuItem>
-								<MenuItem value='zone_1'>Zone 1</MenuItem>
-								<MenuItem value='zone_2'>Zone 2</MenuItem>
-								<MenuItem value='zone_3'>Zone 3</MenuItem>
+								<MenuItem value="zone_1">Zone 1</MenuItem>
+								<MenuItem value="zone_2">Zone 2</MenuItem>
+								<MenuItem value="zone_3">Zone 3</MenuItem>
 							</Select>
 						</FormControl>
 

@@ -51,7 +51,11 @@ services:
         stdin_open: true
         image: node:12-alpine
         entrypoint:
-            ['ash', '-c', 'cd /app/ && ls -la && yarn && PORT=9000 npm start && sleep 10']
+            [
+                'ash',
+                '-c',
+                'cd /app/ && ls -la && yarn && PORT=9000 npm start && sleep 10',
+            ]
         volumes:
             - ./microservices/control-panel-frontend/:/app/
         ports:
