@@ -1,4 +1,4 @@
-import React, { Suspense, useState } from 'react';
+import React, { Suspense, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
 	getSensors,
@@ -14,6 +14,8 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import Switch from '@material-ui/core/Switch';
+import ExpandLess from '@material-ui/icons/ExpandLess';
+import ExpandMore from '@material-ui/icons/ExpandMore';
 import {
 	Divider,
 	Card,
@@ -23,10 +25,12 @@ import {
 	MenuItem,
 	TextField,
 	Box,
+	Collapse,
 } from '@material-ui/core';
 import CenteredCircular from '../common/CenteredCircular';
 import { Icon } from '../Icons/Icon-Library';
 import { sendCommand } from '../../store/actions/controls';
+import SensorIframe from './SensorIframe';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -39,6 +43,9 @@ const useStyles = makeStyles((theme) => ({
 	},
 	selectEmpty: {
 		marginTop: theme.spacing(2),
+	},
+	nested: {
+		paddingLeft: theme.spacing(4),
 	},
 }));
 
@@ -89,6 +96,8 @@ export default function SensorsList() {
 }
 
 const RenderSensorListItem = (props) => {
+	const [open, setOpen] = useState(false);
+	const listItemRef = useRef(null);
 	const classes = useStyles();
 	const dispatch = useDispatch();
 	const [checked, setChecked] = useState([]);
@@ -116,19 +125,33 @@ const RenderSensorListItem = (props) => {
 
 		setChecked(newChecked);
 	};
+
+	const handleClick = () => {
+		setOpen(!open);
+	};
+
 	return (
-		<div>
-			<ListItem>
+		<>
+			<ListItem
+				ref={listItemRef}
+				onClick={handleClick}
+				button
+				alignItems="flex-start"
+			>
 				<ListItemIcon>
 					<Icon icon={props.type} />
 				</ListItemIcon>
 				<ListItemText
-					id="switch-list-label-wifi"
+					id="zone-label"
 					primary={props.type}
 					secondary={props.id}
 				/>
-				<ListItemSecondaryAction>
-					<Box flexDirection="row" justifyContent="end">
+				<Box
+					flexDirection="row"
+					justifyContent="between"
+					alignItems="center"
+				>
+					<ListItemSecondaryAction>
 						<FormControl className={classes.formControl}>
 							<InputLabel shrink id="zone-label">
 								Zone
@@ -162,7 +185,7 @@ const RenderSensorListItem = (props) => {
 						</FormControl>
 						<FormControl className={classes.formControl}>
 							<Switch
-								edge="end"
+								edge="start"
 								onChange={handleToggle(props.id)}
 								checked={checked.indexOf(props.id) !== -1}
 								inputProps={{
@@ -170,10 +193,18 @@ const RenderSensorListItem = (props) => {
 								}}
 							/>
 						</FormControl>
-					</Box>
-				</ListItemSecondaryAction>
+						<FormControl className={classes.formControl}>
+							<Box mr={1}>
+								{open ? <ExpandLess /> : <ExpandMore />}
+							</Box>
+						</FormControl>
+					</ListItemSecondaryAction>
+				</Box>
 			</ListItem>
+			<Collapse in={open} timeout="auto" unmountOnExit>
+				<SensorIframe />
+			</Collapse>
 			<Divider />
-		</div>
+		</>
 	);
 };
