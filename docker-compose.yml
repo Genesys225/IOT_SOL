@@ -80,6 +80,7 @@ services:
             - emqtt:emqtt-broker
             - mysql:mysql
         environment:
+            - GRAPHANA_API_KEY=Bearer eyJrIjoiMVpoVkwyNzRFS1E2OTZDeW1XamxFMTVMY1YwNjVsMHUiLCJuIjoiYWRtaW4iLCJpZCI6MX0=
             - TZ=Asia/Jerusalem
         command:
             [

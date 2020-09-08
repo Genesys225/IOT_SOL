@@ -1,4 +1,6 @@
-class Sensor {
+var GraphanaApi = require('./GraphanaApi/GraphanaApi'); 
+var graphanaApi = new GraphanaApi();
+class Sensor { 
     constructor(sensorObj, SR) {
         this.id = sensorObj.id
         this.type = sensorObj.type
@@ -55,6 +57,9 @@ class registerDevice {
     }
 
     registerDevice(deviceId, sensorType){
+
+graphanaApi.registerAllDevices( this.id)
+
         this.mqttClient.exec("db/mysql.addSensor",{deviceId, sensorType},{ timeout: 5000 })
         .then((sensor) => {
             this.sensorsList[sensor.id] = new Sensor(sensor, this)
