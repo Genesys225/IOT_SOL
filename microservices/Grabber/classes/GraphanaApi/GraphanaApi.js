@@ -6,12 +6,14 @@ const { panel, dashboard } = require('./dashboard');
 
 class GraphanaApi {
 
-
+    hashCode(s){
+        return s.split("").reduce(function(a,b){a=((a<<5)-a)+b.charCodeAt(0);return a&a},0);              
+      }
     async registerAllDevices() {
 
         var myPanels = (await this.getSensors()).map((r) => {
             const rawSql = "SELECT\n  UNIX_TIMESTAMP(ts) AS \"time\",\n  sensor_id AS metric,\n  value\nFROM measurements\nWHERE\n  $__timeFilter(ts)\n  AND sensor_id=\"" + r.id + "\"\nORDER BY ts"
-            return panel({ id: r.id, title: r.id, rawSql })
+            return panel({ id: this.hashCode(r.id), title: r.id, rawSql })
         })
 
         const allPanels = this.addPanelToDashboard({ dashboardUid: 'All', dashboardTitle: 'All', panel: myPanels })
