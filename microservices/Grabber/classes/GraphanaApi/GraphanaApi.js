@@ -6,7 +6,6 @@ const { panel, dashboard } = require('./dashboard');
 
 class GraphanaApi {
 
-
     async updateSensor(id, meta) {
         return await this.mqttClient.exec(
             'db/mysql.updateSensor',
@@ -18,12 +17,11 @@ class GraphanaApi {
     async registerAllDevices() {
 
         var myPanels = (await this.getSensors()).map((r) => {
-            console.log(r);
             const rawSql = "SELECT\n  UNIX_TIMESTAMP(ts) AS \"time\",\n  sensor_id AS metric,\n  value\nFROM measurements\nWHERE\n  $__timeFilter(ts)\n  AND sensor_id=\"" + r.id + "\"\nORDER BY ts"
             return panel({ id: r.id, title: r.id, rawSql })
         })
 
-        const allPanels = this.addPanelToDashboard({ dashboardUid: 'a1', dashboardTitle: 'a1', panel: myPanels })
+        const allPanels = this.addPanelToDashboard({ dashboardUid: 'All', dashboardTitle: 'All', panel: myPanels })
         await this.updateDashboard(allPanels)
     }
 
