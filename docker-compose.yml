@@ -27,6 +27,10 @@ services:
         volumes:
             - ./tmp/grafana/:/var/lib/grafana
             - ./tmp/grafana-provisioning/:/etc/grafana/provisioning
+            - ./tmp/config/grafana.ini:/etc/grafana/grafana.ini:z
+            - ./tmp/config/dashboards:/var/lib/grafana/dashboards
+            - ./tmp/config/datasources:/etc/grafana/datasources
+            - ./tmp/config/plugins:/var/lib/grafana/plugins
         depends_on:
             - mysql
         environment:
@@ -64,7 +68,7 @@ services:
         ports:
             - '9000:9000'
         restart: always
-        
+
     microservices:
         user: '$UID:$GID'
         image: node:12-alpine
