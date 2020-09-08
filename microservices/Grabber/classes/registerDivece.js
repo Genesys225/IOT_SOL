@@ -58,7 +58,7 @@ class registerDevice {
 
     registerDevice(deviceId, sensorType){
 
-graphanaApi.registerAllDevices( this.id)
+        graphanaApi.registerAllDevices( deviceId)
 
         this.mqttClient.exec("db/mysql.addSensor",{deviceId, sensorType},{ timeout: 5000 })
         .then((sensor) => {

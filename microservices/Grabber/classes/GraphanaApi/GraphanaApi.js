@@ -6,13 +6,6 @@ const { panel, dashboard } = require('./dashboard');
 
 class GraphanaApi {
 
-    async updateSensor(id, meta) {
-        return await this.mqttClient.exec(
-            'db/mysql.updateSensor',
-            { id, meta },
-            { timeout: 5000 }
-        );
-    }
 
     async registerAllDevices() {
 
