@@ -1,4 +1,10 @@
 {
-    "private": true,
-    "workspaces": ["db", "baseTemplate", "Grabber", "MockSensor", "control-panel-frontend", "ControlPanelApi"]
+	"private": true,
+	"workspaces": [
+		"db",
+		"baseTemplate",
+		"Grabber",
+		"MockSensor",
+		"ControlPanelApi"
+	]
 }
