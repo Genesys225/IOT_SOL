@@ -202,7 +202,7 @@ const RenderSensorListItem = (props) => {
 				</Box>
 			</ListItem>
 			<Collapse in={open} timeout="auto" unmountOnExit>
-				<SensorIframe />
+				<SensorIframe id={props.id} />
 			</Collapse>
 			<Divider />
 		</>
