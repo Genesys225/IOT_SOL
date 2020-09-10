@@ -2,12 +2,13 @@ import React from 'react';
 
 function SensorIframe(props) {
 	const panelId = hashCode(props.id)
+	const parentBoundingRect = props.listItemRef.current.getBoundingClientRect()
 	// const sensor = useSelector(state => state.sensor)
 	return (
 		<iframe
-			src={`http://localhost:3000/d-solo/All/all?orgId=1&theme=light&panelId=${panelId}`}
-			width="450"
-			height="200"
+			src={`http://localhost:3000/d-solo/All/all?orgId=1&theme=light&kiosk&panelId=${panelId}`}
+			width={parentBoundingRect.width - 30}
+			height="300"
 			frameborder="0"
 			title="grafana"
 		></iframe>

@@ -35,7 +35,7 @@ import SensorIframe from './SensorIframe';
 const useStyles = makeStyles((theme) => ({
 	root: {
 		width: '100%',
-		backgroundColor: theme.palette.background.paper,
+		backgroundColor: 'dark',
 	},
 	formControl: {
 		margin: theme.spacing(1),
@@ -132,77 +132,101 @@ const RenderSensorListItem = (props) => {
 
 	return (
 		<>
-			<ListItem
-				ref={listItemRef}
-				onClick={handleClick}
-				button
-				alignItems="flex-start"
-			>
-				<ListItemIcon>
-					<Icon icon={props.type} />
-				</ListItemIcon>
-				<ListItemText
-					id="zone-label"
-					primary={props.type}
-					secondary={props.id}
-				/>
+			<ListItem ref={listItemRef} onClick={handleClick} button>
 				<Box
-					flexDirection="row"
+					display="flex"
 					justifyContent="between"
-					alignItems="center"
+					alignItems="stretch"
+					width="100%"
+					flexWrap="wrap"
 				>
-					<ListItemSecondaryAction>
-						<FormControl className={classes.formControl}>
-							<InputLabel shrink id="zone-label">
-								Zone
-							</InputLabel>
-							<Select
-								labelId="zone-label"
-								id="zone"
-								value={zone}
-								onChange={handleChange}
-								displayEmpty
-								className={classes.selectEmpty}
-							>
-								<MenuItem value="">
-									<em>None</em>
-								</MenuItem>
-								<MenuItem value="zone_1">Zone 1</MenuItem>
-								<MenuItem value="zone_2">Zone 2</MenuItem>
-								<MenuItem value="zone_3">Zone 3</MenuItem>
-							</Select>
-						</FormControl>
+					<Box
+						display="flex"
+						width="100%"
+						minWidth="400px"
+						flexWrap="wrap"
+						mr="50%"
+						alignItems="center"
+					>
+						<ListItemIcon>
+							<Icon icon={props.type} />
+						</ListItemIcon>
+						<ListItemText
+							id="zone-label"
+							primary={props.type}
+							secondary={props.id}
+						/>
+					</Box>
 
-						<FormControl className={classes.formControl}>
-							<TextField
-								id={props.id + '-value'}
-								label="Current value"
-								value={props.value || ''}
-								InputProps={{
-									readOnly: true,
-								}}
-							/>
-						</FormControl>
-						<FormControl className={classes.formControl}>
-							<Switch
-								edge="start"
-								onChange={handleToggle(props.id)}
-								checked={checked.indexOf(props.id) !== -1}
-								inputProps={{
-									'aria-labelledby': 'switch-list-label-wifi',
-								}}
-							/>
-						</FormControl>
-						<FormControl className={classes.formControl}>
-							<Box mr={1}>
-								{open ? <ExpandLess /> : <ExpandMore />}
-							</Box>
-						</FormControl>
-					</ListItemSecondaryAction>
+					<Box
+						display="flex"
+						justifyContent="between"
+						minWidth="400px"
+						width="100%"
+						alignItems="center"
+						flexWrap="wrap"
+						ml="50%"
+					>
+						<ListItemSecondaryAction>
+							<FormControl className={classes.formControl}>
+								<InputLabel shrink id="zone-label">
+									Zone
+								</InputLabel>
+								<Select
+									labelId="zone-label"
+									id="zone"
+									value={zone}
+									onChange={handleChange}
+									displayEmpty
+									className={classes.selectEmpty}
+								>
+									<MenuItem value="">
+										<em>None</em>
+									</MenuItem>
+									<MenuItem value="zone_1">Zone 1</MenuItem>
+									<MenuItem value="zone_2">Zone 2</MenuItem>
+									<MenuItem value="zone_3">Zone 3</MenuItem>
+								</Select>
+							</FormControl>
+
+							<FormControl className={classes.formControl}>
+								<TextField
+									id={props.id + '-value'}
+									label="Current value"
+									value={props.value || ''}
+									InputProps={{
+										readOnly: true,
+									}}
+								/>
+							</FormControl>
+							<FormControl className={classes.formControl}>
+								<Switch
+									edge="start"
+									onChange={handleToggle(props.id)}
+									checked={checked.indexOf(props.id) !== -1}
+									inputProps={{
+										'aria-labelledby':
+											'switch-list-label-wifi',
+									}}
+								/>
+							</FormControl>
+							<FormControl className={classes.formControl}>
+								<Box
+									display="flex"
+									alignItems="center"
+									justifyContent="center"
+								>
+									{open ? <ExpandLess /> : <ExpandMore />}
+								</Box>
+							</FormControl>
+						</ListItemSecondaryAction>
+					</Box>
 				</Box>
 			</ListItem>
 			<Collapse in={open} timeout="auto" unmountOnExit>
-				<SensorIframe id={props.id} />
+				<Box display="flex" justifyContent="center">
+					<SensorIframe id={props.id} listItemRef={listItemRef} />
+				</Box>
 			</Collapse>
 			<Divider />
 		</>
