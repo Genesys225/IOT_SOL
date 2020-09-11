@@ -143,9 +143,7 @@ const RenderSensorListItem = (props) => {
 					<Box
 						display="flex"
 						width="100%"
-						minWidth="400px"
 						flexWrap="wrap"
-						mr="50%"
 						alignItems="center"
 					>
 						<ListItemIcon>
@@ -157,15 +155,14 @@ const RenderSensorListItem = (props) => {
 							secondary={props.id}
 						/>
 					</Box>
+					<Divider variant="fullWidth" orientation="vertical" />
 
 					<Box
 						display="flex"
 						justifyContent="between"
-						minWidth="400px"
 						width="100%"
 						alignItems="center"
 						flexWrap="wrap"
-						ml="50%"
 					>
 						<ListItemSecondaryAction>
 							<FormControl className={classes.formControl}>
