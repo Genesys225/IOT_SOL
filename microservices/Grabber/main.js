@@ -21,10 +21,15 @@ grabberClient.on('connect', function() {
 	});
 });
 
+
+
 const mqttClient = new Mqtt(clientConnectionParams);
 // message is Buffer
 mqttClient.init().then(async (client) => {
 	var registration = new Registration(mqttClient);
+
+
+
 	await new Promise((resolve)=>setTimeout(() => {resolve()}, 1000))
 	await registration.initAllSensorsData();
 	grabberClient.on('message', function(topic, message) {

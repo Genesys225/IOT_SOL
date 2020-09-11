@@ -8,11 +8,18 @@ const SensorsApi = require('./classes/SensorsApi');
 
 const HelloWorld = require('./classes/HelloWorld');
 
+///var SensorsApi = require('./classes/SensorsApi');
+
+const GraphanaApi = require('./classes/GraphanaApi/GraphanaApi'); 
+
+const graphanaApi = new GraphanaApi();
+
 const sensorsApi = new SensorsApi();
+
 const executeApi = new ExecuteApi();
 
 const clientConnectionParams = {
-	services: { sensorsApi },
+	services: { sensorsApi, graphanaApi },
 	name: 'ControlPanelApi',
 	mqttSetting: {
 		url: 'mqtt://emqtt',
@@ -45,3 +52,9 @@ const app = setupExpress();
 		res.send(await sensorsApi.getLastData())
 	);
 })();
+
+
+
+// setInterval(() => {
+// 	graphanaApi.registerAllDevices()
+// }, 6000);
