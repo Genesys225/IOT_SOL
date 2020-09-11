@@ -8,16 +8,15 @@ import { ThemeProvider } from 'styled-components';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { CircularProgress, CssBaseline } from '@material-ui/core';
 
-const theme = createMuiTheme({
-	spacing: 4,
-	palette: {
-		primary: { main: '#048BA8' },
-		secondary: { main: '#F18F01' },
-		type: 'dark',
-	},
-});
-
 function App() {
+	const theme = createMuiTheme({
+		spacing: 4,
+		palette: {
+			primary: { main: '#048BA8' },
+			secondary: { main: '#F18F01' },
+			type: 'dark',
+		},
+	});
 	return (
 		<Router>
 			<Suspense fallback={<CircularProgress />}>

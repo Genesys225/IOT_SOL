@@ -35,7 +35,6 @@ import SensorIframe from './SensorIframe';
 const useStyles = makeStyles((theme) => ({
 	root: {
 		width: '100%',
-		backgroundColor: 'dark',
 	},
 	formControl: {
 		margin: theme.spacing(1),
@@ -45,6 +44,19 @@ const useStyles = makeStyles((theme) => ({
 	zoneSelect: {
 		marginTop: theme.spacing(2),
 		width: 100,
+	},
+	listItem: {
+		display: 'flex',
+		justifyContent: 'space-between',
+		flexDirection: 'column',
+		alignItems: 'center',
+		width: '100%',
+	},
+	listItemSecondary: {
+		display: 'flex',
+		width: '100%',
+		flexWrap: 'wrap',
+		alignItems: 'center',
 	},
 	nested: {
 		paddingLeft: theme.spacing(4),
@@ -98,11 +110,11 @@ export default function SensorsList() {
 
 const RenderSensorListItem = (props) => {
 	const [open, setOpen] = useState(false);
+	const [checked, setChecked] = useState([]);
+	const [zone, setZone] = useState(props.meta.zone || '');
 	const listItemRef = useRef(null);
 	const classes = useStyles();
 	const dispatch = useDispatch();
-	const [checked, setChecked] = useState([]);
-	const [zone, setZone] = useState(props.meta.zone || '');
 	const handleChange = (event) => {
 		setZone(event.target.value);
 		dispatch(
@@ -127,27 +139,31 @@ const RenderSensorListItem = (props) => {
 		setChecked(newChecked);
 	};
 
-	const handleClick = () => {
-		setOpen(!open);
+	const handleClick = (event) => {
+		console.log(event.target.tagName, this);
+		if (
+			event.target.tagName &&
+			event.target.tagName !== 'LI' &&
+			event.target.tagName !== 'INPUT'
+		)
+			setOpen(!open);
 	};
 
 	return (
 		<>
 			<ListItem ref={listItemRef} onClick={handleClick} button>
-				<Box
-					display="flex"
-					justifyContent="between"
-					alignItems=""
-					width="100%"
-					flexWrap="wrap"
-				>
-					<Box
-						display="flex"
-						width="100%"
-						flexWrap="wrap"
-						alignItems="center"
-					>
-						<ListItemIcon>
+				<Box className={classes.listItem}>
+					<Box className={classes.listItemSecondary}>
+						<FormControl className={classes.formControl}>
+							{open ? <ExpandLess /> : <ExpandMore />}
+						</FormControl>
+						<Divider
+							orientation="vertical"
+							style={{
+								height: '100%',
+							}}
+						/>
+						<ListItemIcon className={classes.formControl}>
 							<Icon icon={props.type} />
 						</ListItemIcon>
 						<ListItemText
@@ -156,16 +172,9 @@ const RenderSensorListItem = (props) => {
 							secondary={props.id}
 						/>
 					</Box>
-					<Divider variant="fullWidth" orientation="vertical" />
 
-					<Box
-						display="flex"
-						justifyContent="between"
-						width="100%"
-						alignItems="center"
-						flexWrap="wrap"
-					>
-						<ListItemSecondaryAction>
+					<ListItemSecondaryAction>
+						<Box className={classes.listItemSecondary}>
 							<FormControl className={classes.formControl}>
 								<InputLabel shrink id="zone-label">
 									Zone
@@ -175,7 +184,6 @@ const RenderSensorListItem = (props) => {
 									id="zone"
 									value={zone}
 									onChange={handleChange}
-									displayEmpty
 									className={classes.zoneSelect}
 								>
 									<MenuItem value="">
@@ -197,6 +205,7 @@ const RenderSensorListItem = (props) => {
 									}}
 								/>
 							</FormControl>
+							<Divider variant="fullWidth" />
 							<FormControl className={classes.formControl}>
 								<Switch
 									edge="start"
@@ -208,13 +217,8 @@ const RenderSensorListItem = (props) => {
 									}}
 								/>
 							</FormControl>
-							<FormControl className={classes.formControl}>
-								<Box display="flex" pt="3">
-									{open ? <ExpandLess /> : <ExpandMore />}
-								</Box>
-							</FormControl>
-						</ListItemSecondaryAction>
-					</Box>
+						</Box>
+					</ListItemSecondaryAction>
 				</Box>
 			</ListItem>
 			<Collapse in={open} timeout="auto" unmountOnExit>
