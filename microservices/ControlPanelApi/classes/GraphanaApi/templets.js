@@ -67,6 +67,7 @@ var dashboard = function({id,uid, panels, title}){
 
   var panel = function({id, title, rawSql}){
     return {
+          "uid": id, 
           "aliasColors": {},
           "bars": false,
           "dashLength": 10,

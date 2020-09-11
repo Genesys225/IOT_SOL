@@ -1,11 +1,14 @@
-var GraphanaApi = require('./GraphanaApi/GraphanaApi'); 
-var graphanaApi = new GraphanaApi();
+
+
+
 class Sensor { 
     constructor(sensorObj, SR) {
         this.id = sensorObj.id
         this.type = sensorObj.type
         this.meta = sensorObj.meta && JSON.parse(sensorObj.meta)
         this.SR = SR
+
+     
     }
    
     write(value) {
@@ -26,6 +29,12 @@ class registerDevice {
 
     }  
 
+    async registerDeviceInGraphana(){
+        var sensors = await this.mqttClient.exec("ControlPanelApi/graphanaApi.registerAllDevices",{a:1},{ timeout: 5000 })
+        console.log({sensors})
+        this.setSensors(sensors);       
+        return sensors
+    }
 
     async initAllSensorsData(){
         var sensors = await this.mqttClient.exec("db/mysql.getSensors",{a:1},{ timeout: 5000 })
@@ -58,7 +67,7 @@ class registerDevice {
 
     registerDevice(deviceId, sensorType){
 
-        graphanaApi.registerAllDevices( deviceId)
+        this.registerDeviceInGraphana()
 
         this.mqttClient.exec("db/mysql.addSensor",{deviceId, sensorType},{ timeout: 5000 })
         .then((sensor) => {
