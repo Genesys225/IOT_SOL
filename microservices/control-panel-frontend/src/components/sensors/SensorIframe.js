@@ -10,6 +10,7 @@ function SensorIframe(props) {
 			src={`http://localhost:3000/d-solo/All/all?orgId=1&refresh=25s&theme=light&kiosk&panelId=${panelId}`}
 			width={parentBoundingRect.width - 30}
 			height="300"
+			frameBorder="0"
 			title="grafana"
 		></iframe>
 	);

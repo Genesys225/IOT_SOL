@@ -40,9 +40,11 @@ const useStyles = makeStyles((theme) => ({
 	formControl: {
 		margin: theme.spacing(1),
 		minWidth: 30,
+		maxWidth: 110,
 	},
-	selectEmpty: {
+	zoneSelect: {
 		marginTop: theme.spacing(2),
+		width: 100,
 	},
 	nested: {
 		paddingLeft: theme.spacing(4),
@@ -85,7 +87,6 @@ export default function SensorsList() {
 					className={classes.root}
 				>
 					<Divider key="0" />
-
 					{sensors.map((sensor) => (
 						<RenderSensorListItem {...sensor} key={sensor.id} />
 					))}
@@ -136,7 +137,7 @@ const RenderSensorListItem = (props) => {
 				<Box
 					display="flex"
 					justifyContent="between"
-					alignItems="stretch"
+					alignItems=""
 					width="100%"
 					flexWrap="wrap"
 				>
@@ -175,7 +176,7 @@ const RenderSensorListItem = (props) => {
 									value={zone}
 									onChange={handleChange}
 									displayEmpty
-									className={classes.selectEmpty}
+									className={classes.zoneSelect}
 								>
 									<MenuItem value="">
 										<em>None</em>
@@ -208,11 +209,7 @@ const RenderSensorListItem = (props) => {
 								/>
 							</FormControl>
 							<FormControl className={classes.formControl}>
-								<Box
-									display="flex"
-									alignItems="center"
-									justifyContent="center"
-								>
+								<Box display="flex" pt="3">
 									{open ? <ExpandLess /> : <ExpandMore />}
 								</Box>
 							</FormControl>
