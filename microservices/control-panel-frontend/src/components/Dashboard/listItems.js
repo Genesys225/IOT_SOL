@@ -10,6 +10,7 @@ import BarChartIcon from '@material-ui/icons/BarChart';
 import LayersIcon from '@material-ui/icons/Layers';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import { Link } from 'react-router-dom';
+import { Icon } from '../Icons/Icon-Library';
 
 function ListItemLink(props) {
 	return <ListItem button component={Link} {...props} />;
@@ -25,7 +26,7 @@ export const mainListItems = (
 		</ListItemLink>
 		<ListItemLink to="/sensors">
 			<ListItemIcon>
-				<ShoppingCartIcon />
+				<Icon icon="sensors" />
 			</ListItemIcon>
 			<ListItemText primary="Sensors" />
 		</ListItemLink>
