@@ -20,7 +20,7 @@ class GraphanaApi {
 
         const allPanels = dashboard({ uid: 'All', title: 'All', panels: myPanels })
         await this.updateDashboard(allPanels)
-    }
+    } 
 
     createNewPanel({ id, title, rawSql }) {
         return panel({ id: null, title: sensorId, rawSql })
@@ -40,6 +40,7 @@ class GraphanaApi {
     } 
 
     async addDeviceFromDashboardToDashboard({ idFrom, idTo, deviceId }) {
+        console.log({ idFrom, idTo, deviceId }, 9999)
         // ********************ADD PANEL***********************************
         var dashboardTo = await this.getDashboard(idTo);
         var allDashboard = await this.getDashboard('All');
@@ -120,5 +121,5 @@ var g = new GraphanaApi();
 sensorUid = 'SOL-15:11:11:11:11:11/hum' 
 //sensorUid = 'SOL-16:11:11:11:11:11/light'
 //g.addDeviceToDashboard({ dashboardUid: 'room1', deviceId: sensorUid });
-g.addDeviceFromDashboardToDashboard({ idFrom: 'room2', idTo: 'room1', deviceId: sensorUid })
+//g.addDeviceFromDashboardToDashboard({ idFrom: 'room2', idTo: 'room1', deviceId: sensorUid })
 module.exports = GraphanaApi;   

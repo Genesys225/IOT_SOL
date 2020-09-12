@@ -56,8 +56,15 @@ const app = setupExpress();
 
 	// graphana api
 
+	/**
+	 {
+			"idFrom": "All",
+			"idTo": "room1",
+			"deviceId": "SOL-14:11:11:11:11:11/temp"
+	}
+	http://localhost:6000/addDeviceFromDashboardToDashboard
+	*/
 	app.post('/addDeviceFromDashboardToDashboard', async (req, res) => {
-		console.log(22222222)
 		return res.send(
 			await graphanaApi.addDeviceFromDashboardToDashboard({idFrom:req.body.idFrom, idTo: req.body.idTo, deviceId: req.body.deviceId})
 		);
