@@ -9,8 +9,10 @@ import sunIcon from '@iconify/icons-twemoji/sun';
 import codropsIcon from '@iconify/icons-logos/codrops';
 // import thermometerIcon from '@iconify/icons-noto/thermometer';
 import thermometerIcon from '@iconify/icons-fxemoji/thermometer';
+import pulseOutline from '@iconify/icons-ion/pulse-outline';
 
 addIcon('temp', thermometerIcon);
+addIcon('sensors', pulseOutline);
 addIcon('humidity', codropsIcon);
 addIcon('hum', codropsIcon);
 addIcon('lux', sunIcon);
