@@ -14,6 +14,7 @@ class GraphanaApi {
     async registerAllDevices() {
         var myPanels = (await this.getSensors()).map((r) => {
             const rawSql = "SELECT\n  UNIX_TIMESTAMP(ts) AS \"time\",\n  sensor_id AS metric,\n  value\nFROM measurements\nWHERE\n  $__timeFilter(ts)\n  AND sensor_id=\"" + r.id + "\"\nORDER BY ts"
+            console.log(this.hashCode(r.id), r.id)
             return panel({ id: this.hashCode(r.id), title: r.id, rawSql })
         })
 
@@ -36,7 +37,7 @@ class GraphanaApi {
      
         const allPanels = dashboard({ uid: dashboardUid, title: dashboardUid, panels: newPanelToAdd })
         await this.updateDashboard(allPanels);
-    }
+    } 
 
     async addDeviceFromDashboardToDashboard({ idFrom, idTo, deviceId }) {
         // ********************ADD PANEL***********************************
@@ -49,30 +50,35 @@ class GraphanaApi {
         from ? 
         where uid = ${uid}
         `, [allDashboard.dashboard.panels]);
-        
-  
-        dashboardTo.dashboard.panels = dashboardTo.dashboard.panels.concat(newPanelToAdd);
+         
+   
+        dashboardTo.dashboard.panels = dashboardTo.dashboard.panels.concat(newPanelToAdd); 
+        await this.updateDashboard(dashboardTo);
          //dashboardTo.dashboard.panels = newPanelToAdd
-        await this.updateDashboard(dashboardTo);  
-        console.log(11111, (dashboardTo), 989898, alasql(`
-        select * 
-        from ? 
-        where uid = ${uid}
-        `, [dashboardTo.dashboard.panels]));
+ 
         // ********************ADD PANEL***********************************
   
 
         // ********************DELETE PANEL***********************************
-        var dashboardFrom= await this.getDashboard(idFrom);
-        if(dashboardFrom){
-            var dashboardFromPanels = alasql(`
-            select * 
-            from ? 
-            where uid  != ${uid}
-            `, [dashboardFrom.dashboard.panels]);
-            console.log()
-            await this.updateDashboard(dashboardTo);
+
+        if(idFrom !='All'){ 
+   
+            var dashboardFrom= await this.getDashboard(idFrom);
+
+           
+                var dashboardFromPanels = alasql(`
+                select *
+                from ?
+                where uid  != ${uid} 
+                `, [dashboardFrom.dashboard.panels]);
+                console.log(555, dashboardFromPanels)
+            console.log({deviceId,  uid})  
+                dashboardFrom.dashboard.panels= dashboardFromPanels   
+                console.log(dashboardFrom.dashboard.panels, 7777)
+                await this.updateDashboard(dashboardFrom);
+            
         }
+      
 
         // ********************DELETE PANEL***********************************
     }
@@ -110,8 +116,9 @@ class GraphanaApi {
     }
 }
 //SOL-16:11:11:11:11:11/light
-var g = new GraphanaApi();
-sensorUid = 'SOL-16:11:11:11:11:11/light'
-g.addDeviceToDashboard({ dashboardUid: 'room1', deviceId: sensorUid });
-g.addDeviceFromDashboardToDashboard({ idFrom: 'room2', idTo: 'room3', deviceId: sensorUid })
-module.exports = GraphanaApi;
+var g = new GraphanaApi();  
+sensorUid = 'SOL-15:11:11:11:11:11/hum' 
+//sensorUid = 'SOL-16:11:11:11:11:11/light'
+//g.addDeviceToDashboard({ dashboardUid: 'room1', deviceId: sensorUid });
+g.addDeviceFromDashboardToDashboard({ idFrom: 'room2', idTo: 'room1', deviceId: sensorUid })
+module.exports = GraphanaApi;   
