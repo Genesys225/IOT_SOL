@@ -17,8 +17,9 @@ import {
 	Select,
 	Switch,
 	TextField,
+	useTheme,
 } from '@material-ui/core';
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { sendCommand } from '../../store/actions/controls';
 import { updateSensor } from '../../store/actions/sensorsActions';
@@ -28,8 +29,10 @@ import { Icon } from '../Icons/Icon-Library';
 import SensorIframe from './SensorIframe';
 import EditIcon from '@material-ui/icons/Edit';
 import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
+import AlertsModal from './AlertsModal';
 
 const useStyles = makeStyles((theme) => ({
+	
 	paper: {
 		margin: theme.spacing(1),
 	},
@@ -61,12 +64,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const SensorListItem = (props) => {
+	const theme = useTheme()
 	const [open, setOpen] = useState(false);
+	const [showAlertsModal, setShowAlertModal] = useState(false);
 	const [checked, setChecked] = useState([]);
 	const [zone, setZone] = useState(props.meta.zone || '');
 	const listItemRef = useRef(null);
 	const classes = useStyles();
 	const dispatch = useDispatch();
+
 	const units = {
 		temp: 'C°',
 		humidity: 'R/H%',
@@ -75,12 +81,14 @@ const SensorListItem = (props) => {
 		lux: 'Lux',
 		light: 'Lux',
 	};
+
 	const handleChange = (event) => {
 		setZone(event.target.value);
 		dispatch(
 			updateSensor({ id: props.id, meta: { zone: event.target.value } })
 		);
 	};
+
 	const handleToggle = (value) => () => {
 		const currentIndex = checked.indexOf(value);
 		const newChecked = [...checked];
@@ -117,7 +125,12 @@ const SensorListItem = (props) => {
 		event.stopPropagation();
 		event.nativeEvent.stopImmediatePropagation();
 		event.preventDefault();
+		setShowAlertModal(true);
 	};
+	
+	const closeAlertsModal = useCallback( () => {
+		setShowAlertModal(false)
+	},[setShowAlertModal])
 
 	return (
 		<>
@@ -146,7 +159,7 @@ const SensorListItem = (props) => {
 								</IconButton>
 							</ListItemIcon>
 							<ListItemIcon>
-								<IconButton aria-label="edit">
+								<IconButton aria-label="edit" onClick={handleEdit}>
 									<EditIcon color="action" />
 								</IconButton>
 							</ListItemIcon>
@@ -228,6 +241,7 @@ const SensorListItem = (props) => {
 				</Box>
 			</Collapse>
 			<Divider />
+			<AlertsModal in={showAlertsModal} onClose={closeAlertsModal}/>
 		</>
 	);
 };
