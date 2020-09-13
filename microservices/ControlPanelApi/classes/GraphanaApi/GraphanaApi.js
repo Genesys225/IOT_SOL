@@ -1,12 +1,12 @@
 const fetch = require('node-fetch');
-const { panel, dashboard } = require('./templets');
+const { panel, dashboard , alertT} = require('./templets');
 const alasql = require('alasql')
 
 class GraphanaApi {
     constructor() {
         setInterval(() => {
             this.registerAllDevices()
-        }, 60000);
+        }, 6000);
     }
     hashCode(s) {
         return s.split("").reduce(function (a, b) { a = ((a << 5) - a) + b.charCodeAt(0); return a & a }, 0);
@@ -39,6 +39,27 @@ class GraphanaApi {
         await this.updateDashboard(allPanels);
     } 
 
+    async addAlertThreshold({dashboardID, deviceId, threshold, op}){
+        var myDashboard = await this.getDashboard(dashboardID);
+        var uid = this.hashCode(deviceId);
+        var panelToUpdate = alasql(`
+        select * 
+        from ? 
+        where uid = ${uid}
+        `, [myDashboard.dashboard.panels]);
+
+        var newDashboard = alasql(`
+        select * 
+        from ? 
+        where uid != ${uid}
+        `, [myDashboard.dashboard.panels]);
+
+        newPanelToAdd.alert = alertT({threshold, op})
+        newDashboard.dashboard.panels = myDashboard.dashboard.panels.concat(newPanelToAdd); 
+        await this.updateDashboard(dashboardTo);
+    }
+
+
     async addDeviceFromDashboardToDashboard({ idFrom, idTo, deviceId }) {
         console.log({ idFrom, idTo, deviceId }, 9999)
         // ********************ADD PANEL***********************************
@@ -51,36 +72,23 @@ class GraphanaApi {
         from ? 
         where uid = ${uid}
         `, [allDashboard.dashboard.panels]);
-         
-   
         dashboardTo.dashboard.panels = dashboardTo.dashboard.panels.concat(newPanelToAdd); 
         await this.updateDashboard(dashboardTo);
-         //dashboardTo.dashboard.panels = newPanelToAdd
- 
         // ********************ADD PANEL***********************************
   
 
         // ********************DELETE PANEL***********************************
-
         if(idFrom !='All'){ 
    
             var dashboardFrom= await this.getDashboard(idFrom);
-
-           
                 var dashboardFromPanels = alasql(`
                 select *
                 from ?
                 where uid  != ${uid} 
                 `, [dashboardFrom.dashboard.panels]);
-                console.log(555, dashboardFromPanels)
-            console.log({deviceId,  uid})  
                 dashboardFrom.dashboard.panels= dashboardFromPanels   
-                console.log(dashboardFrom.dashboard.panels, 7777)
                 await this.updateDashboard(dashboardFrom);
-            
         }
-      
-
         // ********************DELETE PANEL***********************************
     }
 

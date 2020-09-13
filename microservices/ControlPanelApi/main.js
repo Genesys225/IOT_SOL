@@ -71,6 +71,15 @@ const app = setupExpress();
 	});
 	
 	
+	// http://localhost:6000/addAlertThreshold
+	// {"dashboardID":"room2", "deviceId":"SOL-14:11:11:11:11:11/temp", "threshold":8, "op":"gt"}
+	app.post('/addAlertThreshold', async (req, res) => {
+		return res.send(
+			await graphanaApi.addAlertThreshold({dashboardID:req.body.dashboardID, idTdeviceIdo: req.body.deviceId, threshold: req.body.threshold, op: req.body.op})
+		);
+	});
+
+
 })();
 
 
