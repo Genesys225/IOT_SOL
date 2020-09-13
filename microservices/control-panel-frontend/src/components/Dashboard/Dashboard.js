@@ -5,10 +5,10 @@ import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import { mainListItems, secondaryListItems } from './listItems';
 import MainView from '../MainViewHolder/MainView';
 import TopBar from './TopBar';
 import { useStyles } from '../hooks/useStyles';
+import { MainMenu, SecondaryMenu } from './AppDrawer';
 
 export default function Dashboard() {
 	const classes = useStyles();
@@ -40,9 +40,9 @@ export default function Dashboard() {
 					</IconButton>
 				</div>
 				<Divider />
-				<List>{mainListItems}</List>
+				<List>{MainMenu}</List>
 				<Divider />
-				<List>{secondaryListItems}</List>
+				<List>{SecondaryMenu}</List>
 			</Drawer>
 			<MainView />
 		</div>

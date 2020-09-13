@@ -32,7 +32,6 @@ import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
 import AlertsModal from './AlertsModal';
 
 const useStyles = makeStyles((theme) => ({
-	
 	paper: {
 		margin: theme.spacing(1),
 	},
@@ -64,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const SensorListItem = (props) => {
-	const theme = useTheme()
+	const theme = useTheme();
 	const [open, setOpen] = useState(false);
 	const [showAlertsModal, setShowAlertModal] = useState(false);
 	const [checked, setChecked] = useState([]);
@@ -127,10 +126,10 @@ const SensorListItem = (props) => {
 		event.preventDefault();
 		setShowAlertModal(true);
 	};
-	
-	const closeAlertsModal = useCallback( () => {
-		setShowAlertModal(false)
-	},[setShowAlertModal])
+
+	const closeAlertsModal = useCallback(() => {
+		setShowAlertModal(false);
+	}, [setShowAlertModal]);
 
 	return (
 		<>
@@ -159,7 +158,10 @@ const SensorListItem = (props) => {
 								</IconButton>
 							</ListItemIcon>
 							<ListItemIcon>
-								<IconButton aria-label="edit" onClick={handleEdit}>
+								<IconButton
+									aria-label="edit"
+									onClick={handleEdit}
+								>
 									<EditIcon color="action" />
 								</IconButton>
 							</ListItemIcon>
@@ -241,7 +243,11 @@ const SensorListItem = (props) => {
 				</Box>
 			</Collapse>
 			<Divider />
-			<AlertsModal in={showAlertsModal} onClose={closeAlertsModal}/>
+			<AlertsModal
+				in={showAlertsModal}
+				onClose={closeAlertsModal}
+				{...props}
+			/>
 		</>
 	);
 };

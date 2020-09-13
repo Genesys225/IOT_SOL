@@ -3,10 +3,12 @@ import thunkMiddleware from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { sensorsReducer } from './reducers/sensorsReducer';
 import { controlsReducer } from './reducers/controls';
+import { alertsReducer } from './reducers/alertsReducer';
 
 const rootReducer = combineReducers({
+	alerts: alertsReducer,
 	sensors: sensorsReducer,
-	controlsHistory: controlsReducer,
+	controls: controlsReducer,
 });
 export default function configureStore(preloadedState = {}) {
 	const middlewares = [thunkMiddleware];

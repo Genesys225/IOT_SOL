@@ -16,7 +16,7 @@ function ListItemLink(props) {
 	return <ListItem button component={Link} {...props} />;
 }
 
-export const mainListItems = (
+export const MainMenu = (
 	<div>
 		<ListItemLink to="/">
 			<ListItemIcon>
@@ -51,7 +51,7 @@ export const mainListItems = (
 	</div>
 );
 
-export const secondaryListItems = (
+export const SecondaryMenu = (
 	<div>
 		<ListSubheader inset>Saved reports</ListSubheader>
 		<ListItem button>
