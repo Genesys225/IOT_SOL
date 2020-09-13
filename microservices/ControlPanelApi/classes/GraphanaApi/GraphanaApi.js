@@ -104,6 +104,26 @@ class GraphanaApi {
     }
 
 
+    async getAllAlerts(){
+        const allDashboards = await this.getAllDashboards();
+        const allAlerts = []
+        for(const dash in allDashboards){
+            var dashboard  = (await this.getDashboard(allDashboards[dash].uid))['dashboard']
+            if(alasql('select title, alert from ? ', [dashboard.panels]).length > 0) allAlerts.push({dashboardUid:dashboard.uid, deviceId: dashboard.panels.title, alert: alasql('select title, alert from ? ', [dashboard.panels])})
+        } 
+
+        return allAlerts
+    } 
+    
+    async getAllDashboards() {
+        return await fetch('http://grafana:3000/api/search?query=%', {
+            method: 'get',
+            headers: { 'Content-Type': 'application/json', 'Authorization': process.env.GRAPHANA_API_KEY },
+        })
+            .then(res => res.json())
+            .then(json => json || []);
+    }
+
     async getSensors(dashboardUid) {
         return await fetch('http://microservices:6000/getSensors', {
             method: 'get',
@@ -112,7 +132,7 @@ class GraphanaApi {
             .then(res => res.json())
             .then(json => json);
     }
-
+   
     async updateDashboard(dash) {
 
         return await fetch('http://grafana:3000/api/dashboards/db', {
@@ -130,4 +150,5 @@ sensorUid = 'SOL-15:11:11:11:11:11/hum'
 //sensorUid = 'SOL-16:11:11:11:11:11/light'
 //g.addDeviceToDashboard({ dashboardUid: 'room1', deviceId: sensorUid });
 //g.addDeviceFromDashboardToDashboard({ idFrom: 'room2', idTo: 'room1', deviceId: sensorUid })
+g.getAllAlerts()
 module.exports = GraphanaApi;   
