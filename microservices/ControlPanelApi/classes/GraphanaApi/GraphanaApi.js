@@ -105,6 +105,16 @@ class GraphanaApi {
             .then(json => json || []);
     }
 
+    async getAllPannels(){
+        const allDashboards = await this.getAllDashboards();
+        const allPannels = []
+        for(const dash in allDashboards){
+            var dashboard  = (await this.getDashboard(allDashboards[dash].uid))['dashboard']
+           allPannels.push({room:dashboard.uid, deviceId: dashboard.panels.title, devices: alasql('select * from ? ', [dashboard.panels])})
+        } 
+
+        return allPannels
+    }
 
     async getAllAlerts(){
         const allDashboards = await this.getAllDashboards();
