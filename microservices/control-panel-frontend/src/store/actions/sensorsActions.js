@@ -40,7 +40,7 @@ export const updateSensor = ({ id, meta }) => {
 
 export const updateDeviceZone = ({ idFrom, idTo, deviceId }) => {
 	return async (dispatch) => {
-		const res = await fetch('/updateSensor', {
+		const res = await fetch('/addDeviceFromDashboardToDashboard', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
