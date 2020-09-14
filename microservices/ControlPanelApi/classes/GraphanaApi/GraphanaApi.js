@@ -1,12 +1,12 @@
 const fetch = require('node-fetch');
-const { panel, dashboard } = require('./templets');
+const { panel, dashboard , alertT} = require('./templets');
 const alasql = require('alasql')
 
 class GraphanaApi {
     constructor() {
         setInterval(() => {
             this.registerAllDevices()
-        }, 60000);
+        }, 6000);
     }
     hashCode(s) {
         return s.split("").reduce(function (a, b) { a = ((a << 5) - a) + b.charCodeAt(0); return a & a }, 0);
@@ -20,7 +20,7 @@ class GraphanaApi {
 
         const allPanels = dashboard({ uid: 'All', title: 'All', panels: myPanels })
         await this.updateDashboard(allPanels)
-    }
+    } 
 
     createNewPanel({ id, title, rawSql }) {
         return panel({ id: null, title: sensorId, rawSql })
@@ -39,7 +39,29 @@ class GraphanaApi {
         await this.updateDashboard(allPanels);
     } 
 
+    async addAlertThreshold({dashboardID, deviceId, threshold, op}){
+        var myDashboard = await this.getDashboard(dashboardID);
+        var uid = this.hashCode(deviceId);
+        var panelToUpdate = alasql(`
+        select * 
+        from ? 
+        where uid = ${uid}
+        `, [myDashboard.dashboard.panels]);
+
+        var newDashboard = alasql(`
+        select * 
+        from ? 
+        where uid != ${uid}
+        `, [myDashboard.dashboard.panels]);
+
+        newPanelToAdd.alert = alertT({threshold, op})
+        newDashboard.dashboard.panels = myDashboard.dashboard.panels.concat(newPanelToAdd); 
+        await this.updateDashboard(dashboardTo);
+    }
+
+
     async addDeviceFromDashboardToDashboard({ idFrom, idTo, deviceId }) {
+        console.log({ idFrom, idTo, deviceId }, 9999)
         // ********************ADD PANEL***********************************
         var dashboardTo = await this.getDashboard(idTo);
         var allDashboard = await this.getDashboard('All');
@@ -50,36 +72,23 @@ class GraphanaApi {
         from ? 
         where uid = ${uid}
         `, [allDashboard.dashboard.panels]);
-         
-   
         dashboardTo.dashboard.panels = dashboardTo.dashboard.panels.concat(newPanelToAdd); 
         await this.updateDashboard(dashboardTo);
-         //dashboardTo.dashboard.panels = newPanelToAdd
- 
         // ********************ADD PANEL***********************************
   
 
         // ********************DELETE PANEL***********************************
-
         if(idFrom !='All'){ 
    
             var dashboardFrom= await this.getDashboard(idFrom);
-
-           
                 var dashboardFromPanels = alasql(`
                 select *
                 from ?
                 where uid  != ${uid} 
                 `, [dashboardFrom.dashboard.panels]);
-                console.log(555, dashboardFromPanels)
-            console.log({deviceId,  uid})  
                 dashboardFrom.dashboard.panels= dashboardFromPanels   
-                console.log(dashboardFrom.dashboard.panels, 7777)
                 await this.updateDashboard(dashboardFrom);
-            
         }
-      
-
         // ********************DELETE PANEL***********************************
     }
 
@@ -95,6 +104,26 @@ class GraphanaApi {
     }
 
 
+    async getAllAlerts(){
+        const allDashboards = await this.getAllDashboards();
+        const allAlerts = []
+        for(const dash in allDashboards){
+            var dashboard  = (await this.getDashboard(allDashboards[dash].uid))['dashboard']
+            if(alasql('select title, alert from ? ', [dashboard.panels]).length > 0) allAlerts.push({dashboardUid:dashboard.uid, deviceId: dashboard.panels.title, alert: alasql('select title, alert from ? ', [dashboard.panels])})
+        } 
+
+        return allAlerts
+    } 
+    
+    async getAllDashboards() {
+        return await fetch('http://grafana:3000/api/search?query=%', {
+            method: 'get',
+            headers: { 'Content-Type': 'application/json', 'Authorization': process.env.GRAPHANA_API_KEY },
+        })
+            .then(res => res.json())
+            .then(json => json || []);
+    }
+
     async getSensors(dashboardUid) {
         return await fetch('http://microservices:6000/getSensors', {
             method: 'get',
@@ -103,7 +132,7 @@ class GraphanaApi {
             .then(res => res.json())
             .then(json => json);
     }
-
+   
     async updateDashboard(dash) {
 
         return await fetch('http://grafana:3000/api/dashboards/db', {
@@ -120,5 +149,6 @@ var g = new GraphanaApi();
 sensorUid = 'SOL-15:11:11:11:11:11/hum' 
 //sensorUid = 'SOL-16:11:11:11:11:11/light'
 //g.addDeviceToDashboard({ dashboardUid: 'room1', deviceId: sensorUid });
-g.addDeviceFromDashboardToDashboard({ idFrom: 'room2', idTo: 'room1', deviceId: sensorUid })
+//g.addDeviceFromDashboardToDashboard({ idFrom: 'room2', idTo: 'room1', deviceId: sensorUid })
+g.getAllAlerts()
 module.exports = GraphanaApi;   

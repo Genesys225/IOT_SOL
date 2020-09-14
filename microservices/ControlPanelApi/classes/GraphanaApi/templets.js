@@ -1,4 +1,45 @@
+const alertT = function({threshold, op }){
+  return {
+    "alertRuleTags": {},
+    "conditions": [
+      {
+        "evaluator": {
+          "params": [
+            threshold
+          ],
+          "type": op
+        },
+        "operator": {
+          "type": "and"
+        },
+        "query": {
+          "params": [
+            "A",
+            "5m",
+            "now"
+          ]
+        },
+        "reducer": {
+          "params": [],
+          "type": "avg"
+        },
+        "type": "query"
+      }
+    ],
+    "executionErrorState": "alerting",
+    "for": "5m",
+    "frequency": "1m",
+    "handler": 1,
+    "name": "SOL-15:11:11:11:11:11/hum alert",
+    "noDataState": "no_data",
+    "notifications": []
+  }
+}
+
+
 var dashboard = function({ id, uid, panels, title }) {
+
+  
 	const dashboard = {
 		dashboard: {
 			id: id || null,
@@ -175,4 +216,4 @@ var panel = function({ id, title, rawSql }) {
 	};
 };
 
-module.exports = { dashboard, panel };
+module.exports = { dashboard, panel , alertT};

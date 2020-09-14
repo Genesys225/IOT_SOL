@@ -56,14 +56,30 @@ const app = setupExpress();
 
 	// graphana api
 
+	/**
+	 {
+			"idFrom": "All",
+			"idTo": "room1",
+			"deviceId": "SOL-14:11:11:11:11:11/temp"
+	}
+	http://localhost:6000/addDeviceFromDashboardToDashboard
+	*/
 	app.post('/addDeviceFromDashboardToDashboard', async (req, res) => {
-		console.log(22222222)
 		return res.send(
 			await graphanaApi.addDeviceFromDashboardToDashboard({idFrom:req.body.idFrom, idTo: req.body.idTo, deviceId: req.body.deviceId})
 		);
 	});
 	
 	
+	// http://localhost:6000/addAlertThreshold
+	// {"dashboardID":"room2", "deviceId":"SOL-14:11:11:11:11:11/temp", "threshold":8, "op":"gt"}
+	app.post('/addAlertThreshold', async (req, res) => {
+		return res.send(
+			await graphanaApi.addAlertThreshold({dashboardID:req.body.dashboardID, idTdeviceIdo: req.body.deviceId, threshold: req.body.threshold, op: req.body.op})
+		);
+	});
+
+
 })();
 
 
