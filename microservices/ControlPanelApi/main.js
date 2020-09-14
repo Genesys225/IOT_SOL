@@ -81,9 +81,9 @@ const app = setupExpress();
 
 
 
-	app.post('/get', async (req, res) => {
+	app.post('/getAllAlerts', async (req, res) => {
 		return res.send(
-			await graphanaApi.addAlertThreshold({dashboardID:req.body.dashboardID, deviceId: req.body.deviceId, threshold: req.body.threshold, op: req.body.op})
+			await graphanaApi.getAllAlerts({dashboardID:req.body.dashboardID, deviceId: req.body.deviceId, threshold: req.body.threshold, op: req.body.op})
 		);
 	});
 
