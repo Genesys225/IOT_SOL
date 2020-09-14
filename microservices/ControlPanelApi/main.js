@@ -88,9 +88,9 @@ const app = setupExpress();
 	});
 
 
-	app.post('/getAllPannels', async (req, res) => {
+	app.post('/getAllPanels', async (req, res) => {
 		return res.send(
-			await graphanaApi.getAllPannels({dashboardID:req.body.dashboardID, deviceId: req.body.deviceId, threshold: req.body.threshold, op: req.body.op})
+			await graphanaApi.getAllPannels()
 		);
 	});
 
