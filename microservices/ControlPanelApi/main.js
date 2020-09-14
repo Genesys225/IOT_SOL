@@ -75,10 +75,17 @@ const app = setupExpress();
 	// {"dashboardID":"room2", "deviceId":"SOL-14:11:11:11:11:11/temp", "threshold":8, "op":"gt"}
 	app.post('/addAlertThreshold', async (req, res) => {
 		return res.send(
-			await graphanaApi.addAlertThreshold({dashboardID:req.body.dashboardID, idTdeviceIdo: req.body.deviceId, threshold: req.body.threshold, op: req.body.op})
+			await graphanaApi.addAlertThreshold({dashboardID:req.body.dashboardID, deviceId: req.body.deviceId, threshold: req.body.threshold, op: req.body.op})
 		);
 	});
 
+
+
+	app.post('/get', async (req, res) => {
+		return res.send(
+			await graphanaApi.addAlertThreshold({dashboardID:req.body.dashboardID, deviceId: req.body.deviceId, threshold: req.body.threshold, op: req.body.op})
+		);
+	});
 
 })();
 
