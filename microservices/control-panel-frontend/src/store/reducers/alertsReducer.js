@@ -8,7 +8,7 @@ const initialState = {
 export const alertsReducer = (state = initialState, { action, payload }) => {
 	switch (action) {
 		case GET_ALERTS:
-			return state;
+			return { ...state, alerts: payload };
 
 		default:
 			return state;

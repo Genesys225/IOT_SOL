@@ -22,8 +22,17 @@ export const updateAlerts = (updatedAlerts, deviceId) => {
 				}),
 				headers: { 'Content-Type': 'application/json' },
 			});
+			console.log({
+				dashboardID: 'all',
+				deviceId,
+				threshold: alert.threshold,
+				op: alert.op,
+			});
 			return await res.json();
+			// alert.id = Date.now();
+			// return alert;
 		});
+		console.log(await newAlerts);
 		dispatch({ type: GET_ALERTS, payload: newAlerts });
 	};
 };
