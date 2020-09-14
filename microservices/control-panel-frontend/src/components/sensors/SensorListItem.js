@@ -22,7 +22,7 @@ import {
 import React, { useRef, useState, useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { sendCommand } from '../../store/actions/controls';
-import { updateSensor } from '../../store/actions/sensorsActions';
+import { updateDeviceZone } from '../../store/actions/sensorsActions';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import { Icon } from '../Icons/Icon-Library';
@@ -67,7 +67,7 @@ const SensorListItem = (props) => {
 	const [open, setOpen] = useState(false);
 	const [showAlertsModal, setShowAlertModal] = useState(false);
 	const [checked, setChecked] = useState([]);
-	const [zone, setZone] = useState(props.meta.zone || '');
+	const [zone, setZone] = useState(props.room || '');
 	const listItemRef = useRef(null);
 	const classes = useStyles();
 	const dispatch = useDispatch();
@@ -84,7 +84,11 @@ const SensorListItem = (props) => {
 	const handleChange = (event) => {
 		setZone(event.target.value);
 		dispatch(
-			updateSensor({ id: props.id, meta: { zone: event.target.value } })
+			updateDeviceZone({
+				idFrom: 'all',
+				idTo: event.target.value,
+				deviceId: props.id,
+			})
 		);
 	};
 
@@ -186,12 +190,12 @@ const SensorListItem = (props) => {
 									onChange={handleChange}
 									className={classes.zoneSelect}
 								>
-									<MenuItem value="">
-										<em>None</em>
+									<MenuItem value="all">
+										<em>All</em>
 									</MenuItem>
-									<MenuItem value="zone_1">Room 1</MenuItem>
-									<MenuItem value="zone_2">Room 2</MenuItem>
-									<MenuItem value="zone_3">Room 3</MenuItem>
+									<MenuItem value="room1">Room 1</MenuItem>
+									<MenuItem value="room2">Room 2</MenuItem>
+									<MenuItem value="room3">Room 3</MenuItem>
 								</Select>
 							</FormControl>
 

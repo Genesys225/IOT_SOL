@@ -1,6 +1,7 @@
 import {
 	GET_SENSORS,
 	LAST_SENSORS_DATA,
+	UPDATE_ROOM,
 	UPDATE_SENSOR,
 } from '../actions/sensorsActions';
 
@@ -40,6 +41,17 @@ export const sensorsReducer = (state = initialState, { type, payload }) => {
 				if (payload.id === sensorState.id)
 					return Object.assign({}, sensorState, {
 						meta: payload.meta,
+					});
+				return sensorState;
+			});
+
+			return newSensorState;
+		}
+		case UPDATE_ROOM: {
+			const newSensorState = state.map((sensorState) => {
+				if (payload.id === sensorState.id)
+					return Object.assign({}, sensorState, {
+						room: payload.room,
 					});
 				return sensorState;
 			});
