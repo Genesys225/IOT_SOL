@@ -85,7 +85,7 @@ const SensorListItem = (props) => {
 		setZone(event.target.value);
 		dispatch(
 			updateDeviceZone({
-				idFrom: 'all',
+				idFrom: 'All',
 				idTo: event.target.value,
 				deviceId: props.id,
 			})
