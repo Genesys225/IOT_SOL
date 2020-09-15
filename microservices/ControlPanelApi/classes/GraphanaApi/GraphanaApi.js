@@ -13,7 +13,7 @@ class GraphanaApi {
     }
     async registerAllDevices() {
         var myPanels = (await this.getSensors()).map((r) => {
-            const rawSql = "SELECT\n  UNIX_TIMESTAMP(ts) AS \"time\",\n  sensor_id AS metric,\n  value\nFROM measurements\nWHERE\n  $__timeFilter(ts)\n  AND sensor_id=\"" + r.id + "\"\nORDER BY ts"
+            const rawSql = `SELECT\n  $__timeGroupAlias(ts,$__interval),\n  sensor_id AS metric,\n  avg(value) AS \"value\"\nFROM measurements\nWHERE\n  $__timeFilter(ts) AND\n  sensor_id = '${r.id}'\nGROUP BY 1,2\nORDER BY $__timeGroup(ts,$__interval)`
             console.log(this.hashCode(r.id), r.id)
             return panel({ id: this.hashCode(r.id), title: r.id, rawSql })
         })
