@@ -1,39 +1,40 @@
 const alertT = function({threshold, op }){
-  return {
-    "alertRuleTags": {},
-    "conditions": [
-      {
-        "evaluator": {
-          "params": [
-            threshold
-          ],
-          "type": op
-        },
-        "operator": {
-          "type": "and"
-        },
-        "query": {
-          "params": [
-            "A",
-            "5m",
-            "now"
-          ]
-        },
-        "reducer": {
-          "params": [],
-          "type": "avg"
-        },
-        "type": "query"
-      }
-    ],
-    "executionErrorState": "alerting",
-    "for": "5m",
-    "frequency": "1m",
-    "handler": 1,
-    "name": "SOL-15:11:11:11:11:11/hum alert",
-    "noDataState": "no_data",
-    "notifications": []
+  const alertTemplete =  {
+	"alertRuleTags": {},
+	"conditions": [
+	  {
+		"evaluator": {
+		  "params": [
+			threshold
+		  ],
+		  "type": op
+		},
+		"operator": {
+		  "type": "and"
+		},
+		"query": {
+		  "params": [
+			"A",
+			"5m",
+			"now"
+		  ]
+		},
+		"reducer": {
+		  "params": [],
+		  "type": "avg"
+		},
+		"type": "query"
+	  }
+	],
+	"executionErrorState": "alerting",
+	"for": "5m",
+	"frequency": "1m",
+	"handler": 1,
+	"name": "SOL-15:11:11:11:11:11/hum alert",
+	"noDataState": "no_data",
+	"notifications": []
   }
+  return alertTemplete
 }
 
 

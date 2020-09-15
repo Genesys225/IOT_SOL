@@ -40,24 +40,24 @@ class GraphanaApi {
     } 
 
     async addAlertThreshold({dashboardID, deviceId, threshold, op}){
-        console.log(deviceId)
+        
         var myDashboard = await this.getDashboard(dashboardID);
+  
         var uid = this.hashCode(deviceId);
         var newPanelToAdd = alasql(`
         select * 
         from ? 
         where uid = ${uid}
-        `, [myDashboard.dashboard.panels]);
+        `, [myDashboard.dashboard.panels])[0];
        
-        var newDashboard = alasql(`
+        var excledeOldPanel = alasql(`
         select * 
         from ? 
         where uid != ${uid}
         `, [myDashboard.dashboard.panels]);
-        console.log(newDashboard)
-        newPanelToAdd.alert = alertT({threshold, op});
-   
-        myDashboard.dashboard.panels = myDashboard.dashboard.panels.concat(newPanelToAdd); 
+        newPanelToAdd['alert'] = alertT({threshold, op});
+        excledeOldPanel.push(newPanelToAdd)
+        myDashboard.dashboard.panels = excledeOldPanel
         await this.updateDashboard(myDashboard);
     }
  
