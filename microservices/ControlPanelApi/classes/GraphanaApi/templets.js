@@ -93,7 +93,8 @@ var dashboard = function({ id, uid, panels, title }) {
 			version: 924,
 		},
 		folderId: 0,
-		overwrite: true,
+		overwrite: false,
+		version: 1
 	};
 
 	// dashboard.panels = panels
@@ -101,7 +102,7 @@ var dashboard = function({ id, uid, panels, title }) {
 };
 
 var panel = function({ id, title, rawSql }) {
-	return {
+	var panelTemplete = {
 		uid: id,
 		aliasColors: {},
 		bars: false,
@@ -214,6 +215,11 @@ var panel = function({ id, title, rawSql }) {
 			alignLevel: null,
 		},
 	};
+
+	panelTemplete.uid = id;
+	panelTemplete.title = title;
+	panelTemplete.targets[0].rawSql = rawSql;
+	return panelTemplete
 };
 
 module.exports = { dashboard, panel , alertT};
