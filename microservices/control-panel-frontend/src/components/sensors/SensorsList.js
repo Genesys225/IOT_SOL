@@ -12,15 +12,17 @@ import SensorListItem from './SensorListItem';
 const useStyles = makeStyles((theme) => ({
 	root: {
 		width: '100%',
-	}
+	},
 }));
 
 export default function SensorsList() {
 	const sensors = useSelector(
 		(state) =>
 			// @ts-ignore
-			state.sensors
+			state.sensors.All
 	);
+	console.log(sensors);
+
 	const classes = useStyles();
 	const dispatch = useDispatch();
 
@@ -52,7 +54,7 @@ export default function SensorsList() {
 				>
 					<Divider key="0" />
 					{sensors.map((sensor) => (
-						<SensorListItem {...sensor} key={sensor.id} />
+						<SensorListItem {...sensor} key={sensor.deviceId} />
 					))}
 				</List>
 			</Card>

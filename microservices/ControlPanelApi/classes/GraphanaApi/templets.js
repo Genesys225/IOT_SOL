@@ -233,4 +233,10 @@ var textWidget = function({ id, title, rawSql }) {
 	return panelTemplete;
 };
 
-module.exports = { dashboard, panel, alertT, textWidget };
+var gaugeWidget = function({ id, title, rawSql }) {
+	var panelTemplete = panel({ id, title, rawSql });
+	panelTemplete.type = 'gauge';
+	return panelTemplete;
+};
+
+module.exports = { dashboard, panel, alertT, textWidget, gaugeWidget };
