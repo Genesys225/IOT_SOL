@@ -10,7 +10,7 @@ const HelloWorld = require('./classes/HelloWorld');
 
 ///var SensorsApi = require('./classes/SensorsApi');
 
-const GraphanaApi = require('./classes/GraphanaApi/GraphanaApi'); 
+const GraphanaApi = require('./classes/GraphanaApi/GraphanaApi');
 
 const graphanaApi = new GraphanaApi();
 
@@ -52,8 +52,6 @@ const app = setupExpress();
 		res.send(await sensorsApi.getLastData())
 	);
 
-
-
 	// graphana api
 
 	/**
@@ -66,37 +64,35 @@ const app = setupExpress();
 	*/
 	app.post('/addDeviceFromDashboardToDashboard', async (req, res) => {
 		return res.send(
-			await graphanaApi.addDeviceFromDashboardToDashboard({idFrom:req.body.idFrom, idTo: req.body.idTo, deviceId: req.body.deviceId})
+			await graphanaApi.addDeviceFromDashboardToDashboard({
+				idFrom: req.body.idFrom,
+				idTo: req.body.idTo,
+				deviceId: req.body.deviceId,
+			})
 		);
 	});
-	
-	
+
 	// http://localhost:6000/addAlertThreshold
 	// {"dashboardID":"room2", "deviceId":"SOL-14:11:11:11:11:11/temp", "threshold":8, "op":"gt"}
 	app.post('/addAlertThreshold', async (req, res) => {
 		return res.send(
-			await graphanaApi.addAlertThreshold({dashboardID:req.body.dashboardID, deviceId: req.body.deviceId, threshold: req.body.threshold, op: req.body.op})
+			await graphanaApi.addAlertThreshold({
+				dashboardID: req.body.dashboardID,
+				deviceId: req.body.deviceId,
+				threshold: req.body.threshold,
+				op: req.body.op,
+			})
 		);
 	});
 
-
-
-	app.post('/getAllAlerts', async (req, res) => {
-		return res.send(
-			await graphanaApi.getAllAlerts({dashboardID:req.body.dashboardID, deviceId: req.body.deviceId, threshold: req.body.threshold, op: req.body.op})
-		);
+	app.get('/getAllAlerts', async (req, res) => {
+		return res.send(await graphanaApi.getAllAlerts());
 	});
 
-
-	app.post('/getAllPanels', async (req, res) => {
-		return res.send(
-			await graphanaApi.getAllPannels()
-		);
+	app.get('/getAllPanels', async (req, res) => {
+		return res.send(await graphanaApi.getAllPannels());
 	});
-
 })();
-
-
 
 // setInterval(() => {
 // 	graphanaApi.registerAllDevices()

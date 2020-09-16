@@ -1,46 +1,37 @@
-const alertT = function({threshold, op }){
-  const alertTemplete =  {
-	"alertRuleTags": {},
-	"conditions": [
-	  {
-		"evaluator": {
-		  "params": [
-			threshold
-		  ],
-		  "type": op
-		},
-		"operator": {
-		  "type": "and"
-		},
-		"query": {
-		  "params": [
-			"A",
-			"5m",
-			"now"
-		  ]
-		},
-		"reducer": {
-		  "params": [],
-		  "type": "avg"
-		},
-		"type": "query"
-	  }
-	],
-	"executionErrorState": "alerting",
-	"for": "5m",
-	"frequency": "1m",
-	"handler": 1,
-	"name": "SOL-15:11:11:11:11:11/hum alert",
-	"noDataState": "no_data",
-	"notifications": []
-  }
-  return alertTemplete
-}
-
+const alertT = function({ threshold, op }) {
+	const alertTemplete = {
+		alertRuleTags: {},
+		conditions: [
+			{
+				evaluator: {
+					params: [threshold],
+					type: op,
+				},
+				operator: {
+					type: 'and',
+				},
+				query: {
+					params: ['A', '5m', 'now'],
+				},
+				reducer: {
+					params: [],
+					type: 'avg',
+				},
+				type: 'query',
+			},
+		],
+		executionErrorState: 'alerting',
+		for: '5m',
+		frequency: '1m',
+		handler: 1,
+		name: 'SOL-15:11:11:11:11:11/hum alert',
+		noDataState: 'no_data',
+		notifications: [],
+	};
+	return alertTemplete;
+};
 
 var dashboard = function({ id, uid, panels, title }) {
-
-  
 	const dashboard = {
 		dashboard: {
 			id: id || null,
@@ -95,7 +86,7 @@ var dashboard = function({ id, uid, panels, title }) {
 		},
 		folderId: 0,
 		overwrite: false,
-		version: 1
+		version: 1,
 	};
 
 	// dashboard.panels = panels
@@ -220,7 +211,26 @@ var panel = function({ id, title, rawSql }) {
 	panelTemplete.uid = id;
 	panelTemplete.title = title;
 	panelTemplete.targets[0].rawSql = rawSql;
-	return panelTemplete
+	return panelTemplete;
 };
 
-module.exports = { dashboard, panel , alertT};
+var textWidget = function({ id, title, rawSql }) {
+	var panelTemplete = panel({ id, title, rawSql });
+
+	panelTemplete.options = {
+		colorMode: 'value',
+		graphMode: 'none',
+		justifyMode: 'auto',
+		orientation: 'vertical',
+		reduceOptions: {
+			calcs: ['last'],
+			fields: '',
+			values: false,
+		},
+		textMode: 'value',
+	};
+	panelTemplete.type = 'stat';
+	return panelTemplete;
+};
+
+module.exports = { dashboard, panel, alertT, textWidget };
