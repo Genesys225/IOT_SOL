@@ -1,5 +1,5 @@
 const fetch = require('node-fetch');
-const { panel, dashboard , alertT} = require('./templets');
+const { dashboard, panel, alertT, textWidget, gaugeWidget } = require('./templets');
 const alasql = require('alasql')
 
 class GraphanaApi {
@@ -18,7 +18,13 @@ class GraphanaApi {
             return panel({ id: this.hashCode(r.id), title: r.id, rawSql })
         })
 
-        const allPanels = dashboard({ uid: 'All', title: 'All', panels: myPanels })
+        var myGauge = (await this.getSensors()).map((r) => {
+            const rawSql = `SELECT\n  $__timeGroupAlias(ts,$__interval),\n  sensor_id AS metric,\n  avg(value) AS \"value\"\nFROM measurements\nWHERE\n  $__timeFilter(ts) AND\n  sensor_id = '${r.id}'\nGROUP BY 1,2\nORDER BY $__timeGroup(ts,$__interval)`
+            console.log(this.hashCode(r.id+"Gauge"), r.id+"Gauge")
+            return gaugeWidget({ id: this.hashCode(r.id+"Gauge"), title: r.id+"Gauge", rawSql })
+        })
+
+        const allPanels = dashboard({ uid: 'All', title: 'All', panels: [...myPanels, ...myGauge] })
         await this.updateDashboard(allPanels)
     } 
 
