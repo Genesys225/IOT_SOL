@@ -18,6 +18,8 @@ import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
 import { useDispatch, useSelector } from 'react-redux';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import { updateAlerts } from '../../store/actions/alertsActions';
+import SaveIcon from '@material-ui/icons/Save';
+
 const useStyles = makeStyles((theme) => ({
 	modal: {
 		display: 'flex',
@@ -39,6 +41,12 @@ const useStyles = makeStyles((theme) => ({
 	button: {
 		margin: theme.spacing(1),
 	},
+	actionGroup: {
+		display: 'flex',
+		justifyContent: 'space-between',
+		flexDirection: 'row',
+		marginTop: '10px'
+	}
 }));
 
 const initialState = (props, sensors, alerts) => ({
@@ -47,7 +55,6 @@ const initialState = (props, sensors, alerts) => ({
 	alerts: [
 		...alerts.alerts,
 		{
-			id: null,
 			op: 'gt',
 			threshold: props.threshold || '',
 			actions: [],
@@ -71,16 +78,16 @@ const reducer = (state, { type, payload }) => {
 			return { ...state, creating: true };
 
 		case UPDATE_NEW_ALERT:
-			const updatedAlerts = state.alerts.map((alert) =>
-				alert.id === null ? { ...alert, ...payload } : alert
+			const updatedAlerts = state.alerts.map((alert, index) =>
+				index === payload.index ? { ...alert, ...payload, edited: true } : alert
 			);
-			return { state, alerts: updatedAlerts };
+			return { ...state, alerts: updatedAlerts };
 
 		case UPDATE_EXISTING_ALERT: {
 			const updatedAlerts = state.alerts.map((alert) =>
 				alert.id === payload.id ? { ...payload, edited: true } : alert
 			);
-			return { state, alerts: updatedAlerts };
+			return { ...state, alerts: updatedAlerts };
 		}
 
 		case COMMIT_ALERTS:
@@ -131,12 +138,20 @@ function AlertsModal(props) {
 	const handleClose = () => {
 		if (state.creating) {
 			// @ts-ignore
-			dispatch({ type: COMMIT_ALERTS });
+			
 			props.onClose();
 		}
 	};
+
+	const handleSave = () => {
+		dispatch({ type: COMMIT_ALERTS });
+	}
+
 	const { updatedAlertsToCommit } = state;
+
 	useEffect(() => {
+		console.log(state)
+
 		const sendUpdateAlerts = async (alerts) => {
 			await thunkDispatch(updateAlerts(alerts, props.deviceId));
 			// @ts-ignore
@@ -160,7 +175,7 @@ function AlertsModal(props) {
 				timeout: 500,
 			}}
 		>
-			<Fade in={props.deviceId}>
+			<Fade in={props.in}>
 				<Paper className={classes.paper}>
 					<Box display="flex" flexDirection="row">
 						<Typography id="transition-modal-title" variant="h5">
@@ -176,6 +191,7 @@ function AlertsModal(props) {
 						justifyContent="space-evenly"
 						display="flex"
 						flexDirection="row"
+						mb="3"
 					>
 						<Paper className={classes.paper}>
 							<Box
@@ -200,16 +216,17 @@ function AlertsModal(props) {
 										<FormControl
 											className={classes.formControl}
 										>
-											<InputLabel id="zone-label">
+											<InputLabel id="operator-label">
 												Operator
 											</InputLabel>
 											<Select
-												labelId="zone-label"
-												id="zone"
+												labelId="operator-label"
+												id="operator"
 												value={
 													state.alerts[0]
 														.compareOperator
 												}
+												onChange={(event) => dispatch({type: UPDATE_NEW_ALERT, payload: { op: event.target.value, index: 0 } })}
 												defaultValue="gt"
 											>
 												<MenuItem value="eq">
@@ -235,6 +252,8 @@ function AlertsModal(props) {
 												defaultValue=""
 												variant="outlined"
 												type="number"
+												onChange={(event) => dispatch({type: UPDATE_NEW_ALERT, payload: { threshold: event.target.value, index: 0 } })}
+
 											/>
 										</FormControl>
 									</>
@@ -242,9 +261,23 @@ function AlertsModal(props) {
 							</Box>
 						</Paper>
 					</Box>
-					<p id="transition-modal-description">
-						react-transition-group animates me.
-					</p>
+					<Box className={classes.actionGroup}>
+						<Button 
+							variant="contained"
+							color="secodary"
+							onClick={() => props.onClose()}
+						>
+							Cancel
+						</Button>
+						<Button 
+							variant="contained"
+							color="primary"
+							startIcon={<SaveIcon />}
+							onClick={handleSave}
+						>
+							Save
+						</Button>
+					</Box>
 				</Paper>
 			</Fade>
 		</Modal>

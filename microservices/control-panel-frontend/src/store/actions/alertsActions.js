@@ -15,7 +15,7 @@ export const updateAlerts = (updatedAlerts, deviceId) => {
 			const res = await fetch('/addAlertThreshold', {
 				method: 'POST',
 				body: JSON.stringify({
-					dashboardID: 'all',
+					dashboardID: 'All',
 					deviceId,
 					threshold: alert.threshold,
 					op: alert.op,
@@ -23,7 +23,7 @@ export const updateAlerts = (updatedAlerts, deviceId) => {
 				headers: { 'Content-Type': 'application/json' },
 			});
 			console.log({
-				dashboardID: 'all',
+				dashboardID: 'All',
 				deviceId,
 				threshold: alert.threshold,
 				op: alert.op,
