@@ -85,9 +85,9 @@ const SensorListItem = (props) => {
 		setZone(event.target.value);
 		dispatch(
 			updateDeviceZone({
-				idFrom: 'All',
+				idFrom: props.room,
 				idTo: event.target.value,
-				deviceId: props.id,
+				deviceId: props.deviceId,
 			})
 		);
 	};
@@ -97,7 +97,7 @@ const SensorListItem = (props) => {
 		const newChecked = [...checked];
 		dispatch(
 			sendCommand({
-				id: props.id,
+				id: props.deviceId,
 				params: { command: currentIndex === -1 ? 'ON' : 'OFF' },
 			})
 		);
@@ -150,7 +150,7 @@ const SensorListItem = (props) => {
 							}}
 						/>
 						<ListItemIcon className={classes.formControl}>
-							<Icon icon={props.type} />
+							<Icon icon={props.deviceType} />
 						</ListItemIcon>
 						<Box display="flex" flexDirection="row-reverse">
 							<ListItemIcon onClick={handleEdit}>
@@ -171,8 +171,8 @@ const SensorListItem = (props) => {
 							</ListItemIcon>
 							<ListItemText
 								id="zone-label"
-								primary={props.type}
-								secondary={props.id}
+								primary={props.deviceType}
+								secondary={props.deviceId}
 							/>
 						</Box>
 					</Box>
@@ -190,7 +190,7 @@ const SensorListItem = (props) => {
 									onChange={handleChange}
 									className={classes.zoneSelect}
 								>
-									<MenuItem value="all">
+									<MenuItem value="All">
 										<em>All</em>
 									</MenuItem>
 									<MenuItem value="room1">Room 1</MenuItem>
@@ -204,15 +204,19 @@ const SensorListItem = (props) => {
 								variant="filled"
 							>
 								<TextField
-									id={props.id + '-value'}
-									value={props.value || ''}
+									id={props.deviceId + '-value'}
+									value={props.currentValue || ''}
 									label="Current value"
 									InputProps={{
 										endAdornment: (
 											<>
-												{props.value && (
+												{props.deviceId && (
 													<InputAdornment position="end">
-														{units[props.type]}
+														{
+															units[
+																props.deviceType
+															]
+														}
 													</InputAdornment>
 												)}
 											</>
@@ -224,8 +228,10 @@ const SensorListItem = (props) => {
 							<FormControl className={classes.formControl}>
 								<Switch
 									edge="start"
-									onChange={handleToggle(props.id)}
-									checked={checked.indexOf(props.id) !== -1}
+									onChange={handleToggle(props.deviceId)}
+									checked={
+										checked.indexOf(props.deviceId) !== -1
+									}
 									inputProps={{
 										'aria-labelledby':
 											'switch-list-label-wifi',
@@ -238,12 +244,18 @@ const SensorListItem = (props) => {
 			</ListItem>
 			<Collapse in={open} timeout="auto" unmountOnExit>
 				<Box display="flex" justifyContent="center">
-					<Grow in={checked.indexOf(props.id) !== -1} unmountOnExit>
+					<Grow
+						in={checked.indexOf(props.deviceId) !== -1}
+						unmountOnExit
+					>
 						<Paper elevation={2} className={classes.paper}>
 							<h5>WOW!!!</h5>
 						</Paper>
 					</Grow>
-					<SensorIframe id={props.id} listItemRef={listItemRef} />
+					<SensorIframe
+						id={props.deviceId}
+						listItemRef={listItemRef}
+					/>
 				</Box>
 			</Collapse>
 			<Divider />

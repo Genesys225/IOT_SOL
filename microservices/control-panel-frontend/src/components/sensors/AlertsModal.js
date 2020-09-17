@@ -42,8 +42,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const initialState = (props, sensors, alerts) => ({
-	sensorId: props.id,
-	sensor: sensors.find((sensor) => sensor.id === props.id),
+	sensorId: props.deviceId,
+	sensor: sensors.find((sensor) => sensor.deviceId === props.deviceId),
 	alerts: [
 		...alerts.alerts,
 		{
@@ -69,22 +69,26 @@ const reducer = (state, { type, payload }) => {
 	switch (type) {
 		case INIT_ALERT_CREATION:
 			return { ...state, creating: true };
+
 		case UPDATE_NEW_ALERT:
 			const updatedAlerts = state.alerts.map((alert) =>
 				alert.id === null ? { ...alert, ...payload } : alert
 			);
 			return { state, alerts: updatedAlerts };
+
 		case UPDATE_EXISTING_ALERT: {
 			const updatedAlerts = state.alerts.map((alert) =>
 				alert.id === payload.id ? { ...payload, edited: true } : alert
 			);
 			return { state, alerts: updatedAlerts };
 		}
+
 		case COMMIT_ALERTS:
 			const updatedAlertsToCommit = state.alerts.filter(
 				(alert) => alert.edited || alert.id === null
 			);
 			return { ...state, updatedAlertsToCommit };
+
 		case COMMIT_FINISHED:
 			return {
 				...state,
@@ -103,7 +107,9 @@ const reducer = (state, { type, payload }) => {
 
 function AlertsModal(props) {
 	// @ts-ignore
-	const { sensors, controls, alerts } = useSelector((state) => state);
+	const { controls, alerts } = useSelector((state) => state);
+	// @ts-ignore
+	const sensors = useSelector((state) => state.sensors.All);
 	const [state, dispatch] = useReducer(
 		reducer,
 		initialState(props, sensors, alerts)
@@ -132,7 +138,7 @@ function AlertsModal(props) {
 	const { updatedAlertsToCommit } = state;
 	useEffect(() => {
 		const sendUpdateAlerts = async (alerts) => {
-			await thunkDispatch(updateAlerts(alerts, props.id));
+			await thunkDispatch(updateAlerts(alerts, props.deviceId));
 			// @ts-ignore
 			dispatch({ type: COMMIT_FINISHED });
 		};
@@ -154,7 +160,7 @@ function AlertsModal(props) {
 				timeout: 500,
 			}}
 		>
-			<Fade in={props.in}>
+			<Fade in={props.deviceId}>
 				<Paper className={classes.paper}>
 					<Box display="flex" flexDirection="row">
 						<Typography id="transition-modal-title" variant="h5">

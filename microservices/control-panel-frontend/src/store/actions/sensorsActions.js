@@ -5,9 +5,9 @@ export const UPDATE_ROOM = 'UPDATE_ROOM';
 
 export const getSensors = () => {
 	return async (dispatch) => {
-		const res = await fetch('/getSensors');
-		const allSensors = await res.json();
-		dispatch({ type: GET_SENSORS, payload: allSensors });
+		const res = await fetch('/getAllPanels');
+		const allPanels = await res.json();
+		dispatch({ type: GET_SENSORS, payload: allPanels });
 	};
 };
 
