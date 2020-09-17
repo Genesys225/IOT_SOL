@@ -28,11 +28,11 @@ export const updateAlerts = (updatedAlerts, deviceId) => {
 				threshold: alert.threshold,
 				op: alert.op,
 			});
-			// return await res.json();
+			return await res.json();
 			// alert.id = Date.now();
 			// return alert;
 		});
-		// console.log(await newAlerts);
+		console.log( newAlerts);
 		dispatch({ type: GET_ALERTS, payload: newAlerts });
 	};
 };
