@@ -55,7 +55,17 @@ class GraphanaApi {
         from ? 
         where uid != ${uid}
         `, [myDashboard.dashboard.panels]);
-        newPanelToAdd['alert'] = alertT({threshold, op});
+        newPanelToAdd.alert = alertT({threshold, op});
+        newPanelToAdd["thresholds"] = [
+            {
+              "colorMode": "critical",
+              "fill": true,
+              "line": true,
+              "op": op,
+              "value": threshold,
+              "yaxis": "left"
+            }
+          ]
         excledeOldPanel.push(newPanelToAdd)
         myDashboard.dashboard.panels = excledeOldPanel
         await this.updateDashboard(myDashboard);
