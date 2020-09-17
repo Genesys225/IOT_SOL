@@ -74,7 +74,7 @@ class GraphanaApi {
           ]
         excledeOldPanel.push(newPanelToAdd)
         myDashboard.dashboard.panels = excledeOldPanel
-        await this.updateDashboard(myDashboard);
+        return await this.updateDashboard(myDashboard);
     }
  
 
@@ -169,7 +169,7 @@ class GraphanaApi {
             headers: { 'Content-Type': 'application/json', 'Authorization': process.env.GRAPHANA_API_KEY },
         })
             .then(res => res.json(dash))
-            .then(json => console.log(JSON.stringify(json), 999));
+            .then(json => JSON.stringify(json));
     }
 }
 //SOL-16:11:11:11:11:11/light
