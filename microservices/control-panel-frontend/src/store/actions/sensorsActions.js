@@ -64,7 +64,7 @@ export const updateDeviceZone = ({ idFrom, idTo, deviceId }) => {
 		if (res.status === 200)
 			dispatch({
 				type: UPDATE_ROOM,
-				payload: { id: deviceId, room: idTo },
+				payload: { deviceId, room: idTo },
 			});
 	};
 };

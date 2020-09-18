@@ -63,7 +63,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const SensorListItem = (props) => {
-	const theme = useTheme();
 	const [open, setOpen] = useState(false);
 	const [showAlertsModal, setShowAlertModal] = useState(false);
 	const [checked, setChecked] = useState([]);

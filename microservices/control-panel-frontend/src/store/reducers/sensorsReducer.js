@@ -85,6 +85,7 @@ export const sensorsReducer = (state = initialState, { type, payload }) => {
 		case UPDATE_ROOM: {
 			const newSensorState = { ...state };
 			Object.keys(newSensorState).forEach((room) => {
+				console.log(room);
 				newSensorState[room] = newSensorState[room].map((device) => {
 					if (device.deviceId === payload.deviceId) {
 						return { ...device, room: payload.room };
