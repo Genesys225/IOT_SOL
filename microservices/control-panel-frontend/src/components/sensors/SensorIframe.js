@@ -1,9 +1,17 @@
-import { Box, makeStyles } from '@material-ui/core';
+import { Box, Button, IconButton, makeStyles } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
-
+import FullscreenIcon from '@material-ui/icons/Fullscreen';
 const useStyles = makeStyles({
 	iframeWrap: {
 		cursor: 'pointer',
+		position: 'relative',
+	},
+	overlayExpandGraph: {
+		position: 'absolute',
+		background: 'transparent',
+		top: 0,
+		right: 0,
+		zIndex: 1,
 	},
 });
 
@@ -18,6 +26,7 @@ function SensorIframe(props) {
 	function iframeClickHandler(event) {
 		if (iframeHover) {
 			event.preventDefault();
+
 			console.log('Wow! Iframe Click!');
 		}
 	}
@@ -32,8 +41,12 @@ function SensorIframe(props) {
 		setIframeHover(true);
 	};
 	const handleIFrameOut = () => {
-		document.activeElement.blur();
-		window.top.focus();
+		setTimeout(() => {
+			if (document.activeElement instanceof HTMLIFrameElement) {
+				document.activeElement.blur();
+				window.top.focus();
+			}
+		}, 0);
 		setIframeHover(false);
 	};
 	return (
@@ -43,6 +56,9 @@ function SensorIframe(props) {
 			onMouseOver={handleIFrameHover}
 			onMouseOut={handleIFrameOut}
 		>
+			<IconButton color="primary" className={classes.overlayExpandGraph}>
+				<FullscreenIcon />
+			</IconButton>
 			<iframe
 				className={classes.iframeWrap}
 				src={`http://localhost:3000/d-solo/All/all?orgId=1&refresh=25s&from=now-${timePeriod}&to=now&theme=light&kiosk&panelId=${panelId}`}

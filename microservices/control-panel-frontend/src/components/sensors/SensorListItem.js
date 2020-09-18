@@ -163,9 +163,10 @@ const SensorListItem = (props) => {
 							<ListItemIcon>
 								<IconButton
 									aria-label="edit"
+									color="primary"
 									onClick={handleEdit}
 								>
-									<EditIcon color="action" />
+									<EditIcon />
 								</IconButton>
 							</ListItemIcon>
 							<ListItemText

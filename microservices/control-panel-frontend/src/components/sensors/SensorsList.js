@@ -46,7 +46,10 @@ export default function SensorsList() {
 	const sensors = useSelector((state) =>
 		room === 'All'
 			? // @ts-ignore
-			  state.sensors.All
+
+			  state.sensors.All.filter(
+					(device) => !device.title.includes('Gauge')
+			  )
 			: // @ts-ignore
 			  state.sensors.All.filter((device) => device.room === room)
 	);
