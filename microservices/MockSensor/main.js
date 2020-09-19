@@ -11,14 +11,15 @@ const clientConnectionParams = {
   mqttSetting: { url, port },
 };
 const mockDevice = mqtt.connect(url)
-var switch1Status = '0';
 
+var switch1Status = '0';
 mockDevice.on('connect', function () {
   mockDevice.subscribe('alive/#', function (err) {
     setInterval(() => {
-      mockDevice.publish('alive/SOL-18:11:11:11:11:11/switch', 'on')
+      mockDevice.publish('alive/SOL-25:11:11:11:11:11/switch', 'on')
     }, 5000);
   })
+  mockDevice.subscribe('controls/SOL-25:11:11:11:11:11/switch/#')
 
 
 
@@ -56,14 +57,16 @@ mockDevice.on('connect', function () {
       // **************************SWITCHES*****************************************
       mockDevice.on('message', function (topic, message) {
         // message is Buffer
-        if (topic == "sensors/SOL-25:11:11:11:11:11/switch" && message.toString() == 'on') {
-          switch1Status = '0'
-          mockDevice.publish("alive/SOL-18:11:11:11:11:11/switch" + "Status", "on")
-        }
-
-        if (topic == "sensors/SOL-25:11:11:11:11:11/switch" && message.toString() == 'off') {
+        if (topic == "controls/SOL-25:11:11:11:11:11/switch" && message.toString() == 'on') {
           switch1Status = '1'
-          mockDevice.publish("alive/SOL-18:11:11:11:11:11/switch" + "Status", "off")
+          mockDevice.publish("controls/SOL-25:11:11:11:11:11/switch" + "/validate", "on")
+          mockDevice.publish('sensors/SOL-25:11:11:11:11:11/switch', switch1Status)
+        }
+        
+        if (topic == "controls/SOL-25:11:11:11:11:11/switch" && message.toString() == 'off') {
+          switch1Status = '0'
+          mockDevice.publish("controls/SOL-25:11:11:11:11:11/switch" + "/validate", "off")
+          mockDevice.publish('sensors/SOL-25:11:11:11:11:11/switch', switch1Status)
         }
 
       })
