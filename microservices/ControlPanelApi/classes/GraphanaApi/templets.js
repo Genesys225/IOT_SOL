@@ -171,11 +171,7 @@ var panel = function({ id, title, rawSql }) {
 		timeRegions: [],
 		timeShift: null,
 		title: title,
-		tooltip: {
-			shared: true,
-			sort: 0,
-			value_type: 'individual',
-		},
+		
 		type: 'graph',
 		xaxis: {
 			buckets: null,

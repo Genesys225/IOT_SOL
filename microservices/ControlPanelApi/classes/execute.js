@@ -9,7 +9,7 @@ const cMqtt = mqtt.connect(url);
 class ExecuteApi{
 
     async sensorExecute(id, message){
-        this.cMqtt.publish(id, message);
+        this.cMqtt.publish(`controls/${id}`, message);
         return  {id, message}
     }
 

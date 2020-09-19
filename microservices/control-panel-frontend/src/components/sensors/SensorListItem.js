@@ -19,8 +19,9 @@ import {
 	TextField,
 	useTheme,
 } from '@material-ui/core';
+import clsx from 'clsx';
 import React, { useRef, useState, useCallback } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { sendCommand } from '../../store/actions/controls';
 import { updateDeviceZone } from '../../store/actions/sensorsActions';
 import ExpandLess from '@material-ui/icons/ExpandLess';
@@ -39,6 +40,9 @@ const useStyles = makeStyles((theme) => ({
 		margin: theme.spacing(1),
 		minWidth: 30,
 		maxWidth: 110,
+	},
+	rotateSwitch: {
+		transform: 'rotate(270deg)',
 	},
 	zoneSelect: {
 		marginTop: theme.spacing(2),
@@ -63,6 +67,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const SensorListItem = (props) => {
+	const switched = useSelector((state) =>
+		state.controls.switched.includes(props.deviceId)
+	);
 	const [open, setOpen] = useState(false);
 	const [showAlertsModal, setShowAlertModal] = useState(false);
 	const [checked, setChecked] = useState([]);
@@ -91,22 +98,13 @@ const SensorListItem = (props) => {
 		);
 	};
 
-	const handleToggle = (value) => () => {
-		const currentIndex = checked.indexOf(value);
-		const newChecked = [...checked];
+	const handleToggle = () => {
 		dispatch(
 			sendCommand({
 				id: props.deviceId,
-				params: { command: currentIndex === -1 ? 'ON' : 'OFF' },
+				command: !switched ? 'on' : 'off',
 			})
 		);
-		if (currentIndex === -1) {
-			newChecked.push(value);
-		} else {
-			newChecked.splice(currentIndex, 1);
-		}
-
-		setChecked(newChecked);
 	};
 
 	const handleClick = (event) => {
@@ -152,14 +150,16 @@ const SensorListItem = (props) => {
 							<Icon icon={props.deviceType} />
 						</ListItemIcon>
 						<Box display="flex" flexDirection="row-reverse">
-							<ListItemIcon onClick={handleEdit}>
-								<IconButton
-									aria-label="alerts"
-									color="secondary"
-								>
-									<NotificationsActiveIcon />
-								</IconButton>
-							</ListItemIcon>
+							{props.deviceType !== 'switch' && (
+								<ListItemIcon onClick={handleEdit}>
+									<IconButton
+										aria-label="alerts"
+										color="secondary"
+									>
+										<NotificationsActiveIcon />
+									</IconButton>
+								</ListItemIcon>
+							)}
 							<ListItemIcon>
 								<IconButton
 									aria-label="edit"
@@ -225,19 +225,24 @@ const SensorListItem = (props) => {
 								/>
 							</FormControl>
 							<Divider variant="fullWidth" />
-							<FormControl className={classes.formControl}>
-								<Switch
-									edge="start"
-									onChange={handleToggle(props.deviceId)}
-									checked={
-										checked.indexOf(props.deviceId) !== -1
-									}
-									inputProps={{
-										'aria-labelledby':
-											'switch-list-label-wifi',
-									}}
-								/>
-							</FormControl>
+							{props.deviceType === 'switch' && (
+								<FormControl
+									className={clsx(
+										classes.formControl,
+										classes.rotateSwitch
+									)}
+								>
+									<Switch
+										edge="start"
+										onChange={handleToggle}
+										checked={switched}
+										inputProps={{
+											'aria-labelledby':
+												'switch-list-label-wifi',
+										}}
+									/>
+								</FormControl>
+							)}
 						</Box>
 					</ListItemSecondaryAction>
 				</Box>

@@ -32,7 +32,7 @@ export const updateAlerts = (updatedAlerts, deviceId) => {
 			// alert.id = Date.now();
 			// return alert;
 		});
-		console.log( newAlerts);
-		dispatch({ type: GET_ALERTS, payload: newAlerts });
+		console.log(newAlerts);
+		dispatch({ type: UPDATE_ALERTS, payload: newAlerts });
 	};
 };
