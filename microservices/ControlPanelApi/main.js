@@ -85,6 +85,12 @@ const app = setupExpress();
 		);
 	});
 
+	app.post('/addAlertTiming', async (req, res) => {
+		const mysqlDb = await sensorsApi.addAlertTiming({sensor_id: req.body.sensor_id, value: req.body.value, ts: req.body.ts});
+		return res.send(mysqlDb);
+	});
+
+
 	app.get('/getAllAlerts', async (req, res) => {
 		return res.send(await graphanaApi.getAllAlerts());
 	});
