@@ -85,7 +85,7 @@ var dashboard = function({ id, uid, panels, title }) {
 			version: 924,
 		},
 		folderId: 0,
-		overwrite: false,
+		overwrite: true,
 		version: 1,
 	};
 
