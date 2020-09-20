@@ -24,12 +24,16 @@ const useStyles = makeStyles({
 	container: {
 		display: 'flex',
 		marginBottom: (theme) => theme.spacing(2),
-		justifyContent: 'flex-end',
+		justifyContent: 'flex-start',
+		width: '50%',
 	},
 	text: (theme) => ({
 		...theme.typography.h6,
 		marginRight: theme.spacing(2),
 	}),
+	floatLeft: {
+		float: 'left',
+	},
 });
 
 const appointments = [
@@ -99,17 +103,18 @@ const ResourceSwitcher = ({ mainResourceName, onChange, resources }) => {
 	);
 };
 
-const reducer = (state, { type, payload = {} }) => {
+const reducer = (state, { type, payload }) => {
+	console.log({ state, type, payload });
 	switch (type) {
 		case 'addAlert':
-			const { addedAppointment } = payload;
-			return { ...state, addedAppointment };
+			return {
+				...state,
+				addedAppointment: payload,
+			};
 		case 'changeAlert':
-			const { appointmentChanges } = payload;
-			return { ...state, appointmentChanges };
-		case 'selectEditedAler':
-			const { editingAppointment } = payload;
-			return { ...state, editingAppointment };
+			return { ...state, appointmentChanges: payload };
+		case 'selectEditedAlert':
+			return { ...state, editingAppointment: payload };
 		case 'commitAddedAlert':
 			let { data } = state;
 			const startingAddedId =
@@ -138,14 +143,13 @@ const reducer = (state, { type, payload = {} }) => {
 		}
 
 		default:
-			return state;
+			throw new Error(JSON.stringify({ type, payload }));
 	}
 };
 
 const initialState = {
 	data: appointments,
 	currentDate: '2018-06-27',
-
 	addedAppointment: {},
 	appointmentChanges: {},
 	editingAppointment: undefined,
@@ -214,11 +218,6 @@ const SchedulerComp = (props) => {
 	} = state;
 	return (
 		<>
-			<ResourceSwitcher
-				resources={resources}
-				mainResourceName={mainResourceName}
-				onChange={changeMainResource}
-			/>
 			<Paper>
 				<Scheduler data={data} height={660}>
 					<ViewState
@@ -230,28 +229,36 @@ const SchedulerComp = (props) => {
 						onCommitChanges={commitChanges}
 						addedAppointment={addedAppointment}
 						onAddedAppointmentChange={(addedAppointment) =>
-							dispatch({ type: 'addALert', addedAppointment })
+							dispatch({
+								type: 'addAlert',
+								payload: addedAppointment,
+							})
 						}
 						appointmentChanges={appointmentChanges}
 						onAppointmentChangesChange={(appointmentChanges) =>
 							dispatch({
 								type: 'changeAlert',
-								appointmentChanges,
+								payload: appointmentChanges,
 							})
 						}
 						editingAppointment={editingAppointment}
 						onEditingAppointmentChange={(editingAppointment) =>
 							dispatch({
 								type: 'selectEditedAlert',
-								editingAppointment,
+								payload: editingAppointment,
 							})
 						}
 					/>
 					<WeekView />
 					<MonthView />
 					<DayView />
-					<Toolbar />
+					<Toolbar></Toolbar>
 					<ViewSwitcher />
+					<ResourceSwitcher
+						resources={resources}
+						mainResourceName={mainResourceName}
+						onChange={changeMainResource}
+					/>
 					<AllDayPanel />
 					<EditRecurrenceMenu />
 					<ConfirmationDialog />
