@@ -21,7 +21,10 @@ import {
 } from '@devexpress/dx-react-scheduler-material-ui';
 import { appointments } from './demo-data/appointments';
 import { Select, MenuItem, useTheme, Divider } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
+import { createStyles, makeStyles, withStyles } from '@material-ui/styles';
+import { indigo, blue, teal } from '@material-ui/core/colors';
+import { fade } from '@material-ui/core/styles/colorManipulator';
+import classNames from 'classnames';
 
 const useStyles = makeStyles({
 	container: {
@@ -41,6 +44,11 @@ const useStyles = makeStyles({
 	}),
 	floatLeft: {
 		float: 'left',
+	},
+	paper: {
+		height: '2600px',
+		width: '95%',
+		margin: '15px auto',
 	},
 });
 
@@ -113,6 +121,8 @@ const reducer = (state, { type, payload }) => {
 	}
 };
 
+const isWeekEnd = (date) => date.getDay() === 0 || date.getDay() === 6;
+
 const initialState = {
 	data: appointments,
 	currentDate: '2018-06-27',
@@ -147,8 +157,113 @@ const initialState = {
 	],
 };
 
+const useStyles1 = makeStyles({
+	appointment: {
+		borderRadius: 0,
+		borderBottom: 0,
+	},
+	highPriorityAppointment: {
+		borderLeft: `4px solid ${teal[500]}`,
+	},
+	mediumPriorityAppointment: {
+		borderLeft: `4px solid ${blue[500]}`,
+	},
+	lowPriorityAppointment: {
+		borderLeft: `4px solid ${indigo[500]}`,
+	},
+	weekEndCell: {
+		backgroundColor: ({ palette }) =>
+			fade(palette.action.disabledBackground, 0.04),
+		'&:hover': {
+			backgroundColor: ({ palette }) =>
+				fade(palette.action.disabledBackground, 0.04),
+		},
+		'&:focus': {
+			backgroundColor: ({ palette }) =>
+				fade(palette.action.disabledBackground, 0.04),
+		},
+	},
+	weekEndDayScaleCell: {
+		backgroundColor: ({ palette }) =>
+			fade(palette.action.disabledBackground, 0.06),
+	},
+	text: {
+		overflow: 'hidden',
+		textOverflow: 'ellipsis',
+		whiteSpace: 'nowrap',
+	},
+	content: {
+		opacity: 0.7,
+	},
+	container: {
+		width: '100%',
+		lineHeight: 1.2,
+		height: '100%',
+	},
+});
+
+const DayScaleCell = ({ startDate, ...restProps }) => {
+	const theme = useTheme();
+	const classes = useStyles1(theme);
+	return (
+		<MonthView.DayScaleCell
+			className={classNames({
+				[classes.weekEndDayScaleCell]: isWeekEnd(startDate),
+			})}
+			startDate={startDate}
+			{...restProps}
+		/>
+	);
+};
+const TimeTableCell = ({ startDate, ...restProps }) => {
+	const theme = useTheme();
+	const classes = useStyles1(theme);
+	return (
+		<MonthView.TimeTableCell
+			className={classNames({
+				[classes.weekEndCell]: isWeekEnd(startDate),
+			})}
+			startDate={startDate}
+			{...restProps}
+		/>
+	);
+};
+const Appointment = ({ data, ...restProps }) => {
+	const theme = useTheme();
+	const classes = useStyles1(theme);
+	return (
+		<Appointments.Appointment
+			{...restProps}
+			className={classNames({
+				[classes.highPriorityAppointment]: data.priority === 1,
+				[classes.mediumPriorityAppointment]: data.priority === 2,
+				[classes.lowPriorityAppointment]: data.priority === 3,
+				[classes.appointment]: true,
+			})}
+			data={data}
+		/>
+	);
+};
+
+const AppointmentContent = ({ data, ...restProps }) => {
+	const theme = useTheme();
+	const classes = useStyles1(theme);
+	return (
+		<Appointments.AppointmentContent {...restProps} data={data}>
+			<div className={classes.container}>
+				<div className={classes.text}>{data.title}</div>
+				<div className={classNames(classes.text, classes.content)}>
+					{`Location: ${data.location}`}
+				</div>
+			</div>
+		</Appointments.AppointmentContent>
+	);
+};
+
 // @ts-ignore
 const SchedulerComp = (props) => {
+	const theme = useTheme();
+	const classes = useStyles(theme);
 	const [state, dispatch] = useReducer(reducer, initialState);
 	const [currentView, setCurrentView] = useState('Week');
 	const commitChanges = ({ added, changed, deleted }) => {
@@ -188,8 +303,8 @@ const SchedulerComp = (props) => {
 		mainResourceName,
 	} = state;
 	return (
-		<Paper>
-			<Scheduler data={data} height={660}>
+		<Paper className={classes.paper}>
+			<Scheduler data={data} height="auto">
 				<ViewState
 					defaultCurrentDate={currentDate}
 					currentViewName={currentView}
@@ -223,7 +338,10 @@ const SchedulerComp = (props) => {
 					}
 				/>
 				<WeekView />
-				<MonthView />
+				<MonthView
+					dayScaleCellComponent={DayScaleCell}
+					timeTableCellComponent={TimeTableCell}
+				/>
 				<DayView />
 				<Toolbar />
 				<ViewSwitcher />
@@ -238,7 +356,10 @@ const SchedulerComp = (props) => {
 				<AllDayPanel />
 				<EditRecurrenceMenu />
 				<ConfirmationDialog />
-				<Appointments />
+				<Appointments
+					appointmentComponent={Appointment}
+					appointmentContentComponent={AppointmentContent}
+				/>
 				<AppointmentTooltip showOpenButton showDeleteButton />
 				<AppointmentForm />
 				<Resources

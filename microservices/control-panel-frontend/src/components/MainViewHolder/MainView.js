@@ -12,7 +12,7 @@ import SensorsList from '../sensors/SensorsList';
 import Chart from '../Dashboard/Chart';
 import clsx from 'clsx';
 import { useStyles } from '../hooks/useStyles';
-import  Scheduler  from '../Scheduler/Scheduler';
+import Scheduler from '../Scheduler/Scheduler';
 
 function Copyright() {
 	return (
@@ -35,9 +35,7 @@ const MainView = () => {
 			<div className={classes.appBarSpacer} />
 			<Switch>
 				<Route path="/scheduler">
-					<Container maxWidth="lg" className={classes.container}>
-						<Scheduler />
-					</Container>
+					<Scheduler />
 				</Route>
 				<Route path="/sensors">
 					<Container maxWidth="lg" className={classes.container}>
