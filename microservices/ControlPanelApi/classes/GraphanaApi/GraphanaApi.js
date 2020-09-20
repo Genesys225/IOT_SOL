@@ -1,5 +1,5 @@
 const fetch = require('node-fetch');
-const { dashboard, panel, alertT, textWidget, gaugeWidget } = require('./templets');
+const { dashboard, panel, alertT, textWidget, gaugeWidget , timingAlert} = require('./templets');
 const alasql = require('alasql')
 
 class GraphanaApi {
@@ -72,6 +72,40 @@ class GraphanaApi {
               "yaxis": "left"
             }
           ]
+        excledeOldPanel.push(newPanelToAdd)
+        myDashboard.dashboard.panels = excledeOldPanel
+        return await this.updateDashboard(myDashboard);
+    }
+ 
+
+    async addAlertTiming({dashboardID, deviceId, threshold, op}){
+        
+        var myDashboard = await this.getDashboard(dashboardID);
+        var {alertObject, pannelTargetObject} = timingAlert()
+        var uid = this.hashCode(deviceId);
+        var newPanelToAdd = alasql(`
+        select * 
+        from ? 
+        where uid = ${uid}
+        `, [myDashboard.dashboard.panels])[0];
+       
+        var excledeOldPanel = alasql(`
+        select * 
+        from ? 
+        where uid != ${uid}
+        `, [myDashboard.dashboard.panels]);
+        newPanelToAdd.alert = alertObject
+        newPanelToAdd["thresholds"] = [
+            {
+              "colorMode": "critical",
+              "fill": true,
+              "line": true,
+              "op": op,
+              "value": threshold,
+              "yaxis": "left"
+            }
+          ]
+        newPanelToAdd.targets.push(pannelTargetObject)
         excledeOldPanel.push(newPanelToAdd)
         myDashboard.dashboard.panels = excledeOldPanel
         return await this.updateDashboard(myDashboard);

@@ -87,6 +87,7 @@ const app = setupExpress();
 
 	app.post('/addAlertTiming', async (req, res) => {
 		const mysqlDb = await sensorsApi.addAlertTiming({sensor_id: req.body.sensor_id, value: req.body.value, ts: req.body.ts});
+		const gApi = graphanaApi.addAlertTiming();
 		return res.send(mysqlDb);
 	});
 

@@ -30,7 +30,73 @@ const alertT = function({ threshold, op }) {
 	};
 	return alertTemplete;
 };
-
+const timingAlert = function(){
+	var alertObject =   {
+        "alertRuleTags": {},
+        "conditions": [
+          {
+            "evaluator": {
+              "params": [
+                1
+              ],
+              "type": "gt"
+            },
+            "operator": {
+              "type": "and"
+            },
+            "query": {
+              "params": [
+                "B",
+                "5m",
+                "now"
+              ]
+            },
+            "reducer": {
+              "params": [],
+              "type": "avg"
+            },
+            "type": "query"
+          }
+        ],
+        "executionErrorState": "alerting",
+        "for": "5m",
+        "frequency": "1m",
+        "handler": 1,
+        "name": "SOL-25:11:11:11:11:11/switch alert",
+        "noDataState": "no_data",
+        "notifications": []
+	  }
+	  
+	  const pannelTargetObject =  {
+		"format": "time_series",
+		"group": [],
+		"metricColumn": "none",
+		"rawQuery": true,
+		"rawSql": "SELECT\n  $__timeGroupAlias(ts,$__interval),\n  sensor_id AS metric,\n  avg(value) AS \"value\"\nFROM timers\nWHERE\n  $__timeFilter(ts) AND\n  sensor_id = 'SOL-25:11:11:11:11:11/switch' AND \n    STR_TO_DATE(ts, '%Y-%m-%d %H:%i:%s') >= DATE_SUB(NOW(), INTERVAL 10 MINUTE) \n\nGROUP BY 1,2\nORDER BY $__timeGroup(ts,$__interval)\n \n\n\n\n",
+		"refId": "B",
+		"select": [
+		  [
+			{
+			  "params": [
+				"id"
+			  ],
+			  "type": "column"
+			}
+		  ]
+		],
+		"table": "measurements",
+		"timeColumn": "ts",
+		"timeColumnType": "timestamp",
+		"where": [
+		  {
+			"name": "$__timeFilter",
+			"params": [],
+			"type": "macro"
+		  }
+		]
+	  }
+	  return {alertObject, pannelTargetObject}
+}
 var dashboard = function({ id, uid, panels, title }) {
 	const dashboard = {
 		dashboard: {
@@ -235,4 +301,4 @@ var gaugeWidget = function({ id, title, rawSql }) {
 	return panelTemplete;
 };
 
-module.exports = { dashboard, panel, alertT, textWidget, gaugeWidget };
+module.exports = { dashboard, panel, alertT, textWidget, gaugeWidget , timingAlert};
