@@ -1,0 +1,36 @@
+{
+  "name": "aceiot-acesvg-panel",
+  "version": "0.0.8",
+  "description": "SVG Visualization Panel",
+  "scripts": {
+    "build": "grafana-toolkit plugin:build",
+    "test": "grafana-toolkit plugin:test",
+    "dev": "grafana-toolkit plugin:dev",
+    "watch": "grafana-toolkit plugin:dev --watch",
+    "prettier-format": "prettier --config .prettierrc.js 'src/**/*.ts' 'src/**/*.tsx' --write"
+  },
+  "repository": "github:ACE-IoT-Solutions/ace-svg-react",
+  "author": "Andrew Rodgers",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ACE-IoT-Solutions/ace-svg-react/issues",
+    "email": "andrew@aceiotsolutions.com"
+  },
+  "devDependencies": {
+    "@grafana/data": "next",
+    "@grafana/toolkit": "next",
+    "@grafana/ui": "next",
+    "emotion": "10.0.27"
+  },
+  "engines": {
+    "node": ">=12 <13"
+  },
+  "dependencies": {
+    "@grafana/runtime": "^7.1.1",
+    "@monaco-editor/react": "^3.3.0",
+    "@svgdotjs/svg.js": "^3.0.16",
+    "css-loader": "^3.5.3",
+    "monaco-editor-webpack-plugin": "^1.9.0",
+    "react-monaco-editor": "^0.36.0"
+  }
+}
