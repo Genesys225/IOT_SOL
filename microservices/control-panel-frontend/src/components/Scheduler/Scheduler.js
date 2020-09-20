@@ -15,69 +15,34 @@ import {
 	DayView,
 	ViewSwitcher,
 	Toolbar,
+	DateNavigator,
+	TodayButton,
+	DragDropProvider,
 } from '@devexpress/dx-react-scheduler-material-ui';
-// import { appointments } from './demo-data/appointments';
-import { Select, MenuItem, useTheme } from '@material-ui/core';
+import { appointments } from './demo-data/appointments';
+import { Select, MenuItem, useTheme, Divider } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 
 const useStyles = makeStyles({
 	container: {
 		display: 'flex',
+		// @ts-ignore
 		marginBottom: (theme) => theme.spacing(2),
 		justifyContent: 'flex-start',
+		alignItems: 'center',
 		width: '50%',
+		margin: '5px',
 	},
 	text: (theme) => ({
+		// @ts-ignore
 		...theme.typography.h6,
+		// @ts-ignore
 		marginRight: theme.spacing(2),
 	}),
 	floatLeft: {
 		float: 'left',
 	},
 });
-
-const appointments = [
-	{
-		title: 'Website Re-Design Plan',
-		startDate: new Date(2018, 5, 25, 12, 35),
-		endDate: new Date(2018, 5, 25, 15, 0),
-		id: 0,
-		members: [1, 3, 5],
-		location: 'Room 1',
-	},
-	{
-		title: 'Book Flights to San Fran for Sales Trip',
-		startDate: new Date(2018, 5, 26, 12, 35),
-		endDate: new Date(2018, 5, 26, 15, 0),
-		id: 1,
-		members: [2, 4],
-		location: 'Room 2',
-	},
-	{
-		title: 'Install New Router in Dev Room',
-		startDate: new Date(2018, 5, 27, 12, 35),
-		endDate: new Date(2018, 5, 27, 15, 0),
-		id: 2,
-		members: [3],
-		location: 'Room 3',
-	},
-	{
-		title: 'Approve Personal Computer Upgrade Plan',
-		startDate: new Date(2018, 5, 28, 12, 35),
-		endDate: new Date(2018, 5, 28, 15, 0),
-		id: 3,
-		members: [4, 1],
-		location: 'Room 4',
-	},
-	{
-		title: 'Final Budget Review',
-		startDate: new Date(2018, 5, 29, 12, 35),
-		endDate: new Date(2018, 5, 29, 15, 0),
-		id: 4,
-		members: [5, 1, 3],
-		location: 'Room 5',
-	},
-];
 
 const ResourceSwitcher = ({ mainResourceName, onChange, resources }) => {
 	const theme = useTheme();
@@ -89,6 +54,7 @@ const ResourceSwitcher = ({ mainResourceName, onChange, resources }) => {
 			<Select
 				value={mainResourceName}
 				onChange={(e) => onChange(e.target.value)}
+				variant="outlined"
 			>
 				{resources.map((resource) => (
 					<MenuItem
@@ -181,22 +147,27 @@ const initialState = {
 	],
 };
 
+// @ts-ignore
 const SchedulerComp = (props) => {
 	const [state, dispatch] = useReducer(reducer, initialState);
 	const [currentView, setCurrentView] = useState('Week');
 	const commitChanges = ({ added, changed, deleted }) => {
 		if (added) {
+			// @ts-ignore
 			dispatch({ type: 'commitAddedAlert', payload: { added } });
 		}
 		if (changed) {
+			// @ts-ignore
 			dispatch({ type: 'commitChangesToAlert', payload: { changed } });
 		}
 		if (deleted !== undefined) {
+			// @ts-ignore
 			dispatch({ type: 'deleteAlert', payload: { deleted } });
 		}
 	};
 
 	const changeMainResource = (mainResourceName) => {
+		// @ts-ignore
 		dispatch({
 			type: 'changeMainResourceName',
 			payload: { mainResourceName },
@@ -217,61 +188,66 @@ const SchedulerComp = (props) => {
 		mainResourceName,
 	} = state;
 	return (
-		<>
-			<Paper>
-				<Scheduler data={data} height={660}>
-					<ViewState
-						defaultCurrentDate={currentDate}
-						currentViewName={currentView}
-						onCurrentViewNameChange={currentViewChange}
-					/>
-					<EditingState
-						onCommitChanges={commitChanges}
-						addedAppointment={addedAppointment}
-						onAddedAppointmentChange={(addedAppointment) =>
-							dispatch({
-								type: 'addAlert',
-								payload: addedAppointment,
-							})
-						}
-						appointmentChanges={appointmentChanges}
-						onAppointmentChangesChange={(appointmentChanges) =>
-							dispatch({
-								type: 'changeAlert',
-								payload: appointmentChanges,
-							})
-						}
-						editingAppointment={editingAppointment}
-						onEditingAppointmentChange={(editingAppointment) =>
-							dispatch({
-								type: 'selectEditedAlert',
-								payload: editingAppointment,
-							})
-						}
-					/>
-					<WeekView />
-					<MonthView />
-					<DayView />
-					<Toolbar></Toolbar>
-					<ViewSwitcher />
-					<ResourceSwitcher
-						resources={resources}
-						mainResourceName={mainResourceName}
-						onChange={changeMainResource}
-					/>
-					<AllDayPanel />
-					<EditRecurrenceMenu />
-					<ConfirmationDialog />
-					<Appointments />
-					<AppointmentTooltip showOpenButton showDeleteButton />
-					<AppointmentForm />
-					<Resources
-						data={resources}
-						mainResourceName={mainResourceName}
-					/>
-				</Scheduler>
-			</Paper>
-		</>
+		<Paper>
+			<Scheduler data={data} height={660}>
+				<ViewState
+					defaultCurrentDate={currentDate}
+					currentViewName={currentView}
+					onCurrentViewNameChange={currentViewChange}
+				/>
+				<EditingState
+					onCommitChanges={commitChanges}
+					addedAppointment={addedAppointment}
+					onAddedAppointmentChange={(addedAppointment) =>
+						// @ts-ignore
+						dispatch({
+							type: 'addAlert',
+							payload: addedAppointment,
+						})
+					}
+					appointmentChanges={appointmentChanges}
+					onAppointmentChangesChange={(appointmentChanges) =>
+						// @ts-ignore
+						dispatch({
+							type: 'changeAlert',
+							payload: appointmentChanges,
+						})
+					}
+					editingAppointment={editingAppointment}
+					onEditingAppointmentChange={(editingAppointment) =>
+						// @ts-ignore
+						dispatch({
+							type: 'selectEditedAlert',
+							payload: editingAppointment,
+						})
+					}
+				/>
+				<WeekView />
+				<MonthView />
+				<DayView />
+				<Toolbar />
+				<ViewSwitcher />
+				<DateNavigator />
+				<TodayButton />
+				<ResourceSwitcher
+					resources={resources}
+					mainResourceName={mainResourceName}
+					onChange={changeMainResource}
+				/>
+				<Divider />
+				<AllDayPanel />
+				<EditRecurrenceMenu />
+				<ConfirmationDialog />
+				<Appointments />
+				<AppointmentTooltip showOpenButton showDeleteButton />
+				<AppointmentForm />
+				<Resources
+					data={resources}
+					mainResourceName={mainResourceName}
+				/>
+				<DragDropProvider />
+			</Scheduler>
+		</Paper>
 	);
 };
 
