@@ -35,7 +35,7 @@ export const sensorsReducer = (state = initialState, { type, payload }) => {
 						const hasIndexInAll = newSensorState.All.findIndex(
 							(allsDevice) => allsDevice.title === device.title
 						);
-						if (hasIndexInAll) {
+						if (hasIndexInAll !== -1 && hasIndexInAll) {
 							newSensorState.All[hasIndexInAll].room =
 								device.room;
 						}
