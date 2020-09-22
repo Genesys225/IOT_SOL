@@ -12,6 +12,10 @@ const HelloWorld = require('./classes/HelloWorld');
 
 const GraphanaApi = require('./classes/GraphanaApi/GraphanaApi');
 
+const CalendarApi = require('./classes/CalendarApi');
+
+const calendarApi = new CalendarApi()
+
 const graphanaApi = new GraphanaApi();
 
 const sensorsApi = new SensorsApi();
@@ -100,6 +104,25 @@ const app = setupExpress();
 
 	app.get('/getAllPanels', async (req, res) => {
 		return res.send(await graphanaApi.getAllPannels());
+	});
+
+
+
+
+
+
+
+	/********************************CALENDAR API******************************************* */
+	
+
+	app.post('/setTimingStartEnd', async (req, res) => {
+		
+		return res.send(await calendarApi.setTimingStartEnd());
+	});
+
+
+	app.get('/getAllEvents', async (req, res) => {
+		return res.send(await calendarApi.getAllEvents());
 	});
 })();
 
