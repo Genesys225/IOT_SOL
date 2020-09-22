@@ -30,7 +30,7 @@ const alertT = function({ threshold, op }) {
 	};
 	return alertTemplete;
 };
-const timingAlert = function(){
+const timingAlert = function({deviceId, threshold, op}){
 	var alertObject =   {
         "alertRuleTags": {},
         "conditions": [
@@ -62,7 +62,7 @@ const timingAlert = function(){
         "for": "5m",
         "frequency": "1m",
         "handler": 1,
-        "name": "SOL-25:11:11:11:11:11/switch alert",
+        "name": deviceId+"Alert",
         "noDataState": "no_data",
         "notifications": []
 	  }
@@ -72,7 +72,7 @@ const timingAlert = function(){
 		"group": [],
 		"metricColumn": "none",
 		"rawQuery": true,
-		"rawSql": "SELECT\n  $__timeGroupAlias(ts,$__interval),\n  sensor_id AS metric,\n  avg(value) AS \"value\"\nFROM timers\nWHERE\n  $__timeFilter(ts) AND\n  sensor_id = 'SOL-25:11:11:11:11:11/switch' AND \n    STR_TO_DATE(ts, '%Y-%m-%d %H:%i:%s') >= DATE_SUB(NOW(), INTERVAL 10 MINUTE) \n\nGROUP BY 1,2\nORDER BY $__timeGroup(ts,$__interval)\n \n\n\n\n",
+		"rawSql": "SELECT\n  $__timeGroupAlias(ts,$__interval),\n  sensor_id AS metric,\n  avg(value) AS \"value\"\nFROM timers\nWHERE\n  $__timeFilter(ts) AND\n  sensor_id = '"+deviceId+"' AND \n    STR_TO_DATE(ts, '%Y-%m-%d %H:%i:%s') >= DATE_SUB(NOW(), INTERVAL 10 MINUTE) \n\nGROUP BY 1,2\nORDER BY $__timeGroup(ts,$__interval)\n \n\n\n\n",
 		"refId": "B",
 		"select": [
 		  [

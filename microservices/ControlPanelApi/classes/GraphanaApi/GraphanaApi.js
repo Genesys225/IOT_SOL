@@ -81,7 +81,7 @@ class GraphanaApi {
     async addAlertTiming({dashboardID, deviceId, threshold, op}){
         
         var myDashboard = await this.getDashboard(dashboardID);
-        var {alertObject, pannelTargetObject} = timingAlert()
+        var {alertObject, pannelTargetObject} = timingAlert({deviceId, threshold, op})
         var uid = this.hashCode(deviceId);
         var newPanelToAdd = alasql(`
         select * 
@@ -108,6 +108,7 @@ class GraphanaApi {
         newPanelToAdd.targets.push(pannelTargetObject)
         excledeOldPanel.push(newPanelToAdd)
         myDashboard.dashboard.panels = excledeOldPanel
+        console.log(newPanelToAdd.title)
         return await this.updateDashboard(myDashboard);
     }
  
