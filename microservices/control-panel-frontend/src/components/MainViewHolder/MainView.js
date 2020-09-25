@@ -35,7 +35,9 @@ const MainView = () => {
 			<div className={classes.appBarSpacer} />
 			<Switch>
 				<Route path="/scheduler">
-					<Scheduler />
+					<Container maxWidth="xl" className={classes.container}>
+						<Scheduler />
+					</Container>
 				</Route>
 				<Route path="/sensors">
 					<Container maxWidth="lg" className={classes.container}>

@@ -59,12 +59,10 @@ export default function SensorsList() {
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-		let interval;
 		const fetchSensors = async () => {
 			await dispatch(getSensors());
 		};
 		if (sensors.length <= 0) fetchSensors();
-		return () => clearInterval(interval);
 	}, [dispatch, sensors]);
 
 	if (sensors.length <= 0) {

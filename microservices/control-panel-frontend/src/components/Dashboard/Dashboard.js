@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import clsx from 'clsx';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
@@ -9,8 +9,12 @@ import MainView from '../MainViewHolder/MainView';
 import TopBar from './TopBar';
 import { useStyles } from '../hooks/useStyles';
 import { MainMenu, SecondaryMenu } from './AppDrawer';
-
+import { getScheduleEvents } from '../../store/actions/alertsActions';
+import { getSensors } from '../../store/actions/sensorsActions';
+import { useDispatch, useSelector } from 'react-redux';
 export default function Dashboard() {
+	const sensors = useSelector((state) => state.sensors);
+	const thunkDispatch = useDispatch();
 	const classes = useStyles();
 	const [open, setOpen] = React.useState(true);
 	const handleDrawerOpen = () => {
@@ -19,6 +23,13 @@ export default function Dashboard() {
 	const handleDrawerClose = () => {
 		setOpen(false);
 	};
+	useEffect(() => {
+		const fetchSensors = async () => {
+			await thunkDispatch(getScheduleEvents());
+			await thunkDispatch(getSensors());
+		};
+		if (sensors.length <= 0) fetchSensors();
+	}, [thunkDispatch, sensors]);
 
 	return (
 		<div className={classes.root}>

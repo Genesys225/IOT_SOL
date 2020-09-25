@@ -1,5 +1,5 @@
-import React, { Suspense } from 'react';
-import { Provider } from 'react-redux';
+import React, { Suspense, useEffect } from 'react';
+import { Provider, useDispatch } from 'react-redux';
 import { createMuiTheme } from '@material-ui/core/styles';
 import './App.css';
 import configureStore from './store/store';
@@ -17,6 +17,7 @@ function App() {
 			type: 'dark',
 		},
 	});
+
 	return (
 		<Router>
 			<Suspense fallback={<CircularProgress />}>

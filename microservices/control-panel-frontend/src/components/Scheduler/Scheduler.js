@@ -1,4 +1,4 @@
-import React, { useReducer, useState } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import Paper from '@material-ui/core/Paper';
 import { ViewState, EditingState } from '@devexpress/dx-react-scheduler';
 import {
@@ -25,6 +25,13 @@ import { createStyles, makeStyles, withStyles } from '@material-ui/styles';
 import { indigo, blue, teal } from '@material-ui/core/colors';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import classNames from 'classnames';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+	getScheduleEvents,
+	setScheduleEvent,
+} from '../../store/actions/alertsActions';
+import { getSensors } from '../../store/actions/sensorsActions';
+import CenteredCircular from '../common/CenteredCircular';
 
 const useStyles = makeStyles({
 	container: {
@@ -47,8 +54,6 @@ const useStyles = makeStyles({
 	},
 	paper: {
 		height: '2600px',
-		width: '95%',
-		margin: '15px auto',
 	},
 });
 
@@ -83,10 +88,19 @@ const reducer = (state, { type, payload }) => {
 		case 'addAlert':
 			return {
 				...state,
-				addedAppointment: payload,
+				addedAppointment: {
+					...payload,
+					room:
+						(payload.device === 0 &&
+							state.resources[1].instances[0].room) ||
+						'',
+				},
 			};
 		case 'changeAlert':
-			return { ...state, appointmentChanges: payload };
+			return {
+				...state,
+				appointmentChanges: payload,
+			};
 		case 'selectEditedAlert':
 			return { ...state, editingAppointment: payload };
 		case 'commitAddedAlert':
@@ -116,6 +130,11 @@ const reducer = (state, { type, payload }) => {
 			return { ...state, data };
 		}
 
+		case 'lazyInit': {
+			console.log(payload);
+			return payload;
+		}
+
 		default:
 			throw new Error(JSON.stringify({ type, payload }));
 	}
@@ -123,39 +142,33 @@ const reducer = (state, { type, payload }) => {
 
 const isWeekEnd = (date) => date.getDay() === 0 || date.getDay() === 6;
 
-const initialState = {
-	data: appointments,
-	currentDate: '2018-06-27',
+const initialState = (switches) => ({
+	data: [],
+	currentDate: new Date(),
 	addedAppointment: {},
 	appointmentChanges: {},
 	editingAppointment: undefined,
-	mainResourceName: 'members',
+	mainResourceName: 'room',
 	resources: [
 		{
-			fieldName: 'location',
-			title: 'Location',
+			fieldName: 'room',
+			title: 'Room',
 			instances: [
-				{ id: 'Room 1', text: 'Room 1' },
-				{ id: 'Room 2', text: 'Room 2' },
-				{ id: 'Room 3', text: 'Room 3' },
-				{ id: 'Room 4', text: 'Room 4' },
-				{ id: 'Room 5', text: 'Room 5' },
+				{ id: 'room1', text: 'Room 1' },
+				{ id: 'room2', text: 'Room 2' },
+				{ id: 'room3', text: 'Room 3' },
+				{ id: 'All', text: 'All' },
 			],
 		},
 		{
-			fieldName: 'members',
-			title: 'Members',
-			allowMultiple: true,
-			instances: [
-				{ id: 1, text: 'Andrew Glover' },
-				{ id: 2, text: 'Arnie Schwartz' },
-				{ id: 3, text: 'John Heart' },
-				{ id: 4, text: 'Taylor Riley' },
-				{ id: 5, text: 'Brad Farkus' },
-			],
+			fieldName: 'device',
+			title: 'Device',
+			instances: switches,
 		},
 	],
-};
+});
+
+const init = (initialState) => initialState;
 
 const useStyles1 = makeStyles({
 	appointment: {
@@ -260,16 +273,36 @@ const AppointmentContent = ({ data, ...restProps }) => {
 	);
 };
 
-// @ts-ignore
 const SchedulerComp = (props) => {
+	const switches = useSelector((state) =>
+		// @ts-ignore
+		state.sensors.All.filter(
+			(device) => device.deviceType === 'switch'
+		).map((switchInst, i) => ({
+			...switchInst,
+			id: i,
+			text: switchInst.title,
+		}))
+	);
+	const thunkDispatch = useDispatch();
 	const theme = useTheme();
 	const classes = useStyles(theme);
-	const [state, dispatch] = useReducer(reducer, initialState);
+	const [state, dispatch] = useReducer(reducer, initialState(switches), init);
 	const [currentView, setCurrentView] = useState('Week');
 	const commitChanges = ({ added, changed, deleted }) => {
 		if (added) {
 			// @ts-ignore
 			dispatch({ type: 'commitAddedAlert', payload: { added } });
+			const { title, device, room, startDate, endDate } = added;
+			thunkDispatch(
+				setScheduleEvent({
+					title,
+					deviceId: state.resources[1].instances[device],
+					roomId: room,
+					startDate,
+					endDate,
+				})
+			);
 		}
 		if (changed) {
 			// @ts-ignore
@@ -289,8 +322,20 @@ const SchedulerComp = (props) => {
 		});
 	};
 
+	useEffect(() => {
+		const fetchSensors = async () => {
+			await thunkDispatch(getScheduleEvents());
+			await thunkDispatch(getSensors());
+		};
+		if (switches.length <= 0) fetchSensors();
+	}, [thunkDispatch, switches]);
+
+	if (switches.length <= 0) {
+		return <CenteredCircular />;
+	}
+
 	const currentViewChange = (currentViewName) => {
-		setCurrentView(currentViewName);
+		setCurrentView(currentView);
 	};
 
 	const {
