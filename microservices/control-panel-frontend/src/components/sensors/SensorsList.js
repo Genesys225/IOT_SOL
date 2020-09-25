@@ -62,7 +62,14 @@ export default function SensorsList() {
 		const fetchSensors = async () => {
 			await dispatch(getSensors());
 		};
+		const fetchLastData = async () => {
+			await dispatch(getLastData());
+		};
 		if (sensors.length <= 0) fetchSensors();
+		const timeout = setTimeout(async () => {
+			await fetchLastData();
+		}, 5000);
+		return () => clearTimeout(timeout);
 	}, [dispatch, sensors]);
 
 	if (sensors.length <= 0) {

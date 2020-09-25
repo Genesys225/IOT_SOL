@@ -53,19 +53,17 @@ export const sensorsReducer = (state = initialState, { type, payload }) => {
 				if (sensorStateIndex !== -1) {
 					const sensorState = newSensorState.All[sensorStateIndex];
 					sensorState.currentValue = sensorData.value;
-					if (sensorState.room !== 'All') {
-						newSensorState[sensorState.room] = newSensorState[
-							sensorState.room
-						].map((sensor) => {
-							if (sensor.deviceId === sensorData.id) {
-								return {
-									...sensor,
-									currentValue: sensorData.value,
-								};
-							}
-							return sensor;
-						});
-					}
+					newSensorState[sensorState.room] = newSensorState[
+						sensorState.room
+					].map((sensor) => {
+						if (sensor.deviceId === sensorData.id) {
+							return {
+								...sensor,
+								currentValue: sensorData.value,
+							};
+						}
+						return sensor;
+					});
 				}
 			});
 
