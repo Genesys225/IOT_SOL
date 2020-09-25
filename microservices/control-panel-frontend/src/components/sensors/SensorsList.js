@@ -89,7 +89,7 @@ export default function SensorsList() {
 									defaultValue="All"
 								>
 									{availableRooms.map((room, i) => (
-										<MenuItem value={room}>
+										<MenuItem value={room} key={i}>
 											{i > 0 ? `Room ${i}` : <em>All</em>}
 										</MenuItem>
 									))}

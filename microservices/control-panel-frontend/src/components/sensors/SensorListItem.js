@@ -208,19 +208,21 @@ const SensorListItem = (props) => {
 									value={props.currentValue || ''}
 									label="Current value"
 									InputProps={{
-										endAdornment: (
-											<>
-												{props.deviceId && (
-													<InputAdornment position="end">
-														{
-															units[
-																props.deviceType
-															]
-														}
-													</InputAdornment>
-												)}
-											</>
-										),
+										endAdornment:
+											props.deviceType !== 'switch' ? (
+												<>
+													{props.deviceId && (
+														<InputAdornment position="end">
+															{
+																units[
+																	props
+																		.deviceType
+																]
+															}
+														</InputAdornment>
+													)}
+												</>
+											) : null,
 									}}
 								/>
 							</FormControl>
