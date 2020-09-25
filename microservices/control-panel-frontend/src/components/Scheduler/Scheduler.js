@@ -139,7 +139,7 @@ const reducer = (state, { type, payload }) => {
 		}
 
 		default:
-			throw new Error(JSON.stringify({ type, payload }));
+			throw new Error(JSON.stringify({ type, payload }, null, 2));
 	}
 };
 

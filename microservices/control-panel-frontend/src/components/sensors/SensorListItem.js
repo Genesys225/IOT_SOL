@@ -147,7 +147,7 @@ const SensorListItem = (props) => {
 							}}
 						/>
 						<ListItemIcon className={classes.formControl}>
-							<Icon icon={props.deviceType} />
+							<Icon icon={props.deviceType} size="40px" />
 						</ListItemIcon>
 						<Box display="flex" flexDirection="row-reverse">
 							{props.deviceType !== 'switch' && (

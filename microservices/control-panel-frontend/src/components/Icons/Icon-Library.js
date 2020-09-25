@@ -12,13 +12,13 @@ import thermometerIcon from '@iconify/icons-fxemoji/thermometer';
 import pulseOutline from '@iconify/icons-ion/pulse-outline';
 import powerIcon from '@iconify/icons-mdi/power';
 const useStyles = makeStyles({
-	centered: {
+	centered: (props) => ({
 		display: 'flex',
 		justifyContent: 'center',
 		alignItems: 'center',
-		height: '40px',
-		width: '40px'
-	},
+		height: props.size || '24px',
+		width: props.size || '24px',
+	}),
 });
 
 addIcon('temp', thermometerIcon);
@@ -31,15 +31,18 @@ addIcon('light', sunIcon);
 addIcon('co2', moleculeCo2);
 
 export function Icon(props) {
-	console.log(props.icon);
 	const classes = useStyles(props);
 	return (
 		<SvgIcon
 			component={'div'}
-			color={props.icon === 'co2' || props.icon === 'switch' ? 'primary' : 'inherit'}
+			color={
+				props.icon === 'co2' || props.icon === 'switch'
+					? 'primary'
+					: 'inherit'
+			}
 			className={classes.centered}
 		>
-			<Iconify hAlign vAlign height="40px" {...props} />
+			<Iconify hAlign vAlign height={props.size || '24px'} {...props} />
 		</SvgIcon>
 	);
 }
