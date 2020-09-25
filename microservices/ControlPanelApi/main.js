@@ -117,7 +117,7 @@ const app = setupExpress();
 
 	app.post('/setTimingStartEnd', async (req, res) => {
 		
-		return res.send(await calendarApi.setTimingStartEnd());
+		return res.send(await calendarApi.setTimingStartEnd(req.body));
 	});
 
 
