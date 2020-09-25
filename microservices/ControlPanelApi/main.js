@@ -56,6 +56,10 @@ const app = setupExpress();
 		res.send(await sensorsApi.getLastData())
 	);
 
+	app.get('/getAllTimingEvents', async (req, res) =>
+		res.send(await sensorsApi.getAllTimingEvents())
+	);
+	
 	// graphana api
 
 	/**

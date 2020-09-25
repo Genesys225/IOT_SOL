@@ -38,5 +38,16 @@ class SensorsApi {
 		);
 		return mqttRes;
 	}
+
+	async getAllTimingEvents() {
+		const mqttRes = await this.mqttClient.exec(
+			'db/mysql.getAllTimingEvents',
+			{ a: 1 },
+			{ timeout: 5000 }
+		);
+		return mqttRes;
+	}
+
+	
 }
 module.exports = SensorsApi;

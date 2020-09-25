@@ -130,5 +130,19 @@ class Mysql {
 			);
 		});
 	}
+
+	getAllTimingEvents(_a) {
+		return new Promise((resolve) => {
+			connection.query(
+				{
+					sql: 'SELECT * FROM sol_db.timers WHERE ts > now()',
+				},
+				function(error, results, fields) {
+					if (error) throw error;
+					resolve(results);
+				}
+			);
+		});
+	}
 }
 module.exports = Mysql;
