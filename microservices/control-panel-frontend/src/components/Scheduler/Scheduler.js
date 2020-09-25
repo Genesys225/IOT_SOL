@@ -19,9 +19,14 @@ import {
 	TodayButton,
 	DragDropProvider,
 } from '@devexpress/dx-react-scheduler-material-ui';
-import { appointments } from './demo-data/appointments';
-import { Select, MenuItem, useTheme, Divider } from '@material-ui/core';
-import { createStyles, makeStyles, withStyles } from '@material-ui/styles';
+import {
+	Select,
+	MenuItem,
+	useTheme,
+	Divider,
+	LinearProgress,
+} from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
 import { indigo, blue, teal } from '@material-ui/core/colors';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import classNames from 'classnames';
@@ -31,7 +36,6 @@ import {
 	setScheduleEvent,
 } from '../../store/actions/alertsActions';
 import { getSensors } from '../../store/actions/sensorsActions';
-import CenteredCircular from '../common/CenteredCircular';
 
 const useStyles = makeStyles({
 	container: {
@@ -131,8 +135,7 @@ const reducer = (state, { type, payload }) => {
 		}
 
 		case 'lazyInit': {
-			console.log(payload);
-			return payload;
+			return init(payload);
 		}
 
 		default:
@@ -142,7 +145,7 @@ const reducer = (state, { type, payload }) => {
 
 const isWeekEnd = (date) => date.getDay() === 0 || date.getDay() === 6;
 
-const initialState = (switches) => ({
+const init = (switches) => ({
 	data: [],
 	currentDate: new Date(),
 	addedAppointment: {},
@@ -166,9 +169,8 @@ const initialState = (switches) => ({
 			instances: switches,
 		},
 	],
+	loading: switches.length <= 0,
 });
-
-const init = (initialState) => initialState;
 
 const useStyles1 = makeStyles({
 	appointment: {
@@ -212,6 +214,15 @@ const useStyles1 = makeStyles({
 		width: '100%',
 		lineHeight: 1.2,
 		height: '100%',
+	},
+	toolbarRoot: {
+		position: 'relative',
+	},
+	progress: {
+		position: 'absolute',
+		width: '100%',
+		bottom: 0,
+		left: 0,
 	},
 });
 
@@ -273,6 +284,17 @@ const AppointmentContent = ({ data, ...restProps }) => {
 	);
 };
 
+const ToolbarWithLoading = ({ children, ...restProps }) => {
+	const theme = useTheme();
+	const classes = useStyles1(theme);
+	return (
+		<div className={classes.toolbarRoot}>
+			<Toolbar.Root {...restProps}>{children}</Toolbar.Root>
+			<LinearProgress className={classes.progress} />
+		</div>
+	);
+};
+
 const SchedulerComp = (props) => {
 	const switches = useSelector((state) =>
 		// @ts-ignore
@@ -287,7 +309,7 @@ const SchedulerComp = (props) => {
 	const thunkDispatch = useDispatch();
 	const theme = useTheme();
 	const classes = useStyles(theme);
-	const [state, dispatch] = useReducer(reducer, initialState(switches), init);
+	const [state, dispatch] = useReducer(reducer, switches, init);
 	const [currentView, setCurrentView] = useState('Week');
 	const commitChanges = ({ added, changed, deleted }) => {
 		if (added) {
@@ -328,36 +350,27 @@ const SchedulerComp = (props) => {
 			await thunkDispatch(getSensors());
 		};
 		if (switches.length <= 0) fetchSensors();
+		else if (state.resources[1].instances.length <= 0) {
+			// @ts-ignore
+			dispatch({ type: 'lazyInit', payload: switches });
+		}
 	}, [thunkDispatch, switches]);
 
-	if (switches.length <= 0) {
-		return <CenteredCircular />;
-	}
-
 	const currentViewChange = (currentViewName) => {
-		setCurrentView(currentView);
+		setCurrentView(currentViewName);
 	};
 
-	const {
-		currentDate,
-		data,
-		addedAppointment,
-		appointmentChanges,
-		editingAppointment,
-		resources,
-		mainResourceName,
-	} = state;
 	return (
 		<Paper className={classes.paper}>
-			<Scheduler data={data} height="auto">
+			<Scheduler data={state.data} height="auto">
 				<ViewState
-					defaultCurrentDate={currentDate}
+					defaultCurrentDate={state.currentDate}
 					currentViewName={currentView}
 					onCurrentViewNameChange={currentViewChange}
 				/>
 				<EditingState
 					onCommitChanges={commitChanges}
-					addedAppointment={addedAppointment}
+					addedAppointment={state.addedAppointment}
 					onAddedAppointmentChange={(addedAppointment) =>
 						// @ts-ignore
 						dispatch({
@@ -365,7 +378,7 @@ const SchedulerComp = (props) => {
 							payload: addedAppointment,
 						})
 					}
-					appointmentChanges={appointmentChanges}
+					appointmentChanges={state.appointmentChanges}
 					onAppointmentChangesChange={(appointmentChanges) =>
 						// @ts-ignore
 						dispatch({
@@ -373,7 +386,7 @@ const SchedulerComp = (props) => {
 							payload: appointmentChanges,
 						})
 					}
-					editingAppointment={editingAppointment}
+					editingAppointment={state.editingAppointment}
 					onEditingAppointmentChange={(editingAppointment) =>
 						// @ts-ignore
 						dispatch({
@@ -388,13 +401,17 @@ const SchedulerComp = (props) => {
 					timeTableCellComponent={TimeTableCell}
 				/>
 				<DayView />
-				<Toolbar />
+				<Toolbar
+					{...(state.loading
+						? { rootComponent: ToolbarWithLoading }
+						: null)}
+				/>
 				<ViewSwitcher />
 				<DateNavigator />
 				<TodayButton />
 				<ResourceSwitcher
-					resources={resources}
-					mainResourceName={mainResourceName}
+					resources={state.resources}
+					mainResourceName={state.mainResourceName}
 					onChange={changeMainResource}
 				/>
 				<Divider />
@@ -408,8 +425,8 @@ const SchedulerComp = (props) => {
 				<AppointmentTooltip showOpenButton showDeleteButton />
 				<AppointmentForm />
 				<Resources
-					data={resources}
-					mainResourceName={mainResourceName}
+					data={state.resources}
+					mainResourceName={state.mainResourceName}
 				/>
 				<DragDropProvider />
 			</Scheduler>
