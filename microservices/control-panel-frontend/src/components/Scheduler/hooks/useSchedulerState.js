@@ -120,9 +120,9 @@ function SchedulerCtxProvider(props) {
 		// @ts-ignore
 		state.sensors.All.filter(
 			(device) => device.deviceType === 'switch'
-		).map((switchInst, i) => ({
+		).map((switchInst) => ({
 			...switchInst,
-			id: i,
+			id: switchInst.title,
 			text: switchInst.title,
 		}))
 	);
