@@ -23,7 +23,7 @@ export const useScheduleStyles = makeStyles((theme) => {
 			float: 'left',
 		},
 		paper: {
-			height: '2600px',
+			height: '87vh',
 		},
 		appointment: {
 			borderRadius: 0,
