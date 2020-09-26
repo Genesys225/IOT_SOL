@@ -1,7 +1,8 @@
 export const GET_ALERTS = 'GET_ALERTS';
 export const GET_SCHEDULE = 'GET_SCHEDULE';
 export const CREATE_EVENT = 'CREATE_EVENT';
-export const UPDATE_ALERTS = 'GET_ALERTS';
+export const UPDATE_ALERTS = 'UPDATE_ALERTS';
+export const DELETE_SCHEDULE_EVENT = 'DELETE_SCHEDULE_EVENT';
 
 export const getAlerts = () => {
 	return async (dispatch) => {
@@ -54,13 +55,30 @@ export const getScheduleEvents = () => {
 	};
 };
 
-export const setScheduleEvent = ({
-	title,
-	deviceId,
-	roomId,
-	startDate,
-	endDate,
-}) => {
+export const deleteScheduleEvent = (title) => {
+	return async (dispatch) => {
+		const res = await fetch('/deleteScheduleEvent', {
+			method: 'POST',
+			body: JSON.stringify({
+				title,
+			}),
+			headers: { 'Content-Type': 'application/json' },
+		});
+		console.log({ title });
+		try {
+			console.log(await res.json());
+		} catch (error) {
+			console.log(error);
+		}
+
+		dispatch({ type: DELETE_SCHEDULE_EVENT, payload: title });
+	};
+};
+
+export const setScheduleEvent = (
+	{ title, deviceId, roomId, startDate, endDate },
+	edit = false
+) => {
 	return async (dispatch) => {
 		console.log({
 			title,
@@ -68,6 +86,7 @@ export const setScheduleEvent = ({
 			roomId,
 			startDate,
 			endDate,
+			edit,
 		});
 		const response = await fetch('/setTimingStartEnd', {
 			method: 'POST',
@@ -75,6 +94,7 @@ export const setScheduleEvent = ({
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify({
+				edit,
 				title,
 				deviceId,
 				roomId,

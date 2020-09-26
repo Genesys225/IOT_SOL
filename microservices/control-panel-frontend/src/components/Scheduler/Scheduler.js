@@ -20,7 +20,10 @@ import {
 	DragDropProvider,
 } from '@devexpress/dx-react-scheduler-material-ui';
 import { useDispatch } from 'react-redux';
-import { setScheduleEvent } from '../../store/actions/alertsActions';
+import {
+	deleteScheduleEvent,
+	setScheduleEvent,
+} from '../../store/actions/alertsActions';
 import { useScheduleStyles } from './hooks/useScheduleStyles';
 import { SchedulerCtx, SchedulerCtxProvider } from './hooks/useSchedulerState';
 import { Appointment, AppointmentContent } from './AppointmentView';
@@ -51,10 +54,29 @@ const SchedulerContainer = () => {
 		if (changed) {
 			// @ts-ignore
 			dispatch({ type: 'commitChangesToAlert', payload: { changed } });
+			const { title, device, room, startDate, endDate, id } = changed;
+			thunkDispatch(
+				setScheduleEvent(
+					{
+						title,
+						deviceId: device,
+						roomId: room,
+						startDate,
+						endDate,
+					},
+					!!changed
+				)
+			);
 		}
 		if (deleted !== undefined) {
 			// @ts-ignore
 			dispatch({ type: 'deleteAlert', payload: { deleted } });
+			const { title } = deleted;
+			thunkDispatch(
+				deleteScheduleEvent({
+					title,
+				})
+			);
 		}
 	};
 
