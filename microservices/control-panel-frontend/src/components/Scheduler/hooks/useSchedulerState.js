@@ -133,8 +133,9 @@ function SchedulerCtxProvider(props) {
 		const fetchSensors = async () => {
 			await thunkDispatch(getSensors());
 			await thunkDispatch(getScheduleEvents());
+			dispatch({ type: 'lazyInit', payload: { switches, alerts } });
 		};
-		if (switches.length <= 0 || alerts.length <= 0) fetchSensors();
+		if (switches.length <= 0) fetchSensors();
 		else if (state.resources[1].instances.length <= 0) {
 			// @ts-ignore
 			dispatch({ type: 'lazyInit', payload: { switches, alerts } });
