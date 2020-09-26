@@ -77,7 +77,27 @@ class GraphanaApi {
         return await this.updateDashboard(myDashboard);
     }
  
-
+    async deleteAlertTiming({dashboardID, deviceId, threshold, op}){
+        // var myDashboard = await this.getDashboard(dashboardID);
+        // var {alertObject, pannelTargetObject} = timingAlert({deviceId, threshold, op})
+        // var uid = this.hashCode(deviceId);
+        // var newPanelToAdd = alasql(`
+        // select * 
+        // from ? 
+        // where uid = ${uid}
+        // `, [myDashboard.dashboard.panels])[0];
+       
+        // var excledeOldPanel = alasql(`
+        // select * 
+        // from ? 
+        // where uid != ${uid}
+        // `, [myDashboard.dashboard.panels]);
+        // newPanelToAdd.alert = ''
+        // excledeOldPanel.push(newPanelToAdd)
+        // myDashboard.dashboard.panels = excledeOldPanel
+        // console.log(newPanelToAdd.title)
+        // return await this.updateDashboard(myDashboard);
+    }
     async addAlertTiming({dashboardID, deviceId, threshold, op}){
         
         var myDashboard = await this.getDashboard(dashboardID);
@@ -105,7 +125,16 @@ class GraphanaApi {
               "yaxis": "left"
             }
           ]
-        newPanelToAdd.targets.push(pannelTargetObject)
+
+        // validate if timing alert target exist
+        var existTimer = alasql(`select * from where deviceId='${deviceId}'`, [newPanelToAdd.targets])
+        if(existTimer.length==0){
+            pannelTargetObject.deviceId = deviceId
+            newPanelToAdd.targets.push(pannelTargetObject)
+        }
+
+        
+       
         excledeOldPanel.push(newPanelToAdd)
         myDashboard.dashboard.panels = excledeOldPanel
         console.log(newPanelToAdd.title)
