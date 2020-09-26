@@ -62,9 +62,7 @@ const reducer = (state, { type, payload }) => {
 			return { ...state, editingAppointment: payload };
 		case 'commitAddedAlert':
 			let { data } = state;
-			const startingAddedId =
-				data.length > 0 ? data[data.length - 1].id + 1 : 0;
-			data = [...data, { id: startingAddedId, ...payload.added }];
+			data = [...data, { id: new Date(), ...payload.added }];
 			return { ...state, data };
 		case 'commitChangesToAlert': {
 			let { data } = state;
