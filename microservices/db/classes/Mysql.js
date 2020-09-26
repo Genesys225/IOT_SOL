@@ -55,7 +55,17 @@ class Mysql {
 			);
 		});
 	}
-	
+	deleteAlertTiming({ value, sensor_id, ts, title}) {
+		return new Promise((resolve) => {
+			console.log(value, sensor_id, ts, 9999999999)
+			connection.query({sql: 'DELETE FROM timers WHERE title=?', values: [title]},
+				function(error, results, fields) {
+					if (error) throw error;
+					resolve(results);
+				}
+			);
+		});
+	}
 	writeDeviceData({ sensor_id, value }) {
 		return new Promise((resolve) => {
 			connection.query(

@@ -102,6 +102,11 @@ console.log(res.body)
 		return res.send(mysqlDb);
 	});
 
+	app.post('/deleteAlertTiming', async (req, res) => {
+		const mysqlDb = await sensorsApi.deleteAlertTiming({sensor_id: req.body.sensor_id, value: req.body.value, ts: req.body.ts, title:req.body.title});
+		// const gApi = graphanaApi.deleteAlertTiming({dashboardID:req.body.dashboardID, deviceId:req.body.sensor_id, threshold: req.body.value});
+		return res.send(mysqlDb);
+	});
 
 	app.get('/getAllAlerts', async (req, res) => {
 		return res.send(await graphanaApi.getAllAlerts());
@@ -119,6 +124,14 @@ console.log(res.body)
 
 	/********************************CALENDAR API******************************************* */
 	
+	
+
+
+	app.post('/deleteScheduleEvent', async (req, res) => {
+		
+		return res.send(await calendarApi.deleteScheduleEvent(req.body));
+	});
+
 
 	app.post('/setTimingStartEnd', async (req, res) => {
 		

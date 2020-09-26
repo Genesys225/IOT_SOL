@@ -34,7 +34,21 @@ class CalendarApi {
 			}),
 			headers: { 'Content-Type': 'application/json' },
 		}).then((res) => res);
-	}
+    }
+    
+
+    async deleteScheduleEvent(res){
+        return await fetch('http://microservices:6000/deleteAlertTiming', {
+			method: 'post',
+			body: JSON.stringify({
+				title: res.title,
+				sensor_id: res.deviceId,
+				dashboardID: res.roomId,
+			}),
+			headers: { 'Content-Type': 'application/json' },
+		}).then((res) => res);
+    }
+
 
 	async getAllEvents() {
 		var allEvents = await fetch(
