@@ -1,5 +1,5 @@
-import { Box, Button, IconButton, makeStyles } from '@material-ui/core';
-import React, { useEffect, useState } from 'react';
+import { IconButton, makeStyles } from '@material-ui/core';
+import React, { useCallback, useEffect, useState } from 'react';
 import FullscreenIcon from '@material-ui/icons/Fullscreen';
 const useStyles = makeStyles({
 	iframeWrap: {
@@ -18,24 +18,25 @@ const useStyles = makeStyles({
 function SensorIframe(props) {
 	const [iframeHover, setIframeHover] = useState(false);
 	const classes = useStyles();
-	const [time, setTime] = useState(Date.now());
+	// const [time, setTime] = useState(Date.now());
 	const panelId = hashCode(props.id);
 	const parentBoundingRect = props.listItemRef.current.getBoundingClientRect();
 	const timePeriod = props.timePeriod || '6h';
 
-	function iframeClickHandler(event) {
-		if (iframeHover) {
-			event.preventDefault();
-
-			console.log('Wow! Iframe Click!');
-		}
-	}
+	const iframeClickHandler = useCallback(
+		function(event) {
+			if (iframeHover) {
+				event.preventDefault();
+			}
+		},
+		[iframeHover]
+	);
 	useEffect(() => {
 		window.addEventListener('blur', iframeClickHandler);
 		return () => {
 			window.removeEventListener('blur', iframeClickHandler);
 		};
-	}, [iframeHover]);
+	}, [iframeClickHandler]);
 
 	const handleIFrameHover = () => {
 		setIframeHover(true);

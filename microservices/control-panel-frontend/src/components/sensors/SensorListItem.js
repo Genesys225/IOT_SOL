@@ -17,7 +17,6 @@ import {
 	Select,
 	Switch,
 	TextField,
-	useTheme,
 } from '@material-ui/core';
 import clsx from 'clsx';
 import React, { useRef, useState, useCallback } from 'react';
@@ -68,11 +67,11 @@ const useStyles = makeStyles((theme) => ({
 
 const SensorListItem = (props) => {
 	const switched = useSelector((state) =>
+		// @ts-ignore
 		state.controls.switched.includes(props.deviceId)
 	);
 	const [open, setOpen] = useState(false);
 	const [showAlertsModal, setShowAlertModal] = useState(false);
-	const [checked, setChecked] = useState([]);
 	const [zone, setZone] = useState(props.room || '');
 	const listItemRef = useRef(null);
 	const classes = useStyles();
@@ -251,10 +250,7 @@ const SensorListItem = (props) => {
 			</ListItem>
 			<Collapse in={open} timeout="auto" unmountOnExit>
 				<Box display="flex" justifyContent="center">
-					<Grow
-						in={checked.indexOf(props.deviceId) !== -1}
-						unmountOnExit
-					>
+					<Grow in={switched} unmountOnExit>
 						<Paper elevation={2} className={classes.paper}>
 							<h5>WOW!!!</h5>
 						</Paper>

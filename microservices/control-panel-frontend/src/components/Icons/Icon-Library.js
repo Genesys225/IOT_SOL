@@ -11,15 +11,16 @@ import codropsIcon from '@iconify/icons-logos/codrops';
 import thermometerIcon from '@iconify/icons-fxemoji/thermometer';
 import pulseOutline from '@iconify/icons-ion/pulse-outline';
 import powerIcon from '@iconify/icons-mdi/power';
-const useStyles = makeStyles({
-	centered: (props) => ({
+const useStyles = makeStyles((_theme) => ({
+	// @ts-ignore
+	centered: ({ size }) => ({
 		display: 'flex',
 		justifyContent: 'center',
 		alignItems: 'center',
-		height: props.size || '24px',
-		width: props.size || '24px',
+		height: size,
+		width: size,
 	}),
-});
+}));
 
 addIcon('temp', thermometerIcon);
 addIcon('switch', powerIcon);
@@ -31,7 +32,8 @@ addIcon('light', sunIcon);
 addIcon('co2', moleculeCo2);
 
 export function Icon(props) {
-	const classes = useStyles(props);
+	const size = props.size || '24px';
+	const classes = useStyles({ size });
 	return (
 		<SvgIcon
 			component={'div'}
@@ -42,7 +44,7 @@ export function Icon(props) {
 			}
 			className={classes.centered}
 		>
-			<Iconify hAlign vAlign height={props.size || '24px'} {...props} />
+			<Iconify hAlign vAlign height={size} {...props} />
 		</SvgIcon>
 	);
 }

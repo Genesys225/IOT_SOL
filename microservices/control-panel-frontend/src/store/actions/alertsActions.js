@@ -53,6 +53,7 @@ export const getScheduleEvents = () => {
 		}
 	};
 };
+
 export const setScheduleEvent = ({
 	title,
 	deviceId,

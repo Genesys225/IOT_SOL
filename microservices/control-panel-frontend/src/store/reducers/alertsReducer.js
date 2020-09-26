@@ -1,4 +1,4 @@
-import { GET_ALERTS, UPDATE_ALERTS } from '../actions/alertsActions';
+import { GET_SCHEDULE, UPDATE_ALERTS } from '../actions/alertsActions';
 
 const initialState = {
 	alerts: [],
@@ -9,9 +9,9 @@ const initialState = {
 	alertsHistory: [],
 };
 
-export const alertsReducer = (state = initialState, { action, payload }) => {
-	switch (action) {
-		case GET_ALERTS:
+export const alertsReducer = (state = initialState, { type, payload }) => {
+	switch (type) {
+		case GET_SCHEDULE:
 			return { ...state, alerts: payload };
 		case UPDATE_ALERTS:
 			const updatedState = { ...state };

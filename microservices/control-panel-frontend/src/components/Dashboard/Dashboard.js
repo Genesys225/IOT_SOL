@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
@@ -13,10 +13,11 @@ import { getScheduleEvents } from '../../store/actions/alertsActions';
 import { getSensors } from '../../store/actions/sensorsActions';
 import { useDispatch, useSelector } from 'react-redux';
 export default function Dashboard() {
+	// @ts-ignore
 	const sensors = useSelector((state) => state.sensors);
 	const thunkDispatch = useDispatch();
 	const classes = useStyles();
-	const [open, setOpen] = React.useState(true);
+	const [open, setOpen] = useState(true);
 	const handleDrawerOpen = () => {
 		setOpen(true);
 	};

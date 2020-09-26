@@ -45,8 +45,8 @@ const useStyles = makeStyles((theme) => ({
 		display: 'flex',
 		justifyContent: 'space-between',
 		flexDirection: 'row',
-		marginTop: '10px'
-	}
+		marginTop: '10px',
+	},
 }));
 
 const initialState = (props, sensors, alerts) => ({
@@ -79,7 +79,9 @@ const reducer = (state, { type, payload }) => {
 
 		case UPDATE_NEW_ALERT:
 			const updatedAlerts = state.alerts.map((alert, index) =>
-				index === payload.index ? { ...alert, ...payload, edited: true } : alert
+				index === payload.index
+					? { ...alert, ...payload, edited: true }
+					: alert
 			);
 			return { ...state, alerts: updatedAlerts };
 
@@ -114,6 +116,7 @@ const reducer = (state, { type, payload }) => {
 
 function AlertsModal(props) {
 	// @ts-ignore
+	// @ts-ignore
 	const { controls, alerts } = useSelector((state) => state);
 	// @ts-ignore
 	const sensors = useSelector((state) => state.sensors.All);
@@ -138,20 +141,19 @@ function AlertsModal(props) {
 	const handleClose = () => {
 		if (state.creating) {
 			// @ts-ignore
-			
+
 			props.onClose();
 		}
 	};
 
 	const handleSave = () => {
+		// @ts-ignore
 		dispatch({ type: COMMIT_ALERTS });
-	}
+	};
 
 	const { updatedAlertsToCommit } = state;
 
 	useEffect(() => {
-		console.log(state)
-
 		const sendUpdateAlerts = async (alerts) => {
 			await thunkDispatch(updateAlerts(alerts, props.deviceId));
 			// @ts-ignore
@@ -160,7 +162,7 @@ function AlertsModal(props) {
 		if (updatedAlertsToCommit.length > 0) {
 			sendUpdateAlerts(updatedAlertsToCommit);
 		}
-	}, [updatedAlertsToCommit]);
+	}, [updatedAlertsToCommit, thunkDispatch, props]);
 
 	return (
 		<Modal
@@ -226,7 +228,18 @@ function AlertsModal(props) {
 													state.alerts[0]
 														.compareOperator
 												}
-												onChange={(event) => dispatch({type: UPDATE_NEW_ALERT, payload: { op: event.target.value, index: 0 } })}
+												onChange={(event) =>
+													// @ts-ignore
+													dispatch({
+														type: UPDATE_NEW_ALERT,
+														payload: {
+															op:
+																event.target
+																	.value,
+															index: 0,
+														},
+													})
+												}
 												defaultValue="gt"
 											>
 												<MenuItem value="eq">
@@ -252,8 +265,18 @@ function AlertsModal(props) {
 												defaultValue=""
 												variant="outlined"
 												type="number"
-												onChange={(event) => dispatch({type: UPDATE_NEW_ALERT, payload: { threshold: event.target.value, index: 0 } })}
-
+												onChange={(event) =>
+													// @ts-ignore
+													dispatch({
+														type: UPDATE_NEW_ALERT,
+														payload: {
+															threshold:
+																event.target
+																	.value,
+															index: 0,
+														},
+													})
+												}
 											/>
 										</FormControl>
 									</>
@@ -262,14 +285,15 @@ function AlertsModal(props) {
 						</Paper>
 					</Box>
 					<Box className={classes.actionGroup}>
-						<Button 
+						<Button
 							variant="contained"
-							color="secodary"
+							// @ts-ignore
+							color="secondary"
 							onClick={() => props.onClose()}
 						>
 							Cancel
 						</Button>
-						<Button 
+						<Button
 							variant="contained"
 							color="primary"
 							startIcon={<SaveIcon />}
