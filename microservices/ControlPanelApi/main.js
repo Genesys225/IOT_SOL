@@ -96,7 +96,8 @@ const app = setupExpress();
 	// {"sensor_id": "SOL-25:11:11:11:11:11/switch", "value": 2, "ts": "2020-09-21 21:55:02", "dashboardID":"room3"}
 	// http://localhost:6000/addAlertTiming
 	app.post('/addAlertTiming', async (req, res) => {
-		const mysqlDb = await sensorsApi.addAlertTiming({sensor_id: req.body.sensor_id, value: req.body.value, ts: req.body.ts});
+console.log(res.body)
+		const mysqlDb = await sensorsApi.addAlertTiming({sensor_id: req.body.sensor_id, value: req.body.value, ts: req.body.ts, title:req.body.title});
 		const gApi = graphanaApi.addAlertTiming({dashboardID:req.body.dashboardID, deviceId:req.body.sensor_id, threshold: req.body.value});
 		return res.send(mysqlDb);
 	});

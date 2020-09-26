@@ -20,13 +20,15 @@ CREATE TABLE IF NOT EXISTS `measurements` (
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 
 
-CREATE TABLE IF NOT EXISTS `timers` (
-	`id` bigint unsigned NOT NULL AUTO_INCREMENT,
-	`sensor_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-	`value` FLOAT(12) DEFAULT NULL,
-	`ts` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-	PRIMARY KEY (`id`)
-) ENGINE = InnoDB AUTO_INCREMENT = 1 DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
+CREATE TABLE `timers` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `sensor_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `value` float DEFAULT NULL,
+  `ts` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `title` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 
 
 -- Dumping structure for table sol_db.sensors

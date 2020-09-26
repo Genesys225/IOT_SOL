@@ -44,10 +44,10 @@ class Mysql {
 		});
 	}
 
-	addAlertTiming({ value, sensor_id, ts}) {
+	addAlertTiming({ value, sensor_id, ts, title}) {
 		return new Promise((resolve) => {
 			console.log(value, sensor_id, ts, 9999999999)
-			connection.query({sql: 'INSERT INTO timers (value, sensor_id, ts) VALUES (?,?,?)', values: [value, sensor_id, ts]},
+			connection.query({sql: 'INSERT INTO timers (value, sensor_id, ts, title) VALUES (?,?,?, ?)', values: [value, sensor_id, ts, title]},
 				function(error, results, fields) {
 					if (error) throw error;
 					resolve(results);

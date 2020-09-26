@@ -3,8 +3,8 @@ class SensorsApi {
 		// this.mqttClient = mqttClient
 	}
 
-	async addAlertTiming({ value, sensor_id, ts}) {
-		return await this.mqttClient.exec('db/mysql.addAlertTiming',{ value, sensor_id, ts}, { timeout: 5000 });
+	async addAlertTiming({ value, sensor_id, ts, title}) {
+		return await this.mqttClient.exec('db/mysql.addAlertTiming',{ value, sensor_id, ts, title}, { timeout: 5000 });
 	}
 
 
