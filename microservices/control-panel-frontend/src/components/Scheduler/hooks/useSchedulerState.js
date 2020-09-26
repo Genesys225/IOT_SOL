@@ -18,13 +18,7 @@ const initialState = {
 
 const init = (switches, events) => ({
 	...initialState,
-	data: events
-		? events.map((event) => ({
-				...event,
-				device: event.deviceId,
-				room: event.roomId,
-		  }))
-		: [],
+	data: events,
 	resources: [
 		{
 			fieldName: 'room',
@@ -54,7 +48,7 @@ const reducer = (state, { type, payload }) => {
 				addedAppointment: {
 					...payload,
 					room:
-						(payload.device === 0 &&
+						(payload.device &&
 							state.resources[1].instances[0].room) ||
 						'',
 				},
@@ -96,12 +90,12 @@ const reducer = (state, { type, payload }) => {
 		case 'rooms': {
 			return { ...state, rooms: payload };
 		}
+
 		case 'currentFilter': {
 			return { ...state, currentFilter: payload };
 		}
 		case 'lazyInit': {
 			const { switches, alerts } = payload;
-			console.log(switches, alerts);
 			if (switches && alerts) return init(switches, alerts);
 			else return state;
 		}
@@ -126,8 +120,14 @@ function SchedulerCtxProvider(props) {
 			text: switchInst.title,
 		}))
 	);
-	// @ts-ignore
-	const alerts = useSelector((state) => state.alerts.alerts);
+	const alerts = useSelector((state) =>
+		// @ts-ignore
+		state.alerts.alerts.map((event) => ({
+			...event,
+			device: event.deviceId,
+			room: event.roomId,
+		}))
+	);
 	const thunkDispatch = useDispatch();
 	const [state, dispatch] = useReducer(reducer, switches, init);
 
