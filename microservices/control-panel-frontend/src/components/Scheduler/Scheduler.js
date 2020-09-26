@@ -71,11 +71,11 @@ const SchedulerContainer = () => {
 		if (deleted !== undefined) {
 			// @ts-ignore
 			dispatch({ type: 'deleteAlert', payload: { deleted } });
-			const { title } = deleted;
+
 			thunkDispatch(
-				deleteScheduleEvent({
-					title,
-				})
+				deleteScheduleEvent(
+					state.data.find((event) => event.id === deleted).title
+				)
 			);
 		}
 	};
