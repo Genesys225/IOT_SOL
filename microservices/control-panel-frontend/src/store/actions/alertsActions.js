@@ -62,6 +62,13 @@ export const setScheduleEvent = ({
 	endDate,
 }) => {
 	return async (dispatch) => {
+		console.log({
+			title,
+			deviceId,
+			roomId,
+			startDate,
+			endDate,
+		});
 		const response = await fetch('/setTimingStartEnd', {
 			method: 'POST',
 			headers: {

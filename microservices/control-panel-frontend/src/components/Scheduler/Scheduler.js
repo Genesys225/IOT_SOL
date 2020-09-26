@@ -41,7 +41,7 @@ const SchedulerContainer = () => {
 			thunkDispatch(
 				setScheduleEvent({
 					title,
-					deviceId: state.resources[1].instances[device],
+					deviceId: device,
 					roomId: room,
 					startDate,
 					endDate,
