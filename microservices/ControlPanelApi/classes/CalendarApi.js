@@ -48,6 +48,7 @@ class CalendarApi {
 		var calendarResponce = alasql(
 			`
         SELECT 
+        startTable.id,  
         startTable.sensor_id as deviceId,
         startTable.title as title,
         startTable.ts as startDate,  
