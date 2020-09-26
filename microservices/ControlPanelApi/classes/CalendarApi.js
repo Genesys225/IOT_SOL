@@ -3,11 +3,12 @@ const fetch = require('node-fetch');
 
 class CalendarApi {
 	async setTimingStartEnd(res) {
+        console.log(res)
 		await fetch('http://microservices:6000/addAlertTiming', {
 			method: 'post',
 			body: JSON.stringify({
 				title: res.title,
-				sensor_id: res.deviceId.deviceId,
+				sensor_id: res.deviceId,
 				value: 1,
 				ts: new Date(res.startDate)
 					.toISOString()
@@ -22,7 +23,7 @@ class CalendarApi {
 			method: 'post',
 			body: JSON.stringify({
 				title: res.title,
-				sensor_id: res.deviceId.deviceId,
+				sensor_id: res.deviceId,
 				value: 0,
 				ts: new Date(res.endDate)
 					.toISOString()
@@ -65,7 +66,7 @@ class CalendarApi {
 			[allEvents, allEvents]
 		);
 
-		console.log(calendarResponce);
+		return (calendarResponce);
 
 		return [
 			{
