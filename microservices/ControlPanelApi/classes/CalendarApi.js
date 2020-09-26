@@ -3,17 +3,18 @@ const fetch = require('node-fetch');
 
 class CalendarApi {
 	async setTimingStartEnd(res) {
-        console.log(res)
+		var tzoffset = new Date().getTimezoneOffset() * 60000; //offset in milliseconds
+		console.log(res);
 		await fetch('http://microservices:6000/addAlertTiming', {
 			method: 'post',
 			body: JSON.stringify({
 				title: res.title,
 				sensor_id: res.deviceId,
 				value: 1,
-				ts: new Date(res.startDate)
+				ts: new Date(new Date(res.startDate).getTime() - tzoffset)
 					.toISOString()
-					.slice(0, 19)
-					.replace('T', ' '),
+					.slice(0, -1),
+
 				dashboardID: res.roomId,
 			}),
 			headers: { 'Content-Type': 'application/json' },
@@ -25,10 +26,10 @@ class CalendarApi {
 				title: res.title,
 				sensor_id: res.deviceId,
 				value: 0,
-				ts: new Date(res.endDate)
+				ts: new Date(new Date(res.endDate).getTime() - tzoffset)
 					.toISOString()
-					.slice(0, 19)
-					.replace('T', ' '),
+					.slice(0, -1),
+
 				dashboardID: res.roomId,
 			}),
 			headers: { 'Content-Type': 'application/json' },
@@ -66,7 +67,7 @@ class CalendarApi {
 			[allEvents, allEvents]
 		);
 
-		return (calendarResponce);
+		return calendarResponce;
 
 		return [
 			{
