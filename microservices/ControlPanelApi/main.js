@@ -59,7 +59,16 @@ const app = setupExpress();
 	app.get('/getAllTimingEvents', async (req, res) =>
 		res.send(await sensorsApi.getAllTimingEvents())
 	);
+
+	app.post('/webhook', async (req, res) => {
+		var evalMatches = req.body.evalMatches
+		var message = evalMatches[0].value
+		var deviceId = evalMatches[0].metric
+		return res.send(await executeApi.sensorExecute(deviceId, message))
+	}
+
 	
+	);
 	// graphana api
 
 	/**
@@ -96,15 +105,14 @@ const app = setupExpress();
 	// {"sensor_id": "SOL-25:11:11:11:11:11/switch", "value": 2, "ts": "2020-09-21 21:55:02", "dashboardID":"room3"}
 	// http://localhost:6000/addAlertTiming
 	app.post('/addAlertTiming', async (req, res) => {
-console.log(res.body)
-		const mysqlDb = await sensorsApi.addAlertTiming({sensor_id: req.body.sensor_id, value: req.body.value, ts: req.body.ts, title:req.body.title});
-		const gApi = graphanaApi.addAlertTiming({dashboardID:req.body.dashboardID, deviceId:req.body.sensor_id, threshold: req.body.value});
+		const mysqlDb = await sensorsApi.addAlertTiming({ sensor_id: req.body.sensor_id, value: req.body.value, ts: req.body.ts, title: req.body.title });
+		const gApi = graphanaApi.addAlertTiming({ dashboardID: req.body.dashboardID, deviceId: req.body.sensor_id, threshold: req.body.value });
 		return res.send(mysqlDb);
 	});
 
 	app.post('/deleteAlertTiming', async (req, res) => {
-		const mysqlDb = await sensorsApi.deleteAlertTiming({sensor_id: req.body.sensor_id, value: req.body.value, ts: req.body.ts, title:req.body.title});
-		// const gApi = graphanaApi.deleteAlertTiming({dashboardID:req.body.dashboardID, deviceId:req.body.sensor_id, threshold: req.body.value});
+		const mysqlDb = await sensorsApi.deleteAlertTiming({ sensor_id: req.body.sensor_id, value: req.body.value, ts: req.body.ts, title: req.body.title });
+		//const gApi = graphanaApi.deleteAlertTiming({dashboardID:req.body.dashboardID, deviceId:req.body.sensor_id, threshold: req.body.value});
 		return res.send(mysqlDb);
 	});
 
@@ -123,18 +131,18 @@ console.log(res.body)
 
 
 	/********************************CALENDAR API******************************************* */
-	
-	
+
+
 
 
 	app.post('/deleteScheduleEvent', async (req, res) => {
-		
+
 		return res.send(await calendarApi.deleteScheduleEvent(req.body));
 	});
 
 
 	app.post('/setTimingStartEnd', async (req, res) => {
-		
+
 		return res.send(await calendarApi.setTimingStartEnd(req.body));
 	});
 
