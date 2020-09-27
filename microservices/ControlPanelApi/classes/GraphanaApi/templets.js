@@ -64,7 +64,11 @@ const timingAlert = function({deviceId, threshold, op}){
         "handler": 1,
         "name": deviceId+"Alert",
         "noDataState": "no_data",
-        "notifications": []
+		"notifications": [
+			{
+			  "id": 0
+			}
+		  ]
 	  }
 	  
 	  const pannelTargetObject =  {
