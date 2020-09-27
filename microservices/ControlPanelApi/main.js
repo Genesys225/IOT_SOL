@@ -61,13 +61,16 @@ const app = setupExpress();
 	);
 
 	app.post('/webhook', async (req, res) => {
-		if(req.body.evalMatches){
+		console.log(req.body)
+		if(req.body.imageUrl=='https://grafana.com/assets/img/blog/mixed_styles.png'){
+			return res.send('ITS A TEST');
+			
+		}else if (req.body.evalMatches){
+		
 			var evalMatches = req.body.evalMatches
 			var message = evalMatches[0].value
 			var deviceId = evalMatches[0].metric
 			return res.send(await executeApi.sensorExecute(deviceId, message))
-		}else{
-			return 'NOT A WEBHOOK';
 		}
 	
 	}
