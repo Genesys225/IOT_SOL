@@ -107,7 +107,6 @@ const SensorListItem = (props) => {
 	};
 
 	const handleClick = (event) => {
-		console.log(event.target.tagName, this);
 		const tagName = (event.target.tagName || '').toLowerCase();
 		if (
 			tagName &&
@@ -248,7 +247,7 @@ const SensorListItem = (props) => {
 					</ListItemSecondaryAction>
 				</Box>
 			</ListItem>
-			<Collapse in={open} timeout="auto" unmountOnExit>
+			<Collapse ref={listItemRef} in={open} timeout="auto" unmountOnExit>
 				<Box display="flex" justifyContent="center">
 					<Grow in={switched} unmountOnExit>
 						<Paper elevation={2} className={classes.paper}>

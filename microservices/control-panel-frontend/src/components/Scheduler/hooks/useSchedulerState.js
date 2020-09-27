@@ -40,7 +40,6 @@ const init = (switches, events) => ({
 });
 
 const reducer = (state, { type, payload }) => {
-	console.log({ state, type, payload });
 	switch (type) {
 		case 'addAlert':
 			return {
@@ -133,6 +132,7 @@ function SchedulerCtxProvider(props) {
 		const fetchSensors = async () => {
 			await thunkDispatch(getSensors());
 			await thunkDispatch(getScheduleEvents());
+			// @ts-ignore
 			dispatch({ type: 'lazyInit', payload: { switches, alerts } });
 		};
 		if (switches.length <= 0) fetchSensors();

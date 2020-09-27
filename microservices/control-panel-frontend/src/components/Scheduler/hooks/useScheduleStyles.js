@@ -1,12 +1,10 @@
 import { blue, indigo, teal } from '@material-ui/core/colors';
-import { fade, makeStyles } from '@material-ui/core/styles';
+import { createStyles, fade, makeStyles } from '@material-ui/core/styles';
 
-export const useScheduleStyles = makeStyles((theme) => {
-	const { palette } = theme;
-	return {
+export const useScheduleStyles = makeStyles((theme) =>
+	createStyles({
 		container: {
 			display: 'flex',
-			// @ts-ignore
 			marginBottom: theme.spacing(2),
 			justifyContent: 'flex-start',
 			alignItems: 'center',
@@ -14,9 +12,7 @@ export const useScheduleStyles = makeStyles((theme) => {
 			margin: '5px',
 		},
 		text: {
-			// @ts-ignore
 			...theme.typography.subtitle1,
-			// @ts-ignore
 			margin: `0 ${theme.spacing(2)}`,
 		},
 		floatLeft: {
@@ -39,16 +35,28 @@ export const useScheduleStyles = makeStyles((theme) => {
 			borderLeft: `4px solid ${indigo[500]}`,
 		},
 		weekEndCell: {
-			backgroundColor: fade(palette.action.disabledBackground, 0.04),
+			backgroundColor: fade(
+				theme.palette.action.disabledBackground,
+				0.04
+			),
 			'&:hover': {
-				backgroundColor: fade(palette.action.disabledBackground, 0.04),
+				backgroundColor: fade(
+					theme.palette.action.disabledBackground,
+					0.04
+				),
 			},
 			'&:focus': {
-				backgroundColor: fade(palette.action.disabledBackground, 0.04),
+				backgroundColor: fade(
+					theme.palette.action.disabledBackground,
+					0.04
+				),
 			},
 		},
 		weekEndDayScaleCell: {
-			backgroundColor: fade(palette.action.disabledBackground, 0.06),
+			backgroundColor: fade(
+				theme.palette.action.disabledBackground,
+				0.06
+			),
 		},
 		appointmentText: {
 			overflow: 'hidden',
@@ -72,5 +80,5 @@ export const useScheduleStyles = makeStyles((theme) => {
 			bottom: 0,
 			left: 0,
 		},
-	};
-});
+	})
+);

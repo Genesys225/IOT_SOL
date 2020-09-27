@@ -37,7 +37,7 @@ const timingAlert = function({deviceId, threshold, op}){
           {
             "evaluator": {
               "params": [
-                1
+                0.5
               ],
               "type": "gt"
             },
@@ -47,7 +47,7 @@ const timingAlert = function({deviceId, threshold, op}){
             "query": {
               "params": [
                 "B",
-                "5m",
+                "10s",
                 "now"
               ]
             },
@@ -58,46 +58,76 @@ const timingAlert = function({deviceId, threshold, op}){
             "type": "query"
           }
         ],
-        "executionErrorState": "alerting",
-        "for": "5m",
-        "frequency": "1m",
+        "executionErrorState": "keep_state",
+        "for": "1s",
+        "frequency": "1s",
         "handler": 1,
         "name": deviceId+"Alert",
-        "noDataState": "no_data",
-		"notifications": [
-			{
-			  "id": 0
-			}
-		  ]
+				"noDataState": "keep_state",
+				"notifications": [
+					{
+						"uid": "mbrQ4OFMz"
+					}
+				]
 	  }
 	  
 	  const pannelTargetObject =  {
-		"format": "time_series",
-		"group": [],
-		"metricColumn": "none",
-		"rawQuery": true,
-		"rawSql": "SELECT\n  $__timeGroupAlias(ts,$__interval),\n  sensor_id AS metric,\n  avg(value) AS \"value\"\nFROM timers\nWHERE\n  $__timeFilter(ts) AND\n  sensor_id = '"+deviceId+"' AND \n    STR_TO_DATE(ts, '%Y-%m-%d %H:%i:%s') >= DATE_SUB(NOW(), INTERVAL 10 MINUTE) \n\nGROUP BY 1,2\nORDER BY $__timeGroup(ts,$__interval)\n \n\n\n\n",
-		"refId": "B",
-		"select": [
-		  [
-			{
-			  "params": [
-				"id"
-			  ],
-			  "type": "column"
-			}
-		  ]
-		],
-		"table": "measurements",
-		"timeColumn": "ts",
-		"timeColumnType": "timestamp",
-		"where": [
-		  {
-			"name": "$__timeFilter",
-			"params": [],
-			"type": "macro"
-		  }
-		]
+			"format": "time_series",
+			"group": [
+				{
+					"params": [
+						"1s",
+						"previous"
+					],
+					"type": "time"
+				}
+			],
+			"metricColumn": "sensor_id",
+			"rawQuery": true,
+			"rawSql": "SELECT\n  $__timeGroupAlias(ts,1s,previous),\n  sensor_id AS metric,\n  avg(value) AS \"value\"\nFROM timers\nWHERE\n  $__timeFilter(ts) AND\n  sensor_id = '"+deviceId+"' \nGROUP BY 1,2\nORDER BY $__timeGroup(ts,1s,previous)",
+			"refId": "B",
+			"select": [
+				[
+					{
+						"params": [
+							"value"
+						],
+						"type": "column"
+					},
+					{
+						"params": [
+							"avg"
+						],
+						"type": "aggregate"
+					},
+					{
+						"params": [
+							"value"
+						],
+						"type": "alias"
+					}
+				]
+			],
+			"table": "timers",
+			"timeColumn": "ts",
+			"timeColumnType": "timestamp",
+			"where": [
+				{
+					"name": "$__timeFilter",
+					"params": [],
+					"type": "macro"
+				},
+				{
+					"datatype": "varchar",
+					"name": "",
+					"params": [
+						"sensor_id",
+						"=",
+						`"${deviceId}"`
+					],
+					"type": "expression"
+				}
+			]
 	  }
 	  return {alertObject, pannelTargetObject}
 }
