@@ -127,7 +127,7 @@ class GraphanaApi {
           ]
 
         // validate if timing alert target exist
-        var existTimer = alasql(`select * from where deviceId='${deviceId}'`, [newPanelToAdd.targets])
+        var existTimer = alasql(`select * from ? where deviceId='${deviceId}'`, [newPanelToAdd.targets])
         if(existTimer.length==0){
             pannelTargetObject.deviceId = deviceId
             newPanelToAdd.targets.push(pannelTargetObject)
