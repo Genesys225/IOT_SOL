@@ -9,10 +9,11 @@ import {
 	Link,
 } from '@material-ui/core';
 import SensorsList from '../sensors/SensorsList';
-import Chart from '../Dashboard/Chart';
+import Chart from '../Dashboard/Dashboard';
 import clsx from 'clsx';
 import { useStyles } from '../hooks/useStyles';
 import Scheduler from '../Scheduler/Scheduler';
+import RoomSummery from '../room/RoomSummery';
 
 function Copyright() {
 	return (
@@ -44,14 +45,17 @@ const MainView = () => {
 						<SensorsList />
 					</Container>
 				</Route>
+				<Route path="/rooms/:room">
+					<Container maxWidth="lg" className={classes.container}>
+						<RoomSummery />
+					</Container>
+				</Route>
 				<Route path="/">
 					<Container maxWidth="lg" className={classes.container}>
 						<Grid container spacing={3}>
 							{/* Chart */}
 							<Grid item xs={12} md={8} lg={9}>
-								<Paper className={fixedHeightPaper}>
-									<Chart />
-								</Paper>
+								<Chart />
 							</Grid>
 						</Grid>
 						<Box pt={4}>

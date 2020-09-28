@@ -1,62 +1,100 @@
-import React, { useEffect, useState } from 'react';
-import clsx from 'clsx';
-import Drawer from '@material-ui/core/Drawer';
-import List from '@material-ui/core/List';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import MainView from '../MainViewHolder/MainView';
-import TopBar from './TopBar';
-import { useStyles } from '../hooks/useStyles';
-import { MainMenu, SecondaryMenu } from './AppDrawer';
-import { getScheduleEvents } from '../../store/actions/alertsActions';
-import { getSensors } from '../../store/actions/sensorsActions';
-import { useDispatch, useSelector } from 'react-redux';
-export default function Dashboard() {
-	// @ts-ignore
-	const sensors = useSelector((state) => state.sensors);
-	const thunkDispatch = useDispatch();
-	const classes = useStyles();
-	const [open, setOpen] = useState(true);
-	const handleDrawerOpen = () => {
-		setOpen(true);
+import { Drawer, List, ListItem, makeStyles, Toolbar } from '@material-ui/core';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import SensorIframe from '../sensors/SensorIframe';
+const defaultDrawerWidth = 778;
+const defaultDrawerHeight = 1000;
+const minDrawerWidth = 400;
+const maxDrawerWidth = 778;
+const useStyles = makeStyles((theme) => ({
+	root: {
+		display: 'flex',
+	},
+	drawer: {
+		// @ts-ignore
+		width: (props) => (props ? props.drawerWidth : defaultDrawerWidth),
+		flexShrink: 0,
+	},
+	drawerPaper: {
+		width: defaultDrawerWidth,
+		overflow: 'hidden',
+	},
+	drawerContainer: {
+		padding: '0 0 4px',
+		position: 'relative',
+		overflow: 'hidden',
+	},
+	dragger: {
+		width: '5px',
+		cursor: 'ew-resize',
+		padding: '4px 0 0',
+		borderTop: '1px solid #ddd',
+		position: 'absolute',
+		top: 0,
+		left: 0,
+		bottom: 0,
+		zIndex: 100,
+		backgroundColor: '#f4f7f9',
+	},
+}));
+function RoomSummery() {
+	const [drawerWidth, setDrawerWidth] = useState(defaultDrawerWidth);
+	const [drawerHeight, setDrawerHeight] = useState(defaultDrawerHeight);
+
+	const ref = useRef(null);
+	const classes = useStyles({ drawerWidth });
+
+	const handleMouseDown = (e) => {
+		document.addEventListener('mouseup', handleMouseUp, true);
+		document.addEventListener('mousemove', handleMouseMove, true);
 	};
-	const handleDrawerClose = () => {
-		setOpen(false);
+
+	const handleMouseUp = () => {
+		document.removeEventListener('mouseup', handleMouseUp, true);
+		document.removeEventListener('mousemove', handleMouseMove, true);
 	};
+
+	const handleMouseMove = useCallback((e) => {
+		const newWidth = document.body.offsetWidth - e.clientX;
+		console.log(e.clientX, document.body.offsetWidth - e.clientX);
+		if (newWidth > minDrawerWidth && newWidth < maxDrawerWidth) {
+			setDrawerWidth(newWidth);
+		}
+	}, []);
+
 	useEffect(() => {
-		const fetchSensors = async () => {
-			await thunkDispatch(getScheduleEvents());
-			await thunkDispatch(getSensors());
-		};
-		if (sensors.length <= 0) fetchSensors();
-	}, [thunkDispatch, sensors]);
+		if (ref.current && ref.current.getBoundingClientRect().height > 0) {
+			console.log(ref.current.getBoundingClientRect().height);
+			setDrawerHeight(ref.current.getBoundingClientRect().height);
+		}
+	}, [ref]);
 
 	return (
-		<div className={classes.root}>
-			<TopBar handleDrawerOpen={handleDrawerOpen} open={open} />
+		<>
 			<Drawer
+				ref={ref}
+				className={classes.drawer}
 				variant="permanent"
-				classes={{
-					paper: clsx(
-						classes.drawerPaper,
-						!open && classes.drawerPaperClose
-					),
+				anchor="right"
+				PaperProps={{
+					style: { width: drawerWidth, paddingLeft: '5px' },
 				}}
-				color="primary"
-				open={open}
+				classes={{
+					paper: classes.drawerPaper,
+				}}
 			>
-				<div className={classes.toolbarIcon}>
-					<IconButton onClick={handleDrawerClose}>
-						<ChevronLeftIcon />
-					</IconButton>
-				</div>
-				<Divider />
-				<List>{MainMenu}</List>
-				<Divider />
-				<List>{SecondaryMenu}</List>
+				<div
+					onMouseDown={(e) => handleMouseDown(e)}
+					className={classes.dragger}
+				/>
+				<SensorIframe
+					room={'All'}
+					listItemRef={false}
+					height={4860}
+					width={drawerWidth - 10}
+				/>
 			</Drawer>
-			<MainView />
-		</div>
+		</>
 	);
 }
+
+export default RoomSummery;

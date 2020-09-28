@@ -1,4 +1,4 @@
-import { IconButton, makeStyles } from '@material-ui/core';
+import { IconButton, makeStyles, useTheme } from '@material-ui/core';
 import React, { useCallback, useEffect, useState } from 'react';
 import FullscreenIcon from '@material-ui/icons/Fullscreen';
 const useStyles = makeStyles({
@@ -16,11 +16,15 @@ const useStyles = makeStyles({
 });
 
 function SensorIframe(props) {
+	const theme = useTheme();
 	const [iframeHover, setIframeHover] = useState(false);
 	const classes = useStyles();
 	// const [time, setTime] = useState(Date.now());
-	const panelId = hashCode(props.id);
-	const parentBoundingRect = props.listItemRef.current.getBoundingClientRect();
+	const panelId = props.id ? hashCode(props.id) : null;
+	const roomId = props.room;
+	let parentBoundingRect = props.listItemRef.current
+		? props.listItemRef.current.getBoundingClientRect()
+		: { width: props.width || '400px' };
 	const timePeriod = props.timePeriod || '6h';
 
 	const iframeClickHandler = useCallback(
@@ -33,10 +37,12 @@ function SensorIframe(props) {
 	);
 	useEffect(() => {
 		window.addEventListener('blur', iframeClickHandler);
+		if (props.listItemRef.current)
+			parentBoundingRect = props.listItemRef.current;
 		return () => {
 			window.removeEventListener('blur', iframeClickHandler);
 		};
-	}, [iframeClickHandler]);
+	}, [iframeClickHandler, props.listItemRef.current]);
 
 	const handleIFrameHover = () => {
 		setIframeHover(true);
@@ -62,9 +68,13 @@ function SensorIframe(props) {
 			</IconButton>
 			<iframe
 				className={classes.iframeWrap}
-				src={`http://localhost:3000/d-solo/All/all?orgId=1&refresh=25s&from=now-${timePeriod}&to=now&theme=light&kiosk&panelId=${panelId}`}
-				width={parentBoundingRect.width - 30}
-				height="300"
+				src={`http://localhost:3000/d${
+					panelId ? '-solo/All' : '/' + roomId
+				}/all?orgId=1&refresh=25s&from=now-${timePeriod}&to=now&theme=${
+					theme.palette.type
+				}&kiosk${panelId && `&panelId=${panelId}`}`}
+				width={parentBoundingRect.width}
+				height={props.height || '300'}
 				frameBorder="0"
 				title="grafana"
 			></iframe>

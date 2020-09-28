@@ -10,7 +10,10 @@ import codropsIcon from '@iconify/icons-logos/codrops';
 // import thermometerIcon from '@iconify/icons-noto/thermometer';
 import thermometerIcon from '@iconify/icons-fxemoji/thermometer';
 import pulseOutline from '@iconify/icons-ion/pulse-outline';
+import warehouseIcon from '@iconify/icons-mdi/warehouse';
 import powerIcon from '@iconify/icons-mdi/power';
+import calendarMultiselect from '@iconify/icons-mdi/calendar-multiselect';
+
 const useStyles = makeStyles((_theme) => ({
 	// @ts-ignore
 	centered: ({ size }) => ({
@@ -22,9 +25,13 @@ const useStyles = makeStyles((_theme) => ({
 	}),
 }));
 
+/** Menu (drawer) */
+addIcon('calendar', calendarMultiselect);
+addIcon('room', warehouseIcon);
+addIcon('sensors', pulseOutline);
+/** Sensors */
 addIcon('temp', thermometerIcon);
 addIcon('switch', powerIcon);
-addIcon('sensors', pulseOutline);
 addIcon('humidity', codropsIcon);
 addIcon('hum', codropsIcon);
 addIcon('lux', sunIcon);
