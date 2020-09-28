@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import clsx from 'clsx';
 import {
 	AppBar,
@@ -6,12 +6,25 @@ import {
 	IconButton,
 	Typography,
 	Badge,
+	Box,
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import { useStyles } from '../components/hooks/useStyles';
+import Brightness4Icon from '@material-ui/icons/Brightness4';
+import { MuiCtx, setPaletteType } from '../components/hooks/muiState';
+import { useTheme } from '@material-ui/styles';
 
 const TopBar = (props) => {
+	const { theme, dispatch } = useContext(MuiCtx);
+	const [darkTheme, setDarkTheme] = useState(false);
+	const handleSwitchPalette = () => {
+		setDarkTheme(!darkTheme);
+		dispatch(
+			// @ts-ignore
+			setPaletteType(darkTheme ? 'dark' : 'light')
+		);
+	};
 	const classes = useStyles();
 	return (
 		<AppBar
@@ -40,11 +53,16 @@ const TopBar = (props) => {
 				>
 					Dashboard
 				</Typography>
-				<IconButton color="inherit">
-					<Badge badgeContent={4} color="secondary">
-						<NotificationsIcon />
-					</Badge>
-				</IconButton>
+				<Box>
+					<IconButton color="inherit">
+						<Badge badgeContent={4} color="secondary">
+							<NotificationsIcon />
+						</Badge>
+					</IconButton>
+					<IconButton color="inherit" onClick={handleSwitchPalette}>
+						<Brightness4Icon />
+					</IconButton>
+				</Box>
 			</Toolbar>
 		</AppBar>
 	);
