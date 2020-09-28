@@ -9,7 +9,7 @@ import {
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-import { useStyles } from '../hooks/useStyles';
+import { useStyles } from '../components/hooks/useStyles';
 
 const TopBar = (props) => {
 	const classes = useStyles();

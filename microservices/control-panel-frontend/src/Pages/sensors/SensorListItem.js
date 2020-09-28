@@ -25,7 +25,7 @@ import { sendCommand } from '../../store/actions/controls';
 import { updateDeviceZone } from '../../store/actions/sensorsActions';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
-import { Icon } from '../Icons/Icon-Library';
+import { Icon } from '../../components/Icons/Icon-Library';
 import SensorIframe from './SensorIframe';
 import EditIcon from '@material-ui/icons/Edit';
 import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';

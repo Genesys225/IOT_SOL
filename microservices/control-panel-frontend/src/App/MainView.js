@@ -8,12 +8,12 @@ import {
 	Typography,
 	Link,
 } from '@material-ui/core';
-import SensorsList from '../sensors/SensorsList';
-import Chart from '../Dashboard/Dashboard';
+import SensorsList from '../Pages/sensors/SensorsList';
+import Chart from '../Pages/Dashboard/Dashboard';
 import clsx from 'clsx';
-import { useStyles } from '../hooks/useStyles';
-import Scheduler from '../Scheduler/Scheduler';
-import RoomSummery from '../room/RoomSummery';
+import { useStyles } from '../components/hooks/useStyles';
+import Scheduler from '../Pages/Scheduler/Scheduler';
+import RoomSummery from '../Pages/room/RoomSummery';
 
 function Copyright() {
 	return (

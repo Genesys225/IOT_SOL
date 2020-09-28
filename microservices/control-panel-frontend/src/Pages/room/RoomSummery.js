@@ -1,4 +1,4 @@
-import { Drawer, List, ListItem, makeStyles, Toolbar } from '@material-ui/core';
+import { Drawer, List, ListItem, makeStyles } from '@material-ui/core';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import SensorIframe from '../sensors/SensorIframe';
@@ -42,6 +42,7 @@ function RoomSummery() {
 	const [drawerHeight, setDrawerHeight] = useState(defaultDrawerHeight);
 
 	const ref = useRef(null);
+	// @ts-ignore
 	const { room } = useParams();
 	const classes = useStyles({ drawerWidth });
 

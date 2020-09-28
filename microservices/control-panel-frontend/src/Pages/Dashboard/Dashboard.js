@@ -1,4 +1,4 @@
-import { Drawer, List, ListItem, makeStyles, Toolbar } from '@material-ui/core';
+import { Drawer, makeStyles } from '@material-ui/core';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import SensorIframe from '../sensors/SensorIframe';
 const defaultDrawerWidth = 778;

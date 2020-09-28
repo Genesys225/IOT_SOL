@@ -14,7 +14,7 @@ import {
 	Select,
 	MenuItem,
 } from '@material-ui/core';
-import CenteredCircular from '../common/CenteredCircular';
+import CenteredCircular from '../../components/common/CenteredCircular';
 import SensorListItem from './SensorListItem';
 
 const useStyles = makeStyles((theme) => ({

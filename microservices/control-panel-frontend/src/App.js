@@ -3,7 +3,7 @@ import { Provider } from 'react-redux';
 import { createMuiTheme } from '@material-ui/core/styles';
 import './App.css';
 import configureStore from './store/store';
-import NavigationContainer from './components/App/NavigationContainer';
+import NavigationContainer from './App/NavigationContainer';
 import { ThemeProvider } from '@material-ui/styles';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { CircularProgress, CssBaseline } from '@material-ui/core';

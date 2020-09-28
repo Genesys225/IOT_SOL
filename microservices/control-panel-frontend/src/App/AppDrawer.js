@@ -5,7 +5,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import { Link } from 'react-router-dom';
-import { Icon } from '../Icons/Icon-Library';
+import { Icon } from '../components/Icons/Icon-Library';
 import { useSelector } from 'react-redux';
 
 function ListItemLink(props) {

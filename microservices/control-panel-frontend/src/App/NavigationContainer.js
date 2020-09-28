@@ -7,10 +7,10 @@ import IconButton from '@material-ui/core/IconButton';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import MainView from './MainView';
 import TopBar from './TopBar';
-import { useStyles } from '../hooks/useStyles';
+import { useStyles } from '../components/hooks/useStyles';
 import { MainMenu, SecondaryMenu } from './AppDrawer';
-import { getScheduleEvents } from '../../store/actions/alertsActions';
-import { getSensors } from '../../store/actions/sensorsActions';
+import { getScheduleEvents } from '../store/actions/alertsActions';
+import { getSensors } from '../store/actions/sensorsActions';
 import { useDispatch, useSelector } from 'react-redux';
 export default function Dashboard() {
 	// @ts-ignore
