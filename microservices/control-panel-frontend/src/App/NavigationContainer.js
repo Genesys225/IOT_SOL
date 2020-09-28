@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import clsx from 'clsx';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
@@ -12,7 +12,9 @@ import { MainMenu, SecondaryMenu } from './AppDrawer';
 import { getScheduleEvents } from '../store/actions/alertsActions';
 import { getSensors } from '../store/actions/sensorsActions';
 import { useDispatch, useSelector } from 'react-redux';
-export default function Dashboard() {
+import { MuiCtx } from '../components/hooks/muiState';
+import { CssBaseline, ThemeProvider } from '@material-ui/core';
+function DashboardContainer() {
 	// @ts-ignore
 	const sensors = useSelector((state) => state.sensors.All);
 	const thunkDispatch = useDispatch();
@@ -60,5 +62,15 @@ export default function Dashboard() {
 			</Drawer>
 			<MainView />
 		</div>
+	);
+}
+
+export default function Dashboard() {
+	const { theme } = useContext(MuiCtx);
+	return (
+		<ThemeProvider theme={theme}>
+			<CssBaseline />
+			<DashboardContainer />
+		</ThemeProvider>
 	);
 }
