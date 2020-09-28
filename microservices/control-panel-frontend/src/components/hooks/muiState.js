@@ -36,8 +36,6 @@ function MuiCtxProvider(props) {
 	const [state, dispatch] = useReducer(reducer, initialState);
 	const theme = createMuiTheme(state);
 
-	useEffect(() => {}, [state]);
-
 	return (
 		<MuiCtx.Provider value={{ theme, dispatch }}>
 			{props.children}
