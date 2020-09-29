@@ -1,4 +1,4 @@
-import { Drawer, makeStyles } from '@material-ui/core';
+import { CssBaseline, Drawer, makeStyles } from '@material-ui/core';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import SensorIframe from '../sensors/SensorIframe';
 const defaultDrawerWidth = 778;
@@ -63,13 +63,13 @@ function RoomSummery() {
 
 	useEffect(() => {
 		if (ref.current && ref.current.getBoundingClientRect().height > 0) {
-			console.log(ref.current.getBoundingClientRect().height);
 			setDrawerHeight(ref.current.getBoundingClientRect().height);
 		}
 	}, [ref]);
 
 	return (
 		<>
+			<CssBaseline />
 			<Drawer
 				ref={ref}
 				className={classes.drawer}

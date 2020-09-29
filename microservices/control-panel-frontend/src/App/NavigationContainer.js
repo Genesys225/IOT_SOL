@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import clsx from 'clsx';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
@@ -20,12 +20,9 @@ function DashboardContainer() {
 	const thunkDispatch = useDispatch();
 	const classes = useStyles();
 	const [open, setOpen] = useState(true);
-	const handleDrawerOpen = () => {
-		setOpen(true);
-	};
-	const handleDrawerClose = () => {
-		setOpen(false);
-	};
+	const handleDrawerToggle = useCallback(() => {
+		setOpen(!open);
+	}, [open]);
 	useEffect(() => {
 		const fetchSensors = async () => {
 			await thunkDispatch(getScheduleEvents());
@@ -36,7 +33,7 @@ function DashboardContainer() {
 
 	return (
 		<div className={classes.root}>
-			<TopBar handleDrawerOpen={handleDrawerOpen} open={open} />
+			<TopBar handleDrawerToggle={handleDrawerToggle} open={open} />
 			<Drawer
 				variant="permanent"
 				classes={{
@@ -48,16 +45,12 @@ function DashboardContainer() {
 				color="primary"
 				open={open}
 			>
-				<div className={classes.toolbarIcon}>
-					<IconButton onClick={handleDrawerClose}>
-						<ChevronLeftIcon />
-					</IconButton>
-				</div>
+				<div className={classes.toolbarIcon}></div>
 				<Divider />
 				<List>{MainMenu}</List>
 				<Divider />
 				<List>
-					<SecondaryMenu />
+					<SecondaryMenu open={open} />
 				</List>
 			</Drawer>
 			<MainView />

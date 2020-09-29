@@ -1,70 +1,50 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
-import {
-	Container,
-	Grid,
-	Paper,
-	Box,
-	Typography,
-	Link,
-} from '@material-ui/core';
+import { Container, Grid, CssBaseline } from '@material-ui/core';
 import SensorsList from '../Pages/sensors/SensorsList';
-import Chart from '../Pages/Dashboard/Dashboard';
+import Dashboard from '../Pages/Dashboard/Dashboard';
 import clsx from 'clsx';
 import { useStyles } from '../components/hooks/useStyles';
 import Scheduler from '../Pages/Scheduler/Scheduler';
 import RoomSummery from '../Pages/room/RoomSummery';
 
-function Copyright() {
-	return (
-		<Typography variant="body2" color="textSecondary" align="center">
-			{'Copyright © '}
-			<Link color="inherit" href="https://material-ui.com/">
-				Your Website
-			</Link>{' '}
-			{new Date().getFullYear()}
-			{'.'}
-		</Typography>
-	);
-}
-
 const MainView = () => {
 	const classes = useStyles();
 	const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 	return (
-		<main className={classes.content}>
-			<div className={classes.appBarSpacer} />
-			<Switch>
-				<Route path="/scheduler">
-					<Container maxWidth="xl" className={classes.container}>
-						<Scheduler />
-					</Container>
-				</Route>
-				<Route path="/sensors">
-					<Container maxWidth="lg" className={classes.container}>
-						<SensorsList />
-					</Container>
-				</Route>
-				<Route path="/rooms/:room">
-					<Container maxWidth="lg" className={classes.container}>
-						<RoomSummery />
-					</Container>
-				</Route>
-				<Route path="/">
-					<Container maxWidth="lg" className={classes.container}>
-						<Grid container spacing={3}>
-							{/* Chart */}
-							<Grid item xs={12} md={8} lg={9}>
-								<Chart />
+		<>
+			<CssBaseline />
+			<main className={classes.content}>
+				<div className={classes.appBarSpacer} />
+				<Switch>
+					<Route path="/scheduler">
+						<Container maxWidth="xl" className={classes.container}>
+							<Scheduler />
+						</Container>
+					</Route>
+					<Route path="/sensors">
+						<Container maxWidth="lg" className={classes.container}>
+							<SensorsList />
+						</Container>
+					</Route>
+					<Route path="/rooms/:room">
+						<Container maxWidth="lg" className={classes.container}>
+							<RoomSummery />
+						</Container>
+					</Route>
+					<Route path="/">
+						<Container maxWidth="lg" className={classes.container}>
+							<Grid container spacing={3}>
+								{/* Dashboard */}
+								<Grid item xs={12} md={8} lg={9}>
+									<Dashboard />
+								</Grid>
 							</Grid>
-						</Grid>
-						<Box pt={4}>
-							<Copyright />
-						</Box>
-					</Container>
-				</Route>
-			</Switch>
-		</main>
+						</Container>
+					</Route>
+				</Switch>
+			</main>
+		</>
 	);
 };
 
