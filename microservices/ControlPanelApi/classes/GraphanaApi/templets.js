@@ -89,7 +89,7 @@ const timingAlert = function({deviceId, threshold, op}){
 				"noDataState": "keep_state",
 				"notifications": [
 					{
-						"uid": "mbrQ4OFMz"
+						"uid": "webhook"
 					}
 				]
 	  }
