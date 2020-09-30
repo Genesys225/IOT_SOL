@@ -1,3 +1,26 @@
+const webhookNotification = function(){
+return {
+	id: 1,
+	uid: 'webhook',
+	name: 'webhook',
+	type: 'webhook',
+	isDefault: false,
+	sendReminder: true,
+	disableResolveMessage: false,
+	frequency: '5s',
+	created: '2020-09-27T08:26:25Z',
+	updated: '2020-09-27T10:31:56Z',
+	settings: {
+	  autoResolve: true,
+	  httpMethod: 'POST',
+	  severity: 'critical',
+	  uploadImage: false,
+	  url: 'http://microservices:6000/webhook'
+	}
+  }
+}
+
+
 const alertT = function({ threshold, op }) {
 	const alertTemplete = {
 		alertRuleTags: {},
@@ -335,4 +358,4 @@ var gaugeWidget = function({ id, title, rawSql }) {
 	return panelTemplete;
 };
 
-module.exports = { dashboard, panel, alertT, textWidget, gaugeWidget , timingAlert};
+module.exports = { dashboard, panel, alertT, textWidget, gaugeWidget , timingAlert, webhookNotification};

@@ -1,12 +1,15 @@
 const fetch = require('node-fetch');
-const { dashboard, panel, alertT, textWidget, gaugeWidget , timingAlert} = require('./templets');
+const { dashboard, panel, alertT, textWidget, gaugeWidget , timingAlert, webhookNotification} = require('./templets');
 const alasql = require('alasql')
 
 class GraphanaApi {
     constructor() {
         setInterval(() => {
             this.registerAllDevices()
+            this.createWebhookNotificationChanel()
         }, 6000);
+
+        
     }
     hashCode(s) {
         return s.split("").reduce(function (a, b) { a = ((a << 5) - a) + b.charCodeAt(0); return a & a }, 0);
@@ -235,6 +238,30 @@ class GraphanaApi {
             .then(res => res.json(dash))
             .then(json => JSON.stringify(json));
     }
+
+
+    async createWebhookNotificationChanel() {
+       
+        return await fetch('http://grafana:3000/api/alert-notifications', {
+            method: 'post',
+            body: JSON.stringify(webhookNotification()),
+            headers: { 'Content-Type': 'application/json', 'Authorization': process.env.GRAPHANA_API_KEY },
+        })
+            .then(res => res.json(res))
+            .then(json => JSON.stringify(json));
+    }
+
+    async initNotificationChanels(){ 
+        await this.createWebhookNotificationChanel(); 
+        return await fetch('http://grafana:3000/api/alert-notifications', {
+            method: 'get',
+            headers: { 'Content-Type': 'application/json', 'Authorization': process.env.GRAPHANA_API_KEY },
+        })
+            .then(res => res.json())
+            .then(json => console.log(json) || []);
+    }
+
+    
 }
 //SOL-16:11:11:11:11:11/light
 var g = new GraphanaApi();  
@@ -242,5 +269,8 @@ sensorUid = 'SOL-15:11:11:11:11:11/hum'
 //sensorUid = 'SOL-16:11:11:11:11:11/light'
 //g.addDeviceToDashboard({ dashboardUid: 'room1', deviceId: sensorUid });
 //g.addDeviceFromDashboardToDashboard({ idFrom: 'room2', idTo: 'room1', deviceId: sensorUid })
-g.getAllAlerts()
+// setInterval(()=>{
+//     g.initNotificationChanels()
+// }, 3000)
+
 module.exports = GraphanaApi;   
