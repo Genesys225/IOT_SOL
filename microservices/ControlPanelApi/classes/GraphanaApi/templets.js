@@ -186,7 +186,7 @@ var dashboard = function({ id, uid, panels, title }) {
 				list: [],
 			},
 			time: {
-				from: 'now-6h',
+				from: 'now-7d',
 				to: 'now',
 			},
 			timepicker: {
@@ -251,7 +251,7 @@ var panel = function({ id, title, rawSql }) {
 		},
 		lines: true,
 		linewidth: 1,
-		nullPointMode: 'null',
+		nullPointMode: 'null as zero',
 		percentage: false,
 		pluginVersion: '7.1.5',
 		pointradius: 2,
