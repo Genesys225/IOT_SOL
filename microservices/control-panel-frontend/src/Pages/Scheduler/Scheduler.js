@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import Paper from '@material-ui/core/Paper';
 import { ViewState, EditingState } from '@devexpress/dx-react-scheduler';
 import {
@@ -36,7 +36,7 @@ const SchedulerContainer = () => {
 	const classes = useScheduleStyles();
 	const { state, dispatch } = useContext(SchedulerCtx);
 	const [currentView, setCurrentView] = useState('Week');
-	const commitChanges = ({ added, changed, deleted }) => {
+	const commitChanges = useCallback(({ added, changed, deleted }) => {
 		if (added) {
 			// @ts-ignore
 			dispatch({ type: 'commitAddedAlert', payload: { added } });
@@ -78,32 +78,32 @@ const SchedulerContainer = () => {
 				)
 			);
 		}
-	};
+	}, []);
 
-	const currentViewChange = (currentViewName) => {
+	const currentViewChange = useCallback((currentViewName) => {
 		setCurrentView(currentViewName);
-	};
+	}, []);
 
-	const addedAppointmentChange = (addedAppointment) =>
+	const addedAppointmentChange = useCallback((addedAppointment) =>
 		// @ts-ignore
 		dispatch({
 			type: 'addAlert',
 			payload: addedAppointment,
-		});
+		}),[]);
 
-	const appointmentChangesChange = (appointmentChanges) =>
+	const appointmentChangesChange = useCallback((appointmentChanges) =>
 		// @ts-ignore
 		dispatch({
 			type: 'changeAlert',
 			payload: appointmentChanges,
-		});
+		}), []);
 
-	const editingAppointmentChange = (editingAppointment) =>
+	const editingAppointmentChange = useCallback((editingAppointment) =>
 		// @ts-ignore
 		dispatch({
 			type: 'selectEditedAlert',
 			payload: editingAppointment,
-		});
+		}),[]);
 
 	return (
 		<Paper className={classes.paper}>

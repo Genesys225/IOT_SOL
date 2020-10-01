@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getSensors, getLastData } from '../../store/actions/sensorsActions';
 import { useEffect } from 'react';
@@ -53,7 +53,7 @@ export default function SensorsList() {
 			: // @ts-ignore
 			  state.sensors.All.filter((device) => device.room === room)
 	);
-	const handleChange = (event) => setRoom(event.target.value);
+	const handleChange = useCallback( (event) => setRoom(event.target.value), [setRoom]);
 
 	const classes = useStyles();
 	const dispatch = useDispatch();
