@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import clsx from 'clsx';
 import {
 	AppBar,
@@ -8,15 +8,25 @@ import {
 	Badge,
 	Box,
 	CssBaseline,
+	Button,
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import { useStyles } from '../components/hooks/useStyles';
 import Brightness4Icon from '@material-ui/icons/Brightness4';
 import { MuiCtx, setPaletteType } from '../components/hooks/muiState';
+import { useAuth0 } from '@auth0/auth0-react';
+import { rest } from '../restClient/fetchWrapper';
 
 const TopBar = (props) => {
+	const {
+		loginWithRedirect,
+		logout,
+		isAuthenticated,
+		getAccessTokenSilently,
+	} = useAuth0();
 	const { dispatch } = useContext(MuiCtx);
+	const [token, setToken] = useState(null);
 	const [darkTheme, setDarkTheme] = useState(false);
 	const handleSwitchPalette = () => {
 		setDarkTheme(!darkTheme);
@@ -26,6 +36,24 @@ const TopBar = (props) => {
 		);
 	};
 	const classes = useStyles();
+	useEffect(() => {
+		const getUserMetadata = async () => {
+			const domain = 'iot-sol.eu.auth0.com';
+
+			try {
+				const accessToken = await getAccessTokenSilently({
+					audience: `https://${domain}/api/v2/`,
+					scope: 'read:current_user',
+				});
+				console.log(accessToken);
+				setToken(accessToken);
+				rest.setAuthToken(`Bearer ${accessToken}`);
+			} catch (e) {
+				console.log(e.message);
+			}
+		};
+		if (!token && isAuthenticated) getUserMetadata();
+	}, [token, isAuthenticated]);
 	return (
 		<>
 			<CssBaseline />
@@ -50,6 +78,23 @@ const TopBar = (props) => {
 						Dashboard
 					</Typography>
 					<Box>
+						{!isAuthenticated ? (
+							<Button
+								onClick={() => loginWithRedirect()}
+								color="inherit"
+							>
+								Log In
+							</Button>
+						) : (
+							<Button
+								color="inherit"
+								onClick={() =>
+									logout({ returnTo: window.location.origin })
+								}
+							>
+								Log Out
+							</Button>
+						)}
 						<IconButton color="inherit">
 							<Badge badgeContent={4} color="secondary">
 								<NotificationsIcon />

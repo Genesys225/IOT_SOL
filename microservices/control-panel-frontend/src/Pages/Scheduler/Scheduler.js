@@ -18,6 +18,7 @@ import {
 	DateNavigator,
 	TodayButton,
 	DragDropProvider,
+	// @ts-ignore
 } from '@devexpress/dx-react-scheduler-material-ui';
 import { useDispatch } from 'react-redux';
 import {
@@ -36,74 +37,89 @@ const SchedulerContainer = () => {
 	const classes = useScheduleStyles();
 	const { state, dispatch } = useContext(SchedulerCtx);
 	const [currentView, setCurrentView] = useState('Week');
-	const commitChanges = useCallback(({ added, changed, deleted }) => {
-		if (added) {
-			// @ts-ignore
-			dispatch({ type: 'commitAddedAlert', payload: { added } });
-			const { title, device, room, startDate, endDate } = added;
-			thunkDispatch(
-				setScheduleEvent({
-					title,
-					deviceId: device,
-					roomId: room,
-					startDate,
-					endDate,
-				})
-			);
-		}
-		if (changed) {
-			// @ts-ignore
-			dispatch({ type: 'commitChangesToAlert', payload: { changed } });
-			const { title, device, room, startDate, endDate, id } = changed;
-			thunkDispatch(
-				setScheduleEvent(
-					{
+	const commitChanges = useCallback(
+		({ added, changed, deleted }) => {
+			if (added) {
+				// @ts-ignore
+				dispatch({ type: 'commitAddedAlert', payload: { added } });
+				const { title, device, room, startDate, endDate } = added;
+				thunkDispatch(
+					setScheduleEvent({
 						title,
 						deviceId: device,
 						roomId: room,
 						startDate,
 						endDate,
-					},
-					!!changed
-				)
-			);
-		}
-		if (deleted !== undefined) {
-			// @ts-ignore
-			dispatch({ type: 'deleteAlert', payload: { deleted } });
+					})
+				);
+			}
+			if (changed) {
+				// @ts-ignore
+				dispatch({
+					type: 'commitChangesToAlert',
+					payload: { changed },
+				});
+				const { title, device, room, startDate, endDate, id } = changed;
+				thunkDispatch(
+					setScheduleEvent(
+						{
+							title,
+							deviceId: device,
+							roomId: room,
+							startDate,
+							endDate,
+						},
+						!!changed
+					)
+				);
+			}
+			if (deleted !== undefined) {
+				// @ts-ignore
+				dispatch({ type: 'deleteAlert', payload: { deleted } });
 
-			thunkDispatch(
-				deleteScheduleEvent(
-					state.data.find((event) => event.id === deleted).title
-				)
-			);
-		}
-	}, []);
+				thunkDispatch(
+					deleteScheduleEvent(
+						state.data.find((event) => event.id === deleted).title
+					)
+				);
+			}
+		},
+		[dispatch, state, thunkDispatch]
+	);
 
 	const currentViewChange = useCallback((currentViewName) => {
 		setCurrentView(currentViewName);
 	}, []);
 
-	const addedAppointmentChange = useCallback((addedAppointment) =>
-		// @ts-ignore
-		dispatch({
-			type: 'addAlert',
-			payload: addedAppointment,
-		}),[]);
+	const addedAppointmentChange = useCallback(
+		(addedAppointment) =>
+			// @ts-ignore
+			dispatch({
+				type: 'addAlert',
+				payload: addedAppointment,
+			}),
+		[dispatch]
+	);
 
-	const appointmentChangesChange = useCallback((appointmentChanges) =>
-		// @ts-ignore
-		dispatch({
-			type: 'changeAlert',
-			payload: appointmentChanges,
-		}), []);
+	const appointmentChangesChange = useCallback(
+		(appointmentChanges) =>
+			// @ts-ignore
+			dispatch({
+				type: 'changeAlert',
+				payload: appointmentChanges,
+			}),
+		[dispatch]
+	);
 
-	const editingAppointmentChange = useCallback((editingAppointment) =>
-		// @ts-ignore
-		dispatch({
-			type: 'selectEditedAlert',
-			payload: editingAppointment,
-		}),[]);
+	const editingAppointmentChange = useCallback(
+		(editingAppointment) =>
+			// @ts-ignore
+			dispatch({
+				type: 'selectEditedAlert',
+				payload: editingAppointment,
+			}),
+		[dispatch]
+	);
 
 	return (
 		<Paper className={classes.paper}>

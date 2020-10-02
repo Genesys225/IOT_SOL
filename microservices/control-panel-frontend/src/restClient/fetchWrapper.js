@@ -69,6 +69,11 @@ export default class FetchWrap {
 		return url;
 	}
 
+	setAuthToken(token) {
+		this.setBaseHeaders({ Authorization: token });
+		return this;
+	}
+
 	async handleRequest(url, options = null) {
 		try {
 			const response = options
@@ -96,5 +101,5 @@ export default class FetchWrap {
 		};
 	}
 }
- 
-export const rest = new FetchWrap()
+
+export const rest = new FetchWrap();
