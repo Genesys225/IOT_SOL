@@ -3,13 +3,10 @@ import clsx from 'clsx';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import MainView from './MainView';
 import TopBar from './TopBar';
 import { useStyles } from '../components/hooks/useStyles';
 import { MainMenu, SecondaryMenu } from './AppDrawer';
-import { getScheduleEvents } from '../store/actions/alertsActions';
 import { getSensors } from '../store/actions/sensorsActions';
 import { useDispatch, useSelector } from 'react-redux';
 import { MuiCtx } from '../components/hooks/muiState';
@@ -25,7 +22,6 @@ function DashboardContainer() {
 	}, [open]);
 	useEffect(() => {
 		const fetchSensors = async () => {
-			await thunkDispatch(getScheduleEvents());
 			await thunkDispatch(getSensors());
 		};
 		if (sensors.length <= 0) fetchSensors();

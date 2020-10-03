@@ -1,4 +1,4 @@
-import { rest } from "../../restClient/fetchWrapper";
+import { rest } from '../../restClient/fetchWrapper';
 
 export const GET_ALERTS = 'GET_ALERTS';
 export const GET_SCHEDULE = 'GET_SCHEDULE';
@@ -17,10 +17,10 @@ export const updateAlerts = (updatedAlerts, deviceId) => {
 	return async (dispatch) => {
 		const newAlerts = updatedAlerts.map(async (alert) => {
 			const res = await rest.post('/addAlertThreshold', {
-					dashboardID: 'All',
-					deviceId,
-					threshold: alert.threshold,
-					op: alert.op,
+				dashboardID: 'All',
+				deviceId,
+				threshold: alert.threshold,
+				op: alert.op,
 			});
 			console.log({
 				dashboardID: 'All',
@@ -28,7 +28,7 @@ export const updateAlerts = (updatedAlerts, deviceId) => {
 				threshold: alert.threshold,
 				op: alert.op,
 			});
-			return res
+			return res;
 			// alert.id = Date.now();
 			// return alert;
 		});
@@ -40,15 +40,15 @@ export const updateAlerts = (updatedAlerts, deviceId) => {
 export const getScheduleEvents = () => {
 	return async (dispatch) => {
 		const events = await rest.get('/getAllEvents');
-		if (events && events.length > 0)
-		dispatch({ type: GET_SCHEDULE, payload: events });
+		await dispatch({ type: GET_SCHEDULE, payload: events });
+		console.log(events);
 	};
 };
 
 export const deleteScheduleEvent = (title) => {
 	return async (dispatch) => {
 		const res = await rest.post('/deleteScheduleEvent', {
-				title,
+			title,
 		});
 		console.log(res);
 		dispatch({ type: DELETE_SCHEDULE_EVENT, payload: title });
@@ -69,13 +69,14 @@ export const setScheduleEvent = (
 			edit,
 		});
 		const response = await rest.post('/setTimingStartEnd', {
-				edit,
-				title,
-				deviceId,
-				roomId,
-				startDate,
-				endDate,
+			edit,
+			title,
+			deviceId,
+			roomId,
+			startDate,
+			endDate,
 		});
-		console.log(response)
+		console.log(response);
+		dispatch({ type: 'non' });
 	};
 };

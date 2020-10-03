@@ -4,16 +4,14 @@ return {
 	uid: 'webhook',
 	name: 'webhook',
 	type: 'webhook',
-	isDefault: false,
+	isDefault: true,
 	sendReminder: true,
 	disableResolveMessage: false,
-	frequency: '5s',
-	created: '2020-09-27T08:26:25Z',
-	updated: '2020-09-27T10:31:56Z',
+	frequency: '15s',
 	settings: {
 	  autoResolve: true,
-	  httpMethod: 'POST',
-	  severity: 'critical',
+		httpMethod: 'POST',
+		severity: "critical",
 	  uploadImage: false,
 	  url: 'http://microservices:6000/webhook'
 	}
@@ -60,17 +58,18 @@ const timingAlert = function({deviceId, threshold, op}){
           {
             "evaluator": {
               "params": [
-                0.5
+								0.9,
+								0.1
               ],
-              "type": "gt"
+              "type": "outside_range"
             },
             "operator": {
-              "type": "and"
+              "type": "or"
             },
             "query": {
               "params": [
                 "B",
-                "10s",
+                "1m",
                 "now"
               ]
             },
@@ -86,7 +85,7 @@ const timingAlert = function({deviceId, threshold, op}){
         "frequency": "1s",
         "handler": 1,
         "name": deviceId+"Alert",
-				"noDataState": "keep_state",
+				"noDataState": "ok",
 				"notifications": [
 					{
 						"uid": "webhook"

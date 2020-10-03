@@ -1,3 +1,4 @@
+// @ts-ignore
 import { Toolbar } from '@devexpress/dx-react-scheduler-material-ui';
 import {
 	Button,

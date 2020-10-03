@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Paper from '@material-ui/core/Paper';
 import { ViewState, EditingState } from '@devexpress/dx-react-scheduler';
 import {
@@ -20,106 +20,81 @@ import {
 	DragDropProvider,
 	// @ts-ignore
 } from '@devexpress/dx-react-scheduler-material-ui';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
-	deleteScheduleEvent,
-	setScheduleEvent,
-} from '../../store/actions/alertsActions';
+	changeAddedAppointment,
+	changeAppointmentChanges,
+	getScheduleEvents,
+} from '../../store/actions/schedule';
 import { useScheduleStyles } from './hooks/useScheduleStyles';
-import { SchedulerCtx, SchedulerCtxProvider } from './hooks/useSchedulerState';
 import { Appointment, AppointmentContent } from './AppointmentView';
 import { MonthDayScaleCell, MonthTimeTableCell } from './MonthView';
 import { FlexibleSpace, ToolbarWithLoading } from './ToolbarView';
 import { WeekTimeTableCell, WeekDayScaleCell } from './WeekView';
+import {
+	addScheduleEvent,
+	changeScheduleEvent,
+	deleteScheduleEvent,
+	selectEditedAppointment,
+} from '../../store/actions/schedule';
 
 const SchedulerContainer = () => {
-	const thunkDispatch = useDispatch();
+	const dispatch = useDispatch();
+	const switches = useSelector((state) =>
+		// @ts-ignore
+		state.sensors.All.filter(
+			(device) => device.deviceType === 'switch'
+		).map((switchInst) => ({
+			...switchInst,
+			id: switchInst.title,
+			text: switchInst.title,
+		}))
+	);
+	// @ts-ignore
+	const state = useSelector((state) => state.schedule);
 	const classes = useScheduleStyles();
-	const { state, dispatch } = useContext(SchedulerCtx);
 	const [currentView, setCurrentView] = useState('Week');
-	const commitChanges = useCallback(
-		({ added, changed, deleted }) => {
-			if (added) {
-				// @ts-ignore
-				dispatch({ type: 'commitAddedAlert', payload: { added } });
-				const { title, device, room, startDate, endDate } = added;
-				thunkDispatch(
-					setScheduleEvent({
-						title,
-						deviceId: device,
-						roomId: room,
-						startDate,
-						endDate,
-					})
-				);
-			}
-			if (changed) {
-				// @ts-ignore
-				dispatch({
-					type: 'commitChangesToAlert',
-					payload: { changed },
-				});
-				const { title, device, room, startDate, endDate, id } = changed;
-				thunkDispatch(
-					setScheduleEvent(
-						{
-							title,
-							deviceId: device,
-							roomId: room,
-							startDate,
-							endDate,
-						},
-						!!changed
-					)
-				);
-			}
-			if (deleted !== undefined) {
-				// @ts-ignore
-				dispatch({ type: 'deleteAlert', payload: { deleted } });
+	const commitChanges = ({ added, changed, deleted }) => {
+		console.log(added);
+		if (added) {
+			dispatch(addScheduleEvent(added));
+		}
+		if (changed) {
+			dispatch(changeScheduleEvent(changed));
+		}
+		if (deleted !== undefined) {
+			dispatch(deleteScheduleEvent(deleted));
+		}
+	};
 
-				thunkDispatch(
-					deleteScheduleEvent(
-						state.data.find((event) => event.id === deleted).title
-					)
-				);
-			}
-		},
-		[dispatch, state, thunkDispatch]
-	);
-
-	const currentViewChange = useCallback((currentViewName) => {
+	const currentViewChange = (currentViewName) => {
 		setCurrentView(currentViewName);
-	}, []);
+	};
 
-	const addedAppointmentChange = useCallback(
-		(addedAppointment) =>
-			// @ts-ignore
-			dispatch({
-				type: 'addAlert',
-				payload: addedAppointment,
-			}),
-		[dispatch]
-	);
+	const addedAppointmentChange = (addedAppointment) =>
+		dispatch(changeAddedAppointment(addedAppointment));
 
-	const appointmentChangesChange = useCallback(
-		(appointmentChanges) =>
-			// @ts-ignore
-			dispatch({
-				type: 'changeAlert',
-				payload: appointmentChanges,
-			}),
-		[dispatch]
-	);
+	const appointmentChangesChange = (appointmentChanges) =>
+		dispatch(changeAppointmentChanges(appointmentChanges));
 
-	const editingAppointmentChange = useCallback(
-		(editingAppointment) =>
-			// @ts-ignore
-			dispatch({
-				type: 'selectEditedAlert',
-				payload: editingAppointment,
-			}),
-		[dispatch]
-	);
+	const editingAppointmentChange = (editingAppointment) =>
+		dispatch(selectEditedAppointment(editingAppointment));
+
+	useEffect(() => {
+		const fetchSchedule = async () => {
+			await dispatch(getScheduleEvents());
+		};
+		const fetchSensors = async () => {
+			await dispatch({ type: 'setSwitchesList', payload: switches });
+		};
+		if (switches.length !== state.resources[1].instances.length)
+			fetchSensors();
+		if (
+			state.data.length <= 0 &&
+			switches.length === state.resources[1].instances.length
+		)
+			fetchSchedule();
+	}, [dispatch, state, switches]);
 
 	return (
 		<Paper className={classes.paper}>
@@ -175,12 +150,4 @@ const SchedulerContainer = () => {
 	);
 };
 
-const SchedulerComp = () => {
-	return (
-		<SchedulerCtxProvider>
-			<SchedulerContainer />
-		</SchedulerCtxProvider>
-	);
-};
-
-export default SchedulerComp;
+export default SchedulerContainer;

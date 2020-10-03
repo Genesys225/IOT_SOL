@@ -1,7 +1,14 @@
 import React, { createContext, useEffect, useReducer } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getScheduleEvents } from '../../../store/actions/alertsActions';
+import { rest } from '../../../restClient/fetchWrapper';
 import { getSensors } from '../../../store/actions/sensorsActions';
+
+export function commitChangesToAlert(changes) {
+	return {
+		type: 'commitChangesToAlert',
+		payload: { changes },
+	};
+}
 
 const initialState = {
 	data: [],
@@ -16,7 +23,7 @@ const initialState = {
 	loading: true,
 };
 
-const init = (switches, events) => ({
+const init = ({ switches, events }) => ({
 	...initialState,
 	data: events,
 	resources: [
@@ -36,7 +43,7 @@ const init = (switches, events) => ({
 			instances: switches,
 		},
 	],
-	loading: switches.length <= 0,
+	loading: false,
 });
 
 const reducer = (state, { type, payload }) => {
@@ -60,14 +67,16 @@ const reducer = (state, { type, payload }) => {
 		case 'selectEditedAlert':
 			return { ...state, editingAppointment: payload };
 		case 'commitAddedAlert':
+			console.log(payload);
+
 			let { data } = state;
 			data = [...data, { id: new Date(), ...payload.added }];
 			return { ...state, data };
 		case 'commitChangesToAlert': {
-			let { data } = state;
-			data = data.map((appointment) =>
-				payload.changed[appointment.id]
-					? { ...appointment, ...payload.changed[appointment.id] }
+			console.log(payload);
+			const data = state.data.map((appointment) =>
+				payload.changes[appointment.id]
+					? { ...appointment, ...payload.changes[appointment.id] }
 					: appointment
 			);
 			return { ...state, data };
@@ -92,8 +101,10 @@ const reducer = (state, { type, payload }) => {
 			return { ...state, currentFilter: payload };
 		}
 		case 'lazyInit': {
-			const { switches, alerts } = payload;
-			if (switches && alerts) return init(switches, alerts);
+			const { switches, events } = payload;
+			console.log(switches, events);
+
+			if (switches && events) return init({ switches, events });
 			else return state;
 		}
 
@@ -117,30 +128,23 @@ function SchedulerCtxProvider(props) {
 			text: switchInst.title,
 		}))
 	);
-	const alerts = useSelector((state) =>
-		// @ts-ignore
-		state.alerts.alerts.map((event) => ({
-			...event,
-			device: event.deviceId,
-			room: event.roomId,
-		}))
+	const [state, dispatch] = useReducer(
+		reducer,
+		{ switches, events: [] },
+		init
 	);
-	const thunkDispatch = useDispatch();
-	const [state, dispatch] = useReducer(reducer, switches, init);
-
 	useEffect(() => {
 		const fetchSensors = async () => {
-			await thunkDispatch(getSensors());
-			await thunkDispatch(getScheduleEvents());
+			const events = await rest.get('/getAllEvents');
 			// @ts-ignore
-			dispatch({ type: 'lazyInit', payload: { switches, alerts } });
+			dispatch({
+				type: 'lazyInit',
+				payload: { switches, events },
+			});
 		};
-		if (switches.length <= 0) fetchSensors();
-		else if (state.resources[1].instances.length <= 0) {
-			// @ts-ignore
-			dispatch({ type: 'lazyInit', payload: { switches, alerts } });
-		}
-	}, [thunkDispatch, switches, alerts, state]);
+		if (switches.length !== state.resources[1].instances.length)
+			fetchSensors();
+	}, [switches, state]);
 
 	return (
 		<SchedulerCtx.Provider value={{ state, dispatch }}>
