@@ -99,6 +99,12 @@ const app = setupExpress();
 	http://localhost:6000/addDeviceFromDashboardToDashboard
 	*/
 	app.post('/addDeviceFromDashboardToDashboard', async (req, res) => {
+		return res.send(await devicesApi.moveDevice({
+			idFrom: req.body.idFrom,
+			idTo: req.body.idTo,
+			deviceId: req.body.deviceId,
+		}));
+
 		return res.send(
 			await graphanaApi.addDeviceFromDashboardToDashboard({
 				idFrom: req.body.idFrom,

@@ -29,14 +29,49 @@ class DevicesApi {
             room = await this.getRoom('MainRoom');
         }
         if (!room.dashboard.panels) room.dashboard.panels = [];
-        // room.dashboard.panels = [];
         room.dashboard.panels.push(panel({ id: this.hashCode(id), title: id, rawSql: this.defaultQuery(id) }));
         return JSON.stringify(await this.updateRoom(room));
     }
 
     async deleteDevice() { }
 
-    async moveDevice() { }
+    async moveDevice({ idFrom, idTo, deviceId }) {
+        var uid = this.hashCode(deviceId);
+        var roomFrom = await this.getRoom(idFrom);
+        var roomTo = await this.getRoom(idTo);
+        var roomList = await this.getRoom('MainRoom');
+        if ( roomTo.message == 'Dashboard not found') { roomTo = dashboard({ uid: idTo, title: idTo, panels: [] }) }
+        // get device to clone from roomList
+        var newPanelToAdd = alasql(`select * from ? where uid = ${uid}`, [roomList.dashboard.panels]);
+        // add cloned device
+        roomTo.dashboard.panels = roomTo.dashboard.panels.concat(newPanelToAdd);
+        // update room
+        console.log(roomTo)
+        await this.updateRoom(roomTo);
+
+        if(idFrom !='MainRoom' || idFrom !='All'){ 
+            var roomFrom = await this.getRoom(idFrom);
+                var dashboardFromPanels = alasql(`
+                select *
+                from ?
+                where uid  != ${uid} 
+                `, [roomFrom.dashboard.panels]);
+                roomFrom.dashboard.panels= dashboardFromPanels   
+                await this.updateRoom(roomFrom);
+        }
+
+        // add label to roomList about device Location
+        roomList.dashboard.panels = roomList.dashboard.panels.map((panel)=>{
+            if(panel.uid = uid){
+                panel.roomId = idTo;
+                return panel
+            }else{
+                return panel
+            }
+        })
+        await this.updateRoom(roomList);
+        return {roomList}
+    }
 
     async getAllDevices(roomId) {
         const allDashboards = await this.getRoomsList();
