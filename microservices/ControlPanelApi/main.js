@@ -22,6 +22,21 @@ const sensorsApi = new SensorsApi();
 
 const executeApi = new ExecuteApi();
 
+const DevicesApi = require('./classes/GraphanaApi/DevicesApi');
+
+const devicesApi = new DevicesApi()
+
+const NATS = require('nats')
+
+const nc = NATS.connect({url:'nats://nats:4222', json: true })
+
+nc.subscribe('ControlPanelApi/devicesApi/addNewDevice', async (msg, reply, subject, sid) => {
+	console.log({msg, reply, subject, sid});
+	nc.publish(reply, await devicesApi.addNewDevice(msg.deviceId))
+})
+
+
+
 const clientConnectionParams = {
 	services: { sensorsApi, graphanaApi },
 	name: 'ControlPanelApi',
@@ -62,23 +77,19 @@ const app = setupExpress();
 
 	app.post('/webhook', async (req, res) => {
 		console.log(req.body)
-		if(req.body.imageUrl=='https://grafana.com/assets/img/blog/mixed_styles.png'){
-			return res.send('ITS A TEST');
-			
-		}else if (req.body.evalMatches){
-		
+
 			var evalMatches = req.body.evalMatches
 			var message = evalMatches[0].value
 			var deviceId = evalMatches[0].metric
 			return res.send(await executeApi.sensorExecute(deviceId, message))
-		}
+		
 	
 	}
 
 
 	);
 	// graphana api
-
+ 
 	/**
 	 {
 			"idFrom": "All",

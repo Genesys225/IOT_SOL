@@ -12,6 +12,7 @@
 	"dependencies": {
 		"exec-mqtt": "0.0.8",
 		"mqtt": "^4.2.1",
+		"nats": "^1.4.12",
 		"node-fetch": "^2.6.1"
 	}
 }

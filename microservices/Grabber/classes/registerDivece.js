@@ -1,5 +1,11 @@
 
+const NATS = require('nats')
 
+const nc = NATS.connect({url:'nats://nats:4222', json: true })
+
+
+
+ 
 
 class Sensor { 
     constructor(sensorObj, SR) {
@@ -17,7 +23,7 @@ class Sensor {
         { timeout: 5000 }
         )
         .then((res) => { 
-          return res
+          return res 
         })
     }
 }
@@ -64,10 +70,12 @@ class registerDevice {
     isDeviceExist(sensor_id){
         return Object.keys(this.sensorsList).indexOf(sensor_id) !== -1
     }
-
+ 
     registerDevice(deviceId, sensorType){
-
-        this.registerDeviceInGraphana()
+        nc.request('ControlPanelApi/devicesApi/addNewDevice',{ deviceId:`${deviceId}/${sensorType}` } ,(msg) => {
+            console.log('Device was registered' + msg);
+        }) 
+        this.registerDeviceInGraphana() 
 
         this.mqttClient.exec("db/mysql.addSensor",{deviceId, sensorType},{ timeout: 5000 })
         .then((sensor) => {

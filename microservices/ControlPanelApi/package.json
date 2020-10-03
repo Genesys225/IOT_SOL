@@ -12,6 +12,7 @@
   "dependencies": {
     "alasql": "^0.6.3",
     "cors": "^2.8.5",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "nats": "^1.4.12"
   }
 }

@@ -68,7 +68,12 @@ services:
         ports:
             - '9000:9000'
         restart: always
-
+    nats:
+        image: nats
+        ports:
+            - '4222:4222'
+            - '6222:6222'
+            - '8222:8222'
     microservices:
         user: '$UID:$GID'
         image: node:12-alpine
@@ -83,7 +88,7 @@ services:
         links:
             - emqtt:emqtt-broker
             - mysql:mysql
-        environment:
+        environment:             
             - GRAPHANA_API_KEY=Bearer ${GRAFANA_API_KEY}
             - TZ=Asia/Jerusalem
         command:
