@@ -175,6 +175,16 @@ const app = setupExpress();
 	app.get('/getAllEvents', async (req, res) => {
 		return res.send(await calendarApi.getAllEvents());
 	});
+
+
+
+
+	/*********************************NEW DEVICES API****************************************************/
+	app.get('/getRoom', async (req, res) => {
+		console.log(req.query) 
+		return res.send(await devicesApi.getRoom(req.query.roomId));
+	});
+	
 })();
 
 // setInterval(() => {

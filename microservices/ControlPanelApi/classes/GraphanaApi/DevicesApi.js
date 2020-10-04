@@ -11,12 +11,12 @@ class DevicesApi {
         }
 
         this.defaultQuery = (id) => `SELECT\n  $__timeGroupAlias(ts,$__interval),\n  sensor_id AS metric,\n  avg(value) AS \"value\"\nFROM measurements\nWHERE\n  $__timeFilter(ts) AND\n  sensor_id = '${id}'\nGROUP BY 1,2\nORDER BY $__timeGroup(ts,$__interval)`
-    }
+    } 
 
     // ROOMS
     async getRoomsList() { return await this.send('http://grafana:3000/api/search?query=%') }
 
-    async getRoom(roomId) { return await this.send(`http://grafana:3000/api/dashboards/uid/${roomId}`) }
+    async getRoom(roomId='MainRoom') { return await this.send(`http://grafana:3000/api/dashboards/uid/${roomId}`) }
 
     async updateRoom(roomJsonData) { return this.send('http://grafana:3000/api/dashboards/db', roomJsonData) }
 
@@ -46,9 +46,8 @@ class DevicesApi {
         // add cloned device
         roomTo.dashboard.panels = roomTo.dashboard.panels.concat(newPanelToAdd);
         // update room
-        console.log(roomTo)
         await this.updateRoom(roomTo);
-
+        // remove device from old room
         if(idFrom !='MainRoom' || idFrom !='All'){ 
             var roomFrom = await this.getRoom(idFrom);
                 var dashboardFromPanels = alasql(`
