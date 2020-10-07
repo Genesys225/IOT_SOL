@@ -1,7 +1,6 @@
 import React, { createContext, useEffect, useReducer } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { rest } from '../../../restClient/fetchWrapper';
-import { getSensors } from '../../../store/actions/sensorsActions';
 
 export function commitChangesToAlert(changes) {
 	return {
@@ -34,7 +33,7 @@ const init = ({ switches, events }) => ({
 				{ id: 'room1', text: 'Room 1' },
 				{ id: 'room2', text: 'Room 2' },
 				{ id: 'room3', text: 'Room 3' },
-				{ id: 'All', text: 'All' },
+				{ id: 'MainRoom', text: 'MainRoom' },
 			],
 		},
 		{
@@ -120,13 +119,13 @@ const SchedulerCtx = createContext({
 function SchedulerCtxProvider(props) {
 	const switches = useSelector((state) =>
 		// @ts-ignore
-		state.sensors.All.filter(
-			(device) => device.deviceType === 'switch'
-		).map((switchInst) => ({
-			...switchInst,
-			id: switchInst.title,
-			text: switchInst.title,
-		}))
+		state.sensors
+			.filter((device) => device.deviceType === 'switch')
+			.map((switchInst) => ({
+				...switchInst,
+				id: switchInst.title,
+				text: switchInst.title,
+			}))
 	);
 	const [state, dispatch] = useReducer(
 		reducer,

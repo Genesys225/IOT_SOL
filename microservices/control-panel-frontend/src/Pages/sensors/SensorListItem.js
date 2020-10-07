@@ -72,7 +72,7 @@ const SensorListItem = (props) => {
 	);
 	const [open, setOpen] = useState(false);
 	const [showAlertsModal, setShowAlertModal] = useState(false);
-	const [zone, setZone] = useState(props.room || '');
+	const [zone, setZone] = useState(props.roomId || '');
 	const listItemRef = useRef(null);
 	const classes = useStyles();
 	const dispatch = useDispatch();
@@ -90,7 +90,7 @@ const SensorListItem = (props) => {
 		setZone(event.target.value);
 		dispatch(
 			updateDeviceZone({
-				idFrom: props.room,
+				idFrom: props.roomId,
 				idTo: event.target.value,
 				deviceId: props.deviceId,
 			})
@@ -188,8 +188,8 @@ const SensorListItem = (props) => {
 									onChange={handleChange}
 									className={classes.zoneSelect}
 								>
-									<MenuItem value="All">
-										<em>All</em>
+									<MenuItem value="MainRoom">
+										<em>MainRoom</em>
 									</MenuItem>
 									<MenuItem value="room1">Room 1</MenuItem>
 									<MenuItem value="room2">Room 2</MenuItem>

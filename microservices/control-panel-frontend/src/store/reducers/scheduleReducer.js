@@ -21,7 +21,7 @@ const initialState = {
 				{ id: 'room1', text: 'Room 1' },
 				{ id: 'room2', text: 'Room 2' },
 				{ id: 'room3', text: 'Room 3' },
-				{ id: 'All', text: 'All' },
+				{ id: 'MainRoom', text: 'MainRoom' },
 			],
 		},
 		{

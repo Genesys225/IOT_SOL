@@ -42,7 +42,7 @@ const SchedulerContainer = () => {
 	const dispatch = useDispatch();
 	const switches = useSelector((state) =>
 		// @ts-ignore
-		state.sensors.All.filter(
+		state.sensors.filter(
 			(device) => device.deviceType === 'switch'
 		).map((switchInst) => ({
 			...switchInst,

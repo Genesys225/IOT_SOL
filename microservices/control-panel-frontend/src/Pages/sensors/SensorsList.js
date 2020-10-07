@@ -40,20 +40,23 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SensorsList() {
-	const [room, setRoom] = React.useState('All');
+	const [room, setRoom] = React.useState('MainRoom');
 	// @ts-ignore
-	const availableRooms = useSelector((state) => Object.keys(state.sensors));
+	const availableRooms = useSelector((state) => [
+		// @ts-ignore
+		...new Set(state.sensors.map((device) => device.roomId)),
+	]);
 	const sensors = useSelector((state) =>
-		room === 'All'
+		room === 'MainRoom'
 			? // @ts-ignore
 
-			  state.sensors.All.filter(
-					(device) => !device.title.includes('Gauge')
-			  )
+			  state.sensors.filter((device) => !device.title.includes('Gauge'))
 			: // @ts-ignore
-			  state.sensors.All.filter((device) => device.room === room)
+			  state.sensors.filter((device) => device.room === room)
 	);
-	const handleChange = useCallback( (event) => setRoom(event.target.value), [setRoom]);
+	const handleChange = useCallback((event) => setRoom(event.target.value), [
+		setRoom,
+	]);
 
 	const classes = useStyles();
 	const dispatch = useDispatch();
@@ -93,11 +96,15 @@ export default function SensorsList() {
 									displayEmpty
 									onChange={handleChange}
 									className={classes.roomSelect}
-									defaultValue="All"
+									defaultValue="MainRoom"
 								>
 									{availableRooms.map((room, i) => (
 										<MenuItem value={room} key={i}>
-											{i > 0 ? `Room ${i}` : <em>All</em>}
+											{i > 0 ? (
+												`Room ${i}`
+											) : (
+												<em>MainRoom</em>
+											)}
 										</MenuItem>
 									))}
 								</Select>

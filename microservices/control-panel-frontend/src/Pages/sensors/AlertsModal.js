@@ -119,7 +119,7 @@ function AlertsModal(props) {
 	// @ts-ignore
 	const { controls, alerts } = useSelector((state) => state);
 	// @ts-ignore
-	const sensors = useSelector((state) => state.sensors.All);
+	const sensors = useSelector((state) => state.sensors);
 	const [state, dispatch] = useReducer(
 		reducer,
 		initialState(props, sensors, alerts)

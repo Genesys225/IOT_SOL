@@ -87,7 +87,7 @@ function RoomSummery() {
 					className={classes.dragger}
 				/>
 				<SensorIframe
-					room={'All'}
+					room={'MainRoom'}
 					listItemRef={false}
 					height={4860}
 					width={drawerWidth - 10}

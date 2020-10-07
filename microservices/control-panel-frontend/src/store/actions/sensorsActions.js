@@ -7,7 +7,8 @@ export const UPDATE_ROOM = 'UPDATE_ROOM';
 
 export const getSensors = () => {
 	return async (dispatch) => {
-		const allPanels = await rest.get('/getAllPanels');
+		const allPanels = await rest.get('/getRoom');
+		console.log(allPanels);
 		dispatch({ type: GET_SENSORS, payload: allPanels });
 	};
 };
@@ -33,7 +34,7 @@ export const updateSensor = ({ id, meta }) => {
 export const updateDeviceZone = ({ idFrom, idTo, deviceId }) => {
 	return async (dispatch) => {
 		const res = await rest.post('/addDeviceFromDashboardToDashboard', {
-			idFrom,
+			idFrom: idFrom === 'MainRoom' ? 'All' : idFrom,
 			idTo,
 			deviceId,
 		});

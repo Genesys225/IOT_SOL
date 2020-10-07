@@ -38,8 +38,10 @@ export const MainMenu = (
 );
 
 export const SecondaryMenu = (props) => {
-	// @ts-ignore
-	const rooms = useSelector((state) => Object.keys(state.sensors));
+	const rooms = useSelector((state) => [
+		// @ts-ignore
+		...new Set(state.sensors.map((device) => device.roomId)),
+	]);
 
 	return (
 		<>
