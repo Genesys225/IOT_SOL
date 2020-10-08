@@ -1,46 +1,75 @@
-const Grabber = require('./classes/Grabber');
-const Registration = require('./classes/registerDivece');
+
 const Mqtt = require('exec-mqtt');
 const mqtt = require('mqtt');
+const NATS = require('nats')
 
-const grabber = new Grabber();
+const nc = NATS.connect({url:'nats://nats:4222', json: true })
+
+
 const url = 'mqtt://emqtt';
-const port = 1883;
-const clientConnectionParams = {
-	services: { grabber },
-	name: 'grabber',
-	mqttSetting: { url, port },
-};
 
 const grabberClient = mqtt.connect(url);
-grabberClient.on('connect', function() {
-	grabberClient.subscribe('sensors/#', function(err) {
-		if (!err) {
-			grabberClient.publish('presence', 'Grabber');
-		}
-	});
-});
 
+const fetch = require('node-fetch');
+class Grabber{
 
+	constructor(){
+		this.devices = [];
+	}
+	setDevices(devices){
+		this.devices = devices
+	}
+	async subscribeToDataDevicesStream(){
+		const grabberClient = await mqtt.connect(url);
 
-const mqttClient = new Mqtt(clientConnectionParams);
-// message is Buffer
-mqttClient.init().then(async (client) => {
-	var registration = new Registration(mqttClient);
+		return new Promise((resolve)=>{
+			grabberClient.on('connect', () => {
+				grabberClient.subscribe('sensors/#', (err) =>  {
+					grabberClient.on('message', (topic, message)=> {
 
-
-
-	await new Promise((resolve)=>setTimeout(() => {resolve()}, 1000))
-	await registration.initAllSensorsData();
-	grabberClient.on('message', function(topic, message) {
-		// sensors/SOL-XXX/type
-		// types: temp, co2, humidity, lux
-		const [_sensors, deviceId, sensorType] = topic.split('/');
-		registration
-			.getSensorInst(`${deviceId}/${sensorType}`)
-			.then((sensor) => {
-				console.log({ topic, message });
-				return sensor.write(message.toString());
+						this.processMessage(topic, message);
+						resolve('connected')
+					});
+					
+				});
 			});
-	});
-});
+		})
+	}
+
+	async setAllDevices(){
+		const res = await fetch('http://microservices:6000/getRoom')
+		const rowRes = await res.json();
+		if(!rowRes.dashboard) return []
+		const devices = rowRes.dashboard.panels.map((r)=>r.title);
+		this.devices = devices
+	    return devices
+	}
+	async processMessage(topic, message){
+		console.log(topic)
+		if (this.devices.includes(topic.replace('sensors/', ''))){
+			
+		}else{
+			await this.addDevice(topic)
+			await this.setAllDevices();
+		}
+	   
+	}
+	addDevice(id){
+		return new Promise((resolve)=>{
+			nc.request('ControlPanelApi/devicesApi/addNewDevice',{ deviceId:id.replace('sensors/', '') } ,(msg) => {
+				console.log('Device was registered' + msg);
+				resolve()
+			})
+		})
+
+	}
+}
+
+const grabber = new Grabber();
+
+(async ()=>{
+	setTimeout(async () => {
+	console.log("allDevices: ", await grabber.setAllDevices());  
+	await grabber.subscribeToDataDevicesStream(); 
+	}, 1000);  
+})()
