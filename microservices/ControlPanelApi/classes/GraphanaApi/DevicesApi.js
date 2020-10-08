@@ -29,7 +29,7 @@ class DevicesApi {
             room = await this.getRoom('MainRoom');
         }
         if (!room.dashboard.panels) room.dashboard.panels = [];
-       var newPanel = panel({ id: this.hashCode(id), title: id, rawSql: this.defaultQuery(id) })
+       var newPanel = panel({ id: (id), title: id, rawSql: this.defaultQuery(id) })
        // add main room
         newPanel.roomId = 'MainRoom';
         room.dashboard.panels.push(newPanel);
@@ -39,13 +39,14 @@ class DevicesApi {
     async deleteDevice() { }
 
     async moveDevice({ idFrom, idTo, deviceId }) {
-        var uid = this.hashCode(deviceId);
+        var uid = (deviceId);
         var roomFrom = await this.getRoom(idFrom);
         var roomTo = await this.getRoom(idTo);
         var roomList = await this.getRoom('MainRoom');
         if ( roomTo.message == 'Dashboard not found') { roomTo = dashboard({ uid: idTo, title: idTo, panels: [] }) }
         // get device to clone from roomList
-        var newPanelToAdd = alasql(`select * from ? where uid = ${uid}`, [roomList.dashboard.panels]);
+       // var newPanelToAdd = alasql(`select * from ? where uid = ${uid}`, [roomList.dashboard.panels]);
+        var newPanelToAdd = roomList.dashboard.panels.filter((res)=>res.uid==uid)
         // add cloned device
         roomTo.dashboard.panels = roomTo.dashboard.panels.concat(newPanelToAdd);
         // update room
@@ -53,18 +54,15 @@ class DevicesApi {
         // remove device from old room
         if(idFrom !='MainRoom' || idFrom !='All'){ 
             var roomFrom = await this.getRoom(idFrom);
-                var dashboardFromPanels = alasql(`
-                select *
-                from ?
-                where uid  != ${uid} 
-                `, [roomFrom.dashboard.panels]);
+                var dashboardFromPanels = roomFrom.dashboard.panels.filter((res)=>res.uid!==uid)
                 roomFrom.dashboard.panels= dashboardFromPanels   
                 await this.updateRoom(roomFrom);
         }
 
         // add label to roomList about device Location
         roomList.dashboard.panels = roomList.dashboard.panels.map((panel)=>{
-            if(panel.uid = uid){
+            console.log({uid}, panel.uid == uid,panel.uid )
+            if(panel.uid == uid){
                 panel.roomId = idTo;
                 return panel
             }else{
