@@ -18,7 +18,7 @@ class Grabber{
 	}
 	setDevices(devices){
 		this.devices = devices
-	}
+	} 
 	async subscribeToDataDevicesStream(){
 		const grabberClient = await mqtt.connect(url);
 
@@ -44,10 +44,13 @@ class Grabber{
 		this.devices = devices
 	    return devices
 	}
-	async processMessage(topic, message){
-		console.log(topic)
-		if (this.devices.includes(topic.replace('sensors/', ''))){
-			this.write({id:topic.replace('sensors/', ''), value: message})
+	async processMessage(topic=[], message){
+		var deviceData = topic.split('/');
+		var deviceType = deviceData[2];
+		var deviceName = deviceData[1];
+		var systemDeviceId = deviceName + "/" + deviceType;
+		if (this.devices.includes(systemDeviceId)){
+			this.write({id:systemDeviceId, value: message})
 		}else{
 			await this.addDevice(topic)
 			await this.setAllDevices();
@@ -59,7 +62,7 @@ class Grabber{
 
 		
 		nc.request('db/mysql.writeDeviceData',{ deviceId:id, value: value.toString() } ,(msg) => {
-			console.log('Device was registered' + msg);
+			//console.log('Device was registered' + msg);
 			resolve()
 		})
 	})
@@ -68,7 +71,6 @@ class Grabber{
 	addDevice(id){
 		return new Promise((resolve)=>{
 			nc.request('ControlPanelApi/devicesApi/addNewDevice',{ deviceId:id.replace('sensors/', '') } ,(msg) => {
-				console.log('Device was registered' + msg);
 				resolve()
 			})
 		})

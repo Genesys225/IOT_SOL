@@ -39,6 +39,7 @@ class DevicesApi {
     async deleteDevice() { }
 
     async moveDevice({ idFrom, idTo, deviceId }) {
+       
         var uid = (deviceId);
         var roomFrom = await this.getRoom(idFrom);
         var roomTo = await this.getRoom(idTo);
@@ -46,10 +47,14 @@ class DevicesApi {
         if ( roomTo.message == 'Dashboard not found') { roomTo = dashboard({ uid: idTo, title: idTo, panels: [] }) }
         // get device to clone from roomList
        // var newPanelToAdd = alasql(`select * from ? where uid = ${uid}`, [roomList.dashboard.panels]);
+
+       
         var newPanelToAdd = roomList.dashboard.panels.filter((res)=>res.uid==uid)
+        console.log(newPanelToAdd, deviceId, 999999, roomList)
         // add cloned device
         roomTo.dashboard.panels = roomTo.dashboard.panels.concat(newPanelToAdd);
         // update room
+      
         await this.updateRoom(roomTo);
         // remove device from old room
         if(idFrom !='MainRoom' || idFrom !='All'){ 

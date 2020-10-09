@@ -10,7 +10,7 @@ const NATS = require('nats')
 const nc = NATS.connect({url:'nats://nats:4222', json: true })
 
 nc.subscribe('db/mysql.writeDeviceData', async (msg, reply, subject, sid) => {
-	console.log({msg, reply, subject, sid});
+	//console.log({msg, reply, subject, sid});
 	nc.publish(reply, await mysql.writeDeviceData({id:msg.deviceId, value: msg.value}))
 })
 
