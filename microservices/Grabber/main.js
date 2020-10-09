@@ -47,13 +47,24 @@ class Grabber{
 	async processMessage(topic, message){
 		console.log(topic)
 		if (this.devices.includes(topic.replace('sensors/', ''))){
-			
+			this.write({id:topic.replace('sensors/', ''), value: message})
 		}else{
 			await this.addDevice(topic)
 			await this.setAllDevices();
 		}
 	   
 	}
+	write({id, value}) {
+		return new Promise((resolve)=>{
+
+		
+		nc.request('db/mysql.writeDeviceData',{ deviceId:id, value: value.toString() } ,(msg) => {
+			console.log('Device was registered' + msg);
+			resolve()
+		})
+	})
+	}
+	
 	addDevice(id){
 		return new Promise((resolve)=>{
 			nc.request('ControlPanelApi/devicesApi/addNewDevice',{ deviceId:id.replace('sensors/', '') } ,(msg) => {

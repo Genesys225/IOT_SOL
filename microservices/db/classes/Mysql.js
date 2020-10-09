@@ -46,7 +46,6 @@ class Mysql {
 
 	addAlertTiming({ value, sensor_id, ts, title}) {
 		return new Promise((resolve) => {
-			console.log(value, sensor_id, ts, 9999999999)
 			connection.query({sql: 'INSERT INTO timers (value, sensor_id, ts, title) VALUES (?,?,?, ?)', values: [value, sensor_id, ts, title]},
 				function(error, results, fields) {
 					if (error) throw error;
@@ -66,13 +65,14 @@ class Mysql {
 			);
 		});
 	}
-	writeDeviceData({ sensor_id, value }) {
+	writeDeviceData({ id, value }) {
+		console.log(id, value, 9898989)
 		return new Promise((resolve) => {
 			connection.query(
 				{
 					sql:
 						'INSERT INTO measurements (value, sensor_id) VALUES (?,?)',
-					values: [value, sensor_id],
+					values: [value, id],
 				},
 				function(error, results, fields) {
 					if (error) throw error;
