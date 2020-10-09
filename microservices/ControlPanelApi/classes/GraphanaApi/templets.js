@@ -326,7 +326,7 @@ var panel = function({ id,uid,  title, rawSql }) {
 		},
 	};
 
-	panelTemplete.uid = id;
+	panelTemplete.uid = uid;
 	panelTemplete.title = title;
 	panelTemplete.targets[0].rawSql = rawSql;
 	return panelTemplete;
