@@ -146,7 +146,7 @@ class DevicesApi {
         excledeOldPanel.push(newPanelToAdd)
         myDashboard.dashboard.panels = excledeOldPanel
         console.log(newPanelToAdd.title)
-        return await this.updateDashboard(myDashboard);
+        return await this.updateRoom(myDashboard);
     }
 
     async addAlertThreshold({ dashboardID, deviceId, threshold, op }) {
@@ -177,7 +177,8 @@ class DevicesApi {
         ]
         excledeOldPanel.push(newPanelToAdd)
         myDashboard.dashboard.panels = excledeOldPanel
-        return await this.updateDashboard(myDashboard);
+        console.log(myDashboard.dashboard.panels)
+        return await this.updateRoom(myDashboard);
     }
     /**************************************ALERTS**************************************/
 
