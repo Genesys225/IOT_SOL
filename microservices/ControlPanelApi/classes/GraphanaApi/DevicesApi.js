@@ -11,12 +11,12 @@ class DevicesApi {
         }
 
         this.defaultQuery = (id) => `SELECT\n  $__timeGroupAlias(ts,$__interval),\n  sensor_id AS metric,\n  avg(value) AS \"value\"\nFROM measurements\nWHERE\n  $__timeFilter(ts) AND\n  sensor_id = '${id}'\nGROUP BY 1,2\nORDER BY $__timeGroup(ts,$__interval)`
-    } 
+    }
 
     // ROOMS
     async getRoomsList() { return await this.send('http://grafana:3000/api/search?query=%') }
 
-    async getRoom(roomId='MainRoom') { return await this.send(`http://grafana:3000/api/dashboards/uid/${roomId}`) }
+    async getRoom(roomId = 'MainRoom') { return await this.send(`http://grafana:3000/api/dashboards/uid/${roomId}`) }
 
     async updateRoom(roomJsonData) { return this.send('http://grafana:3000/api/dashboards/db', roomJsonData) }
 
@@ -29,8 +29,8 @@ class DevicesApi {
             room = await this.getRoom('MainRoom');
         }
         if (!room.dashboard.panels) room.dashboard.panels = [];
-       var newPanel = panel({ uid:id , id: this.hashCode(id), title: id, rawSql: this.defaultQuery(id) })
-       // add main room
+        var newPanel = panel({ uid: id, id: this.hashCode(id), title: id, rawSql: this.defaultQuery(id) })
+        // add main room
         newPanel.roomId = 'MainRoom';
         room.dashboard.panels.push(newPanel);
         return JSON.stringify(await this.updateRoom(room));
@@ -39,43 +39,45 @@ class DevicesApi {
     async deleteDevice() { }
 
     async moveDevice({ idFrom, idTo, deviceId }) {
-       
+
         var uid = (deviceId);
         var roomFrom = await this.getRoom(idFrom);
         var roomTo = await this.getRoom(idTo);
         var roomList = await this.getRoom('MainRoom');
-        if ( roomTo.message == 'Dashboard not found') { roomTo = dashboard({ uid: idTo, title: idTo, panels: [] }) }
+        if (roomTo.message == 'Dashboard not found') { roomTo = dashboard({ uid: idTo, title: idTo, panels: [] }) }
         // get device to clone from roomList
-       // var newPanelToAdd = alasql(`select * from ? where uid = ${uid}`, [roomList.dashboard.panels]);
+        // var newPanelToAdd = alasql(`select * from ? where uid = ${uid}`, [roomList.dashboard.panels]);
 
-       
-        var newPanelToAdd = roomList.dashboard.panels.filter((res)=>res.uid==uid)
+
+        var newPanelToAdd = roomList.dashboard.panels.filter((res) => res.uid == uid)
         console.log(newPanelToAdd, deviceId, 999999, roomList)
         // add cloned device
         roomTo.dashboard.panels = roomTo.dashboard.panels.concat(newPanelToAdd);
         // update room
-      
+
         await this.updateRoom(roomTo);
+      
         // remove device from old room
-        if(idFrom !='MainRoom' || idFrom !='All'){ 
+        if (idFrom != 'MainRoom') {
             var roomFrom = await this.getRoom(idFrom);
-                var dashboardFromPanels = roomFrom.dashboard.panels.filter((res)=>res.uid!==uid)
-                roomFrom.dashboard.panels= dashboardFromPanels   
-                await this.updateRoom(roomFrom);
+            console.log(roomFrom, 8888888, idFrom)
+            var dashboardFromPanels = roomFrom.dashboard.panels.filter((res) => res.uid !== uid)
+            roomFrom.dashboard.panels = dashboardFromPanels
+            await this.updateRoom(roomFrom);
         }
 
         // add label to roomList about device Location
-        roomList.dashboard.panels = roomList.dashboard.panels.map((panel)=>{
-            console.log({uid}, panel.uid == uid,panel.uid )
-            if(panel.uid == uid){
+        roomList.dashboard.panels = roomList.dashboard.panels.map((panel) => {
+            console.log({ uid }, panel.uid == uid, panel.uid)
+            if (panel.uid == uid) {
                 panel.roomId = idTo;
                 return panel
-            }else{
+            } else {
                 return panel
             }
         })
         await this.updateRoom(roomList);
-        return {roomList}
+        return { roomList }
     }
 
     async getAllDevices(roomId) {
@@ -103,6 +105,85 @@ class DevicesApi {
     hashCode(s) {
         return s.split("").reduce(function (a, b) { a = ((a << 5) - a) + b.charCodeAt(0); return a & a }, 0);
     }
+
+    /**************************************ALERTS**************************************/
+    async addAlertTiming({ dashboardID, deviceId, threshold, op }) {
+        var myDashboard = await this.getRoom(dashboardID);
+        var { alertObject, pannelTargetObject } = timingAlert({ deviceId, threshold, op })
+        var uid = (deviceId);
+        var newPanelToAdd = alasql(`
+        select * 
+        from ? 
+        where uid = "${uid}"
+        `, [myDashboard.dashboard.panels])[0];
+
+        var excledeOldPanel = alasql(`
+        select * 
+        from ? 
+        where uid != "${uid}"
+        `, [myDashboard.dashboard.panels]);
+        newPanelToAdd.alert = alertObject
+        newPanelToAdd["thresholds"] = [
+            {
+                "colorMode": "critical",
+                "fill": true,
+                "line": true,
+                "op": op,
+                "value": threshold,
+                "yaxis": "left"
+            }
+        ]
+
+        // validate if timing alert target exist
+        var existTimer = alasql(`select * from ? where deviceId='${deviceId}'`, [newPanelToAdd.targets])
+        if (existTimer.length == 0) {
+            pannelTargetObject.deviceId = deviceId
+            newPanelToAdd.targets.push(pannelTargetObject)
+        }
+
+
+
+        excledeOldPanel.push(newPanelToAdd)
+        myDashboard.dashboard.panels = excledeOldPanel
+        console.log(newPanelToAdd.title)
+        return await this.updateDashboard(myDashboard);
+    }
+
+    async addAlertThreshold({ dashboardID, deviceId, threshold, op }) {
+        var myDashboard = await this.getRoom(dashboardID);
+
+        var uid = (deviceId);
+        var newPanelToAdd = alasql(`
+        select * 
+        from ? 
+        where uid = "${uid}"
+        `, [myDashboard.dashboard.panels])[0];
+
+        var excledeOldPanel = alasql(`
+        select * 
+        from ? 
+        where uid != "${uid}"
+        `, [myDashboard.dashboard.panels]);
+        newPanelToAdd.alert = alertT({ threshold, op });
+        newPanelToAdd["thresholds"] = [
+            {
+                "colorMode": "critical",
+                "fill": true,
+                "line": true,
+                "op": op,
+                "value": threshold,
+                "yaxis": "left"
+            }
+        ]
+        excledeOldPanel.push(newPanelToAdd)
+        myDashboard.dashboard.panels = excledeOldPanel
+        return await this.updateDashboard(myDashboard);
+    }
+    /**************************************ALERTS**************************************/
+
+
+
+
 
 }
 
