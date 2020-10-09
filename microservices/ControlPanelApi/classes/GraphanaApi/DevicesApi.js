@@ -29,7 +29,7 @@ class DevicesApi {
             room = await this.getRoom('MainRoom');
         }
         if (!room.dashboard.panels) room.dashboard.panels = [];
-       var newPanel = panel({ id: (id), title: id, rawSql: this.defaultQuery(id) })
+       var newPanel = panel({ id: this.hashCode(id), title: id, rawSql: this.defaultQuery(id) })
        // add main room
         newPanel.roomId = 'MainRoom';
         room.dashboard.panels.push(newPanel);
