@@ -118,7 +118,7 @@ const app = setupExpress();
 	// {"dashboardID":"room2", "deviceId":"SOL-14:11:11:11:11:11/temp", "threshold":8, "op":"gt"}
 	app.post('/addAlertThreshold', async (req, res) => {
 		return res.send(
-			await graphanaApi.addAlertThreshold({
+			await devicesApi.addAlertThreshold({
 				dashboardID: req.body.dashboardID,
 				deviceId: req.body.deviceId,
 				threshold: req.body.threshold,
@@ -131,7 +131,7 @@ const app = setupExpress();
 	// http://localhost:6000/addAlertTiming
 	app.post('/addAlertTiming', async (req, res) => {
 		const mysqlDb = await sensorsApi.addAlertTiming({ sensor_id: req.body.sensor_id, value: req.body.value, ts: req.body.ts, title: req.body.title });
-		const gApi = graphanaApi.addAlertTiming({ dashboardID: req.body.dashboardID, deviceId: req.body.sensor_id, threshold: req.body.value });
+		const gApi = devicesApi.addAlertTiming({ dashboardID: req.body.dashboardID, deviceId: req.body.sensor_id, threshold: req.body.value });
 		return res.send(mysqlDb);
 	});
 
