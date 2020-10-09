@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
 	listItem: {
 		display: 'flex',
 		justifyContent: 'space-between',
-		flexDirection: 'column',
+		flexDirection: 'row',
 		alignItems: 'center',
 		width: '100%',
 	},
@@ -135,19 +135,20 @@ const SensorListItem = (props) => {
 			<ListItem ref={listItemRef} onClick={handleClick} button>
 				<Box className={classes.listItem}>
 					<Box className={classes.listItemSecondary}>
-						<FormControl className={classes.formControl}>
-							{open ? <ExpandLess /> : <ExpandMore />}
-						</FormControl>
-						<Divider
-							orientation="vertical"
-							style={{
-								height: '100%',
-							}}
-						/>
-						<ListItemIcon className={classes.formControl}>
-							<Icon icon={props.deviceType} size="40px" />
-						</ListItemIcon>
+						<Box className={classes.listItemSecondary}>
+
+							<FormControl className={classes.formControl}>
+								{open ? <ExpandLess /> : <ExpandMore />}
+							</FormControl>
+							<Divider
+								orientation="vertical"
+								style={{
+									height: '100%',
+								}}
+							/>
+						</Box>
 						<Box display="flex" flexDirection="row-reverse">
+							
 							{props.deviceType !== 'switch' && (
 								<ListItemIcon onClick={handleEdit}>
 									<IconButton
@@ -172,10 +173,10 @@ const SensorListItem = (props) => {
 								primary={props.deviceType}
 								secondary={props.deviceId}
 							/>
+							<ListItemIcon className={classes.formControl}>
+								<Icon icon={props.deviceType} size="40px" />
+							</ListItemIcon>
 						</Box>
-					</Box>
-
-					<ListItemSecondaryAction>
 						<Box className={classes.listItemSecondary}>
 							<FormControl className={classes.formControl}>
 								<InputLabel shrink id="zone-label">
@@ -244,22 +245,21 @@ const SensorListItem = (props) => {
 								</FormControl>
 							)}
 						</Box>
-					</ListItemSecondaryAction>
+					</Box>
+
+					<Box display="flex" justifyContent="center">
+						<Grow in={switched} unmountOnExit>
+							<Paper elevation={2} className={classes.paper}>
+								<h5>WOW!!!</h5>
+							</Paper>
+						</Grow>
+						<SensorIframe
+							id={props.deviceId}
+							height={250}
+						/>
+					</Box>
 				</Box>
 			</ListItem>
-			<Collapse ref={listItemRef} in={open} timeout="auto" unmountOnExit>
-				<Box display="flex" justifyContent="center">
-					<Grow in={switched} unmountOnExit>
-						<Paper elevation={2} className={classes.paper}>
-							<h5>WOW!!!</h5>
-						</Paper>
-					</Grow>
-					<SensorIframe
-						id={props.deviceId}
-						listItemRef={listItemRef}
-					/>
-				</Box>
-			</Collapse>
 			<Divider />
 			<AlertsModal
 				in={showAlertsModal}

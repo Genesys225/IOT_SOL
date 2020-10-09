@@ -6,7 +6,7 @@ class GraphanaApi {
     constructor() {
         setInterval(() => {
             this.registerAllDevices()
-            this.createWebhookNotificationChanel()
+            // this.createWebhookNotificationChanel()
         }, 6000);
 
         

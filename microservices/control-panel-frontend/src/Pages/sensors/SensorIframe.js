@@ -22,7 +22,7 @@ function SensorIframe(props) {
 	// const [time, setTime] = useState(Date.now());
 	const panelId = props.id ? hashCode(props.id) : null;
 	const roomId = props.room;
-	let parentBoundingRect = props.listItemRef.current
+	let parentBoundingRect = props.listItemRef && props.listItemRef.current
 		? props.listItemRef.current.getBoundingClientRect()
 		: { width: props.width || '400px' };
 	const timePeriod = props.timePeriod || '6h';
@@ -37,12 +37,12 @@ function SensorIframe(props) {
 	);
 	useEffect(() => {
 		window.addEventListener('blur', iframeClickHandler);
-		if (props.listItemRef.current)
+		if (props.listItemRef && props.listItemRef.current)
 			parentBoundingRect = props.listItemRef.current;
 		return () => {
 			window.removeEventListener('blur', iframeClickHandler);
 		};
-	}, [iframeClickHandler, props.listItemRef.current]);
+	}, [iframeClickHandler, props]);
 
 	const handleIFrameHover = () => {
 		setIframeHover(true);
