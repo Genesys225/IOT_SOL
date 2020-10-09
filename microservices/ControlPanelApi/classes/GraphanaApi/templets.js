@@ -49,7 +49,43 @@ const alertT = function({ threshold, op }) {
 		noDataState: 'no_data',
 		notifications: [],
 	};
-	return alertTemplete;
+	//return alertTemplete;
+
+	return {
+		"alertRuleTags": {},
+		"conditions": [
+		  {
+			"evaluator": {
+			  "params": [
+				1
+			  ],
+			  "type": "gt"
+			},
+			"operator": {
+			  "type": "and"
+			},
+			"query": {
+			  "params": [
+				"A",
+				"5m",
+				"now"
+			  ]
+			},
+			"reducer": {
+				params: [threshold],
+			  type: op,
+			},
+			"type": "query"
+		  }
+		],
+		"executionErrorState": "alerting",
+		"for": "5m",
+		"frequency": "1m",
+		"handler": 1,
+		"name": "my alert",
+		"noDataState": "no_data",
+		"notifications": []
+	  }
 };
 const timingAlert = function({deviceId, threshold, op}){
 	var alertObject =   {
