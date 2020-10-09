@@ -155,7 +155,7 @@ function AlertsModal(props) {
 
 	useEffect(() => {
 		const sendUpdateAlerts = async (alerts) => {
-			await thunkDispatch(updateAlerts(alerts, props.deviceId));
+			await thunkDispatch(updateAlerts(alerts, props.deviceId, props.roomId));
 			// @ts-ignore
 			dispatch({ type: COMMIT_FINISHED });
 		};

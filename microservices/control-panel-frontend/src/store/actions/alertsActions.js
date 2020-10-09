@@ -13,17 +13,17 @@ export const getAlerts = () => {
 	};
 };
 
-export const updateAlerts = (updatedAlerts, deviceId) => {
+export const updateAlerts = (updatedAlerts, deviceId, roomId) => {
 	return async (dispatch) => {
 		const newAlerts = updatedAlerts.map(async (alert) => {
 			const res = await rest.post('/addAlertThreshold', {
-				dashboardID: 'All',
+				dashboardID: roomId,
 				deviceId,
 				threshold: alert.threshold,
 				op: alert.op,
 			});
 			console.log({
-				dashboardID: 'All',
+				dashboardID: roomId,
 				deviceId,
 				threshold: alert.threshold,
 				op: alert.op,
@@ -32,7 +32,6 @@ export const updateAlerts = (updatedAlerts, deviceId) => {
 			// alert.id = Date.now();
 			// return alert;
 		});
-		console.log(newAlerts);
 		dispatch({ type: UPDATE_ALERTS, payload: newAlerts });
 	};
 };
