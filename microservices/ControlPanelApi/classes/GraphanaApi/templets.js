@@ -215,9 +215,9 @@ var dashboard = function({ id, uid, panels, title }) {
 	return dashboard;
 };
 
-var panel = function({ id, title, rawSql }) {
+var panel = function({ id,uid,  title, rawSql }) {
 	var panelTemplete = {
-		uid: id,
+		uid: uid,
 		aliasColors: {},
 		bars: false,
 		dashLength: 10,
