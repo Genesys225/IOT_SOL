@@ -34,7 +34,7 @@ export const updateSensor = ({ id, meta }) => {
 export const updateDeviceZone = ({ idFrom, idTo, deviceId }) => {
 	return async (dispatch) => {
 		const res = await rest.post('/addDeviceFromDashboardToDashboard', {
-			idFrom: idFrom === 'MainRoom' ? 'All' : idFrom,
+			idFrom,
 			idTo,
 			deviceId,
 		});
