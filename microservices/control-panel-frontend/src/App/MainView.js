@@ -23,12 +23,12 @@ const MainView = () => {
 						</Container>
 					</Route>
 					<Route path="/sensors">
-						<Container maxWidth="lg" className={classes.container}>
+						<Container maxWidth="xl" className={classes.container}>
 							<SensorsList />
 						</Container>
 					</Route>
 					<Route path="/rooms/:room">
-						<Container maxWidth="lg" className={classes.container}>
+						<Container maxWidth="xl" className={classes.container}>
 							<RoomSummery />
 						</Container>
 					</Route>

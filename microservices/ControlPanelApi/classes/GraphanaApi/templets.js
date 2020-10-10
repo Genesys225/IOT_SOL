@@ -20,46 +20,15 @@ return {
 
 
 const alertT = function({ threshold, op }) {
-	const alertTemplete = {
-		alertRuleTags: {},
-		conditions: [
-			{
-				evaluator: {
-					params: [threshold],
-					type: op,
-				},
-				operator: {
-					type: 'and',
-				},
-				query: {
-					params: ['A', '5m', 'now'],
-				},
-				reducer: {
-					params: [],
-					type: 'avg',
-				},
-				type: 'query',
-			},
-		],
-		executionErrorState: 'alerting',
-		for: '5m',
-		frequency: '1m',
-		handler: 1,
-		name: 'SOL-15:11:11:11:11:11/hum alert',
-		noDataState: 'no_data',
-		notifications: [],
-	};
-	//return alertTemplete;
-
 	return {
 		"alertRuleTags": {},
 		"conditions": [
 		  {
 			"evaluator": {
 			  "params": [
-				1
+					parseInt(threshold)
 			  ],
-			  "type": "gt"
+			  "type": op
 			},
 			"operator": {
 			  "type": "and"
@@ -72,8 +41,8 @@ const alertT = function({ threshold, op }) {
 			  ]
 			},
 			"reducer": {
-				params: [threshold],
-			  type: op,
+				'params': [],
+			  'type': 'avg',
 			},
 			"type": "query"
 		  }
@@ -83,9 +52,13 @@ const alertT = function({ threshold, op }) {
 		"frequency": "1m",
 		"handler": 1,
 		"name": "my alert",
-		"noDataState": "no_data",
-		"notifications": []
-	  }
+		"noDataState": "keep_state",
+		"notifications": [
+			{
+				"uid": "webhook"
+			}
+		]
+	}
 };
 const timingAlert = function({deviceId, threshold, op}){
 	var alertObject =       {
@@ -94,17 +67,18 @@ const timingAlert = function({deviceId, threshold, op}){
 			{
 			  "evaluator": {
 				"params": [
-				  -1
+				  0.9,
+					0.1
 				],
-				"type": "gt"
+				"type": "outside_range"
 			  },
 			  "operator": {
 				"type": "and"
 			  },
 			  "query": {
 				"params": [
-				  "A",
-				  "5m",
+				  "B",
+				  "1m",
 				  "now"
 				]
 			  },
@@ -115,56 +89,19 @@ const timingAlert = function({deviceId, threshold, op}){
 			  "type": "query"
 			}
 		  ],
-		  "executionErrorState": "alerting",
-		  "for": "5m",
-		  "frequency": "1m",
+		  "executionErrorState": "keep_state",
+		  "for": "1s",
+		  "frequency": "1s",
 		  "handler": 1,
-		  "name": "SOL-25:11:11:11:11:11/switch alert",
-		  "noDataState": "no_data",
-		  "notifications": []
+		  "name": deviceId+"Alert",
+		  "noDataState": "ok",
+		  "notifications": [
+				{
+					"uid": "webhook"
+				}
+			]
 		}
         
-	var alertObjectOld =   {
-        "alertRuleTags": {},
-        "conditions": [
-          {
-            "evaluator": {
-              "params": [
-								0.9,
-								0.1
-              ],
-              "type": "outside_range"
-            },
-            "operator": {
-              "type": "or"
-            },
-            "query": {
-              "params": [
-                "B",
-                "1m",
-                "now"
-              ]
-            },
-            "reducer": {
-              "params": [],
-              "type": "avg"
-            },
-            "type": "query"
-          }
-        ],
-        "executionErrorState": "keep_state",
-        "for": "1s",
-        "frequency": "1s",
-        "handler": 1,
-        "name": deviceId+"Alert",
-				"noDataState": "ok",
-				"notifications": [
-					{
-						"uid": "webhook"
-					}
-				]
-	  }
-	  
 	  const pannelTargetObject =  {
 			"format": "time_series",
 			"group": [
@@ -316,7 +253,7 @@ var panel = function({ id,uid,  title, rawSql }) {
 			current: false,
 			max: false,
 			min: false,
-			show: true,
+			show: false,
 			total: false,
 			values: false,
 		},

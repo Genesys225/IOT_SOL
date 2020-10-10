@@ -38,27 +38,32 @@ const useStyles = makeStyles((theme) => ({
 	formControl: {
 		margin: theme.spacing(1),
 		minWidth: 30,
-		maxWidth: 110,
+		maxWidth: 150,
 	},
 	rotateSwitch: {
 		transform: 'rotate(270deg)',
 	},
 	zoneSelect: {
 		marginTop: theme.spacing(2),
-		width: 100,
+		width: 150,
 	},
 	listItem: {
 		display: 'flex',
 		justifyContent: 'space-between',
 		flexDirection: 'row',
+		flexWrap: "wrap",
 		alignItems: 'center',
-		width: '100%',
 	},
 	listItemSecondary: {
 		display: 'flex',
 		width: '100%',
-		flexWrap: 'wrap',
 		alignItems: 'center',
+	},
+	listItemData: {
+		height: 250,
+		justifyContent: 'space-between',
+		flexDirection: 'column',
+		display: 'flex',
 	},
 	nested: {
 		paddingLeft: theme.spacing(4),
@@ -132,23 +137,10 @@ const SensorListItem = (props) => {
 
 	return (
 		<>
-			<ListItem ref={listItemRef} onClick={handleClick} button>
-				<Box className={classes.listItem}>
-					<Box className={classes.listItemSecondary}>
-						<Box className={classes.listItemSecondary}>
-
-							<FormControl className={classes.formControl}>
-								{open ? <ExpandLess /> : <ExpandMore />}
-							</FormControl>
-							<Divider
-								orientation="vertical"
-								style={{
-									height: '100%',
-								}}
-							/>
-						</Box>
-						<Box display="flex" flexDirection="row-reverse">
-							
+			<ListItem ref={listItemRef}>
+				<Paper className={classes.listItem}>
+					<Box className={classes.listItemData}>
+						<Box display="flex" flexDirection="row-reverse" justifyContent='start'>
 							{props.deviceType !== 'switch' && (
 								<ListItemIcon onClick={handleEdit}>
 									<IconButton
@@ -245,22 +237,17 @@ const SensorListItem = (props) => {
 								</FormControl>
 							)}
 						</Box>
+						<Box height={58} />
 					</Box>
 
 					<Box display="flex" justifyContent="center">
-						<Grow in={switched} unmountOnExit>
-							<Paper elevation={2} className={classes.paper}>
-								<h5>WOW!!!</h5>
-							</Paper>
-						</Grow>
 						<SensorIframe
 							id={props.deviceId}
 							height={250}
 						/>
 					</Box>
-				</Box>
+				</Paper>
 			</ListItem>
-			<Divider />
 			<AlertsModal
 				in={showAlertsModal}
 				onClose={closeAlertsModal}

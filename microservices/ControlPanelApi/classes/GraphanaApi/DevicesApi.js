@@ -126,35 +126,21 @@ class DevicesApi {
         var myDashboard = await this.getRoom(dashboardID);
         var { alertObject, pannelTargetObject } = timingAlert({ deviceId, threshold, op })
         var uid = (deviceId);
-        
 
-
-        var excledeOldPanel = myDashboard.dashboard.panels.filter((res) => res.uid !== uid)
+        var excledeOldPanel = myDashboard.dashboard.panels.filter((res) => res.uid !== uid )
 
         var newPanelToAdd = myDashboard.dashboard.panels.filter((res) => res.uid == uid)[0]
       
         newPanelToAdd.alert = alertObject
-        newPanelToAdd["thresholds"] = [
-            {
-                "colorMode": "critical",
-                "fill": true,
-                "line": true,
-                "op": op,
-                "value": threshold,
-                "yaxis": "left"
-            }
-        ]
 
         // validate if timing alert target exist
-        if (!newPanelToAdd.targets) newPanelToAdd.targets = []
-        var existTimer = newPanelToAdd.targets.filter((res) => res.deviceId == deviceId)
-        if (existTimer.length == 0) {
-            pannelTargetObject.deviceId = deviceId
-            
+        if (newPanelToAdd.targets.length == 1) {
+            newPanelToAdd.targets.push(pannelTargetObject)
         }
+        console.log(newPanelToAdd.targets)
     
-        myDashboard.dashboard.panels.push(newPanelToAdd )
-        console.log( myDashboard.dashboard.panels)
+        excledeOldPanel.push(newPanelToAdd )
+        myDashboard.panels = excledeOldPanel
         return await this.updateRoom(myDashboard);
     }
 

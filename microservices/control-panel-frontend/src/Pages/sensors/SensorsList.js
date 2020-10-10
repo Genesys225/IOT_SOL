@@ -12,7 +12,7 @@ import {
 	FormControl,
 	InputLabel,
 	Select,
-	MenuItem,
+	MenuItem, GridList, GridListTile
 } from '@material-ui/core';
 import CenteredCircular from '../../components/common/CenteredCircular';
 import SensorListItem from './SensorListItem';
@@ -34,6 +34,10 @@ const useStyles = makeStyles((theme) => ({
 		marginTop: theme.spacing(2),
 	},
 	roomSelect: {
+		marginTop: theme.spacing(2),
+		width: 100,
+	},
+	gridListItem: {
 		marginTop: theme.spacing(2),
 		width: 100,
 	},
@@ -114,10 +118,14 @@ export default function SensorsList() {
 					className={classes.root}
 				>
 					<Divider key="0" />
-					{sensors.map((sensor) => (
-						<SensorListItem {...sensor} key={sensor.deviceId} />
-					))}
 				</List>
+					<GridList cellHeight={270}  cols={{ lg:1, xl: 2}} >
+						{sensors.map((sensor) => (
+							<GridListTile  cols={1}>
+								<SensorListItem {...sensor} key={sensor.deviceId}  />
+							</GridListTile>
+						))}
+					</GridList>
 			</Card>
 		</Suspense>
 	);

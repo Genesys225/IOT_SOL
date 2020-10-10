@@ -46,8 +46,8 @@ const SchedulerContainer = () => {
 			(device) => device.deviceType === 'switch'
 		).map((switchInst) => ({
 			...switchInst,
-			id: switchInst.title,
-			text: switchInst.title,
+			id: switchInst.deviceId,
+			text: switchInst.deviceId,
 		}))
 	);
 	// @ts-ignore
