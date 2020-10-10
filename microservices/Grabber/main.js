@@ -40,9 +40,9 @@ class Grabber{
 		const res = await fetch('http://microservices:6000/getRoom')
 		const rowRes = await res.json();
 		if(!rowRes.dashboard) return []
-		const devices = rowRes.dashboard.panels.map((r)=>r.title);
+		const devices = rowRes.dashboard.panels.map((r)=>r.uid);
 		this.devices = devices
-	    return devices
+	    return devices 
 	}
 	async processMessage(topic=[], message){
 		var deviceData = topic.split('/');
