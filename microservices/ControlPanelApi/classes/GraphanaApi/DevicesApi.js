@@ -4,27 +4,33 @@ const alasql = require('alasql')
 
 class DevicesApi {
     constructor() {
+        process.env.GRAPHANA_API_AUTH = 'http://admin:admin@'
 
         setTimeout(() => {
+            this.createDataSource()
             this.createWebhookNotificationChanel()
         }, 6000);
 
 
         this.urlMap = {
-            postWebhookNotificationChanel: 'http://grafana:3000/api/alert-notifications',
-            postUpdateRoom: 'http://grafana:3000/api/dashboards/db'
+            postWebhookNotificationChanel: 'grafana:3000/api/alert-notifications',
+            postUpdateRoom: 'grafana:3000/api/dashboards/db'
         }
 
         this.defaultQuery = (id) => `SELECT\n  $__timeGroupAlias(ts,$__interval),\n  sensor_id AS metric,\n  avg(value) AS \"value\"\nFROM measurements\nWHERE\n  $__timeFilter(ts) AND\n  sensor_id = '${id}'\nGROUP BY 1,2\nORDER BY $__timeGroup(ts,$__interval)`
     }
+    
     // INIT STUFF
-    async createWebhookNotificationChanel() { return await this.send('http://grafana:3000/api/alert-notifications', webhookNotification())}
+    async createWebhookNotificationChanel() { return await this.send('grafana:3000/api/alert-notifications', webhookNotification())};
+    
+    async createDataSource() { return await this.send('grafana:3000/api/datasources',{"id":1,"orgId":1,"name":"MySQL","type":"mysql","typeLogoUrl":"public/app/plugins/datasource/mysql/img/mysql_logo.svg","access":"proxy","url":"mysql","password":"password","user":"root","database":"sol_db","basicAuth":false,"isDefault":true,"jsonData":{},"readOnly":false})}
+    
     // ROOMS
-    async getRoomsList() { return await this.send('http://grafana:3000/api/search?query=%') }
+    async getRoomsList() { return await this.send('grafana:3000/api/search?query=%') }
 
-    async getRoom(roomId = 'MainRoom') { return await this.send(`http://grafana:3000/api/dashboards/uid/${roomId}`) }
+    async getRoom(roomId = 'MainRoom') { return await this.send(`grafana:3000/api/dashboards/uid/${roomId}`) }
 
-    async updateRoom(roomJsonData) { return this.send('http://grafana:3000/api/dashboards/db', roomJsonData) }
+    async updateRoom(roomJsonData) { return this.send('grafana:3000/api/dashboards/db', roomJsonData) }
 
     // DEVICES
     async addNewDevice(id) {
@@ -104,7 +110,9 @@ class DevicesApi {
     async send(url, data) {
         var method = 'get';
         if (data) method = 'post'
-        return await (await fetch(url, { method, body: JSON.stringify(data), headers: { 'Content-Type': 'application/json', 'Authorization': process.env.GRAPHANA_API_KEY } })).json()
+
+       
+        return await (await fetch(process.env.GRAPHANA_API_AUTH+url, { method, body: JSON.stringify(data), headers: { 'Content-Type': 'application/json'} })).json()
     }
 
 
