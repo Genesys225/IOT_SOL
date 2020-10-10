@@ -17,7 +17,7 @@ import {
 import CenteredCircular from '../../components/common/CenteredCircular';
 import SensorListItem from './SensorListItem';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(({spacing, breakpoints}) => ({
 	root: {
 		width: '100%',
 	},
@@ -27,19 +27,23 @@ const useStyles = makeStyles((theme) => ({
 		justifyContent: 'space-between',
 	},
 	formControl: {
-		margin: theme.spacing(1),
+		margin: spacing(1),
 		minWidth: 120,
 	},
 	selectEmpty: {
-		marginTop: theme.spacing(2),
+		marginTop: spacing(2),
 	},
 	roomSelect: {
-		marginTop: theme.spacing(2),
-		width: 100,
+		marginTop: spacing(2),
+		width: 150,
 	},
-	gridListItem: {
-		marginTop: theme.spacing(2),
-		width: 100,
+	gridList: {
+		[breakpoints.up('xl')] : {
+			justifyContent: 'space-evenly'
+		},
+		[breakpoints.down('lg')] : {
+			justifyContent: 'center'
+		}
 	},
 }));
 
@@ -119,9 +123,9 @@ export default function SensorsList() {
 				>
 					<Divider key="0" />
 				</List>
-					<GridList cellHeight={270}  cols={{ lg:1, xl: 2}} >
+					<GridList cellHeight={270}  cols={{ lg:1, xl: 2}} className={classes.gridList} >
 						{sensors.map((sensor) => (
-							<GridListTile  cols={1}>
+							<GridListTile  cols={1} >
 								<SensorListItem {...sensor} key={sensor.deviceId}  />
 							</GridListTile>
 						))}

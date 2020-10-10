@@ -53,6 +53,7 @@ const useStyles = makeStyles((theme) => ({
 		flexDirection: 'row',
 		flexWrap: "wrap",
 		alignItems: 'center',
+		minWidth: '795px'
 	},
 	listItemSecondary: {
 		display: 'flex',

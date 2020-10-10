@@ -118,7 +118,7 @@ export const ResourceSwitcher = ({ mainResourceName, onChange, resources }) => {
 						key={resource.fieldName}
 						value={resource.fieldName}
 					>
-						{resource.title}
+						{resource.deviceId}
 					</MenuItem>
 				))}
 			</Select>
