@@ -111,17 +111,13 @@ class DevicesApi {
         var myDashboard = await this.getRoom(dashboardID);
         var { alertObject, pannelTargetObject } = timingAlert({ deviceId, threshold, op })
         var uid = (deviceId);
-        var newPanelToAdd = alasql(`
-        select * 
-        from ? 
-        where uid = "${uid}"
-        `, [myDashboard.dashboard.panels])[0];
+        
 
-        var excledeOldPanel = alasql(`
-        select * 
-        from ? 
-        where uid != "${uid}"
-        `, [myDashboard.dashboard.panels]);
+
+        var excledeOldPanel = myDashboard.dashboard.panels.filter((res) => res.uid !== uid)
+
+        var newPanelToAdd = myDashboard.dashboard.panels.filter((res) => res.uid == uid)[0]
+      
         newPanelToAdd.alert = alertObject
         newPanelToAdd["thresholds"] = [
             {
@@ -135,17 +131,14 @@ class DevicesApi {
         ]
 
         // validate if timing alert target exist
-        var existTimer = alasql(`select * from ? where deviceId='${deviceId}'`, [newPanelToAdd.targets])
+        if (!newPanelToAdd.targets) newPanelToAdd.targets = []
+        var existTimer = newPanelToAdd.targets.filter((res) => res.deviceId == deviceId)
         if (existTimer.length == 0) {
             pannelTargetObject.deviceId = deviceId
-            newPanelToAdd.targets.push(pannelTargetObject)
+            
         }
-
-
-
-        excledeOldPanel.push(newPanelToAdd)
-        myDashboard.dashboard.panels = excledeOldPanel
-        console.log(newPanelToAdd.title)
+    
+        myDashboard.dashboard.panels.push(newPanelToAdd )
         return await this.updateRoom(myDashboard);
     }
 
@@ -165,6 +158,7 @@ class DevicesApi {
         where uid != "${uid}"
         `, [myDashboard.dashboard.panels]);
         newPanelToAdd.alert = alertT({ threshold, op });
+        console.log( JSON.stringify(newPanelToAdd.alert) , 988989889)
         newPanelToAdd["thresholds"] = [
             {
                 "colorMode": "critical",
@@ -177,7 +171,7 @@ class DevicesApi {
         ]
         excledeOldPanel.push(newPanelToAdd)
         myDashboard.dashboard.panels = excledeOldPanel
-        console.log(myDashboard.dashboard.panels)
+        
         return await this.updateRoom(myDashboard);
     }
     /**************************************ALERTS**************************************/
