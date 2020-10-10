@@ -4,15 +4,21 @@ const alasql = require('alasql')
 
 class DevicesApi {
     constructor() {
-        this.urlMap = {
 
+        setTimeout(() => {
+            this.createWebhookNotificationChanel()
+        }, 6000);
+
+
+        this.urlMap = {
             postWebhookNotificationChanel: 'http://grafana:3000/api/alert-notifications',
             postUpdateRoom: 'http://grafana:3000/api/dashboards/db'
         }
 
         this.defaultQuery = (id) => `SELECT\n  $__timeGroupAlias(ts,$__interval),\n  sensor_id AS metric,\n  avg(value) AS \"value\"\nFROM measurements\nWHERE\n  $__timeFilter(ts) AND\n  sensor_id = '${id}'\nGROUP BY 1,2\nORDER BY $__timeGroup(ts,$__interval)`
     }
-
+    // INIT STUFF
+    async createWebhookNotificationChanel() { return await this.send('http://grafana:3000/api/alert-notifications', webhookNotification())}
     // ROOMS
     async getRoomsList() { return await this.send('http://grafana:3000/api/search?query=%') }
 
