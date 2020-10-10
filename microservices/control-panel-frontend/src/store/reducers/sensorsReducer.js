@@ -12,8 +12,8 @@ export const sensorsReducer = (state = initialState, { type, payload }) => {
 		case GET_SENSORS: {
 			return payload.dashboard.panels.map((device) => ({
 				...device,
-				deviceId: device.title,
-				deviceType: device.title.split('/')[1],
+				deviceId: device.uid,
+				deviceType: device.uid.split('/')[1],
 			}));
 		}
 
