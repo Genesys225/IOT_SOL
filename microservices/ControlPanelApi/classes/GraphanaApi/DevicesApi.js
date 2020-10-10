@@ -139,6 +139,7 @@ class DevicesApi {
         }
     
         myDashboard.dashboard.panels.push(newPanelToAdd )
+        console.log( myDashboard.dashboard.panels)
         return await this.updateRoom(myDashboard);
     }
 
