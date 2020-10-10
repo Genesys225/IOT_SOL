@@ -64,6 +64,7 @@ class DevicesApi {
         var newPanelToAdd = roomList.dashboard.panels.filter((res) => res.uid == uid)
         console.log(newPanelToAdd, deviceId, 999999, roomList)
         // add cloned device
+        newPanelToAdd.title = deviceId
         roomTo.dashboard.panels = roomTo.dashboard.panels.concat(newPanelToAdd);
         // update room
 
