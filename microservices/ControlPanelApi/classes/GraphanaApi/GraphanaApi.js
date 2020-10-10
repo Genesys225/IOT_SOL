@@ -5,12 +5,14 @@ const alasql = require('alasql')
 class GraphanaApi {
     constructor() {
         setInterval(() => {
-            this.registerAllDevices()
+       //     this.registerAllDevices()
             // this.createWebhookNotificationChanel()
         }, 6000);
-
-        
+ 
+       // process.env.GRAPHANA_API_KEY = "Bearer eyJrIjoiUklSRDYyeEptU2N3N0d3Vnl5MUNOck5QNXhNZEhBUHMiLCJuIjoiYXBpa2V5Y3VybCIsImlkIjoxfQ=="
     }
+
+    //curl -X POST -H "Content-Type: application/json" -d '¨"name":"apikeycurl", "role": "Admin"¼' http://admin:admin¾localhost:3000/api/auth/keys
     hashCode(s) {
         return s.split("").reduce(function (a, b) { a = ((a << 5) - a) + b.charCodeAt(0); return a & a }, 0);
     }
