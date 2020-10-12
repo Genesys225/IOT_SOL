@@ -1,6 +1,6 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
-import { Container, Grid, CssBaseline } from '@material-ui/core';
+import { Container, Grid, CssBaseline, useTheme } from '@material-ui/core';
 import SensorsList from '../Pages/sensors/SensorsList';
 import Dashboard from '../Pages/Dashboard/Dashboard';
 import clsx from 'clsx';
@@ -10,7 +10,10 @@ import RoomSummery from '../Pages/room/RoomSummery';
 
 const MainView = () => {
 	const classes = useStyles();
+	const {breakpoints:{up, down}} = useTheme()
 	const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+	const maxWidth = up('xl') ? 'xl' : 'lg'
+	console.log(maxWidth)
 	return (
 		<>
 			<CssBaseline />
@@ -18,17 +21,17 @@ const MainView = () => {
 				<div className={classes.appBarSpacer} />
 				<Switch>
 					<Route path="/scheduler">
-						<Container maxWidth="xl" className={classes.container}>
+						<Container maxWidth={maxWidth} className={classes.container}>
 							<Scheduler />
 						</Container>
 					</Route>
 					<Route path="/sensors">
-						<Container maxWidth="xl" className={classes.container}>
+						<Container maxWidth={maxWidth} className={classes.container}>
 							<SensorsList />
 						</Container>
 					</Route>
 					<Route path="/rooms/:room">
-						<Container maxWidth="xl" className={classes.container}>
+						<Container maxWidth={maxWidth} className={classes.container}>
 							<RoomSummery />
 						</Container>
 					</Route>

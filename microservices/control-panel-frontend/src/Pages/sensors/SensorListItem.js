@@ -38,14 +38,14 @@ const useStyles = makeStyles((theme) => ({
 	formControl: {
 		margin: theme.spacing(1),
 		minWidth: 30,
-		maxWidth: 150,
+		maxWidth: 120,
 	},
 	rotateSwitch: {
 		transform: 'rotate(270deg)',
 	},
 	zoneSelect: {
 		marginTop: theme.spacing(2),
-		width: 150,
+		width: 120,
 	},
 	listItem: {
 		display: 'flex',
@@ -53,7 +53,13 @@ const useStyles = makeStyles((theme) => ({
 		flexDirection: 'row',
 		flexWrap: "wrap",
 		alignItems: 'center',
-		minWidth: '795px'
+		minWidth: '795px',
+		[theme.breakpoints.up('xl')]: {
+			width: "50%"
+		},
+		[theme.breakpoints.down('lg')]: {
+			width: "100%"
+		}
 	},
 	listItemSecondary: {
 		display: 'flex',
@@ -61,8 +67,8 @@ const useStyles = makeStyles((theme) => ({
 		alignItems: 'center',
 	},
 	listItemData: {
-		height: 250,
-		justifyContent: 'space-between',
+		height: 180,
+		justifyContent: 'space-evenly',
 		flexDirection: 'column',
 		display: 'flex',
 	},
@@ -238,13 +244,12 @@ const SensorListItem = (props) => {
 								</FormControl>
 							)}
 						</Box>
-						<Box height={58} />
 					</Box>
 
 					<Box display="flex" justifyContent="center">
 						<SensorIframe
 							id={props.deviceId}
-							height={250}
+							height={180}
 						/>
 					</Box>
 				</Paper>
