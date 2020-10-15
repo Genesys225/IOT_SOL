@@ -42,9 +42,11 @@ class DevicesApi {
         }
         if (!room.dashboard.panels) room.dashboard.panels = [];
         var newPanel = panel({ uid: id, id: this.hashCode(id), title: '', rawSql: this.defaultQuery(id) })
+        var newGauge = gaugeWidget({ uid: id+'Gauge', id: this.hashCode(id+'Gauge'), title: '', rawSql: this.defaultQuery(id) })
         // add main room
         newPanel.roomId = 'MainRoom';
         room.dashboard.panels.push(newPanel);
+        room.dashboard.panels.push(newGauge); 
         return JSON.stringify(await this.updateRoom(room));
     }
 
