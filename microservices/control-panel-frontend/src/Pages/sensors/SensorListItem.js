@@ -180,6 +180,7 @@ const SensorListItem = (props) => {
 								display="flex"
 								width="100%"
 								justifyContent="space-between"
+								alignItems="center"
 							>
 								<FormControl className={classes.formControl}>
 									<InputLabel shrink id="zone-label">
