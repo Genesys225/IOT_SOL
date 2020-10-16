@@ -26,9 +26,10 @@ const reducer = (state, { type, payload }) => {
 			throw new Error(JSON.stringify({ type, payload }, null, 2));
 	}
 };
+const defaultTheme = createMuiTheme();
 
 const MuiCtx = createContext({
-	theme: {},
+	theme: {...defaultTheme},
 	dispatch: () => null,
 });
 

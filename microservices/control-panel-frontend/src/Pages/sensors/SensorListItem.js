@@ -48,6 +48,10 @@ const useStyles = makeStyles((theme) => ({
 		width: 120,
 	},
 	listItem: {
+		backgroundColor:
+			theme.palette.type === 'dark'
+				? '#141619'
+				: theme.palette.background.paper,
 		display: 'flex',
 		justifyContent: 'space-between',
 		flexDirection: 'row',

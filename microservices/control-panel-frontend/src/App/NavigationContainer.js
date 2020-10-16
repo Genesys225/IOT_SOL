@@ -57,7 +57,17 @@ function DashboardContainer() {
 export default function Dashboard() {
 	const { theme } = useContext(MuiCtx);
 	return (
-		<ThemeProvider theme={theme}>
+		<ThemeProvider
+			theme={{
+				...theme,
+				overrides: {
+					...theme.overrides,
+					MuiPaper: {
+						...theme.overrides.MuiPaper,
+					},
+				},
+			}}
+		>
 			<CssBaseline />
 			<DashboardContainer />
 		</ThemeProvider>
