@@ -64,7 +64,7 @@ export const sensorsReducer = (state = initialState, { type, payload }) => {
 		}
 		case UPDATE_ROOM: {
 			const newSensorState = [...state.devices];
-			const sensorStateIndex = state.findIndex(
+			const sensorStateIndex = state.devices.findIndex(
 				(sensor) => sensor.deviceId === payload.deviceId
 			);
 			newSensorState[sensorStateIndex].roomId = payload.room;
