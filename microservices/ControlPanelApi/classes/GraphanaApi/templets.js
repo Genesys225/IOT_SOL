@@ -341,8 +341,8 @@ var panel = function({ id,uid,  title, rawSql }) {
 	return panelTemplete;
 };
 
-var textWidget = function({ id, title, rawSql }) {
-	var panelTemplete = panel({ id, title, rawSql });
+var textWidget = function({ id, uid, title, rawSql }) {
+	var panelTemplete = panel({ id, uid, title, rawSql });
 
 	panelTemplete.options = {
 		colorMode: 'value',
@@ -360,8 +360,8 @@ var textWidget = function({ id, title, rawSql }) {
 	return panelTemplete;
 };
 
-var gaugeWidget = function({ id, title, rawSql }) {
-	var panelTemplete = panel({ id, title, rawSql });
+var gaugeWidget = function({ id, uid, title, rawSql }) {
+	var panelTemplete = panel({ id, title, uid, rawSql });
 	panelTemplete.type = 'gauge';
 	return panelTemplete;
 };
