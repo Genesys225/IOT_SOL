@@ -51,15 +51,15 @@ const useStyles = makeStyles((theme) => ({
 		display: 'flex',
 		justifyContent: 'space-between',
 		flexDirection: 'row',
-		flexWrap: "wrap",
+		flexWrap: 'wrap',
 		alignItems: 'center',
 		minWidth: '795px',
 		[theme.breakpoints.up('xl')]: {
-			width: "50%"
+			width: '50%',
 		},
 		[theme.breakpoints.down('lg')]: {
-			width: "100%"
-		}
+			width: '100%',
+		},
 	},
 	listItemSecondary: {
 		display: 'flex',
@@ -147,7 +147,11 @@ const SensorListItem = (props) => {
 			<ListItem ref={listItemRef}>
 				<Paper className={classes.listItem}>
 					<Box className={classes.listItemData}>
-						<Box display="flex" flexDirection="row-reverse" justifyContent='start'>
+						<Box
+							display="flex"
+							flexDirection="row-reverse"
+							justifyContent="start"
+						>
 							{props.deviceType !== 'switch' && (
 								<ListItemIcon onClick={handleEdit}>
 									<IconButton
@@ -248,9 +252,12 @@ const SensorListItem = (props) => {
 
 					<Box display="flex" justifyContent="center">
 						<SensorIframe
-							id={props.deviceId}
+							id={props.deviceId + 'Gauge'}
 							height={180}
 						/>
+					</Box>
+					<Box display="flex" justifyContent="center">
+						<SensorIframe id={props.deviceId} height={180} />
 					</Box>
 				</Paper>
 			</ListItem>
