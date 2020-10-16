@@ -54,12 +54,7 @@ const useStyles = makeStyles((theme) => ({
 		flexWrap: 'wrap',
 		alignItems: 'center',
 		minWidth: '795px',
-		[theme.breakpoints.up('xl')]: {
-			width: '50%',
-		},
-		[theme.breakpoints.down('lg')]: {
-			width: '100%',
-		},
+		width: '100%',
 	},
 	listItemSecondary: {
 		display: 'flex',

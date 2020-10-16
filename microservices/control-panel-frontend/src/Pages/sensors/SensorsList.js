@@ -40,12 +40,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
 		width: 150,
 	},
 	gridList: {
-		[breakpoints.up('xl')]: {
-			justifyContent: 'space-evenly',
-		},
-		[breakpoints.down('lg')]: {
-			justifyContent: 'center',
-		},
+		justifyContent: 'center',
 	},
 }));
 
