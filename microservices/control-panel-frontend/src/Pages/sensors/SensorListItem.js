@@ -176,83 +176,73 @@ const SensorListItem = (props) => {
 							</ListItemIcon>
 						</Box>
 						<Box className={classes.listItemSecondary}>
-							<FormControl className={classes.formControl}>
-								<InputLabel shrink id="zone-label">
-									Room
-								</InputLabel>
-								<Select
-									labelId="zone-label"
-									id="zone"
-									value={zone}
-									onChange={handleChange}
-									className={classes.zoneSelect}
-								>
-									<MenuItem value="MainRoom">
-										<em>MainRoom</em>
-									</MenuItem>
-									<MenuItem value="room1">Room 1</MenuItem>
-									<MenuItem value="room2">Room 2</MenuItem>
-									<MenuItem value="room3">Room 3</MenuItem>
-								</Select>
-							</FormControl>
-
-							<FormControl
-								className={classes.formControl}
-								variant="filled"
+							<Box
+								display="flex"
+								width="100%"
+								justifyContent="space-between"
 							>
-								<TextField
-									id={props.deviceId + '-value'}
-									value={props.currentValue || ''}
-									label="Current value"
-									InputProps={{
-										endAdornment:
-											props.deviceType !== 'switch' ? (
-												<>
-													{props.deviceId && (
-														<InputAdornment position="end">
-															{
-																units[
-																	props
-																		.deviceType
-																]
-															}
-														</InputAdornment>
-													)}
-												</>
-											) : null,
-									}}
-								/>
-							</FormControl>
-							<Divider variant="fullWidth" />
-							{props.deviceType === 'switch' && (
-								<FormControl
-									className={clsx(
-										classes.formControl,
-										classes.rotateSwitch
-									)}
-								>
-									<Switch
-										edge="start"
-										onChange={handleToggle}
-										checked={switched}
-										inputProps={{
-											'aria-labelledby':
-												'switch-list-label-wifi',
-										}}
-									/>
+								<FormControl className={classes.formControl}>
+									<InputLabel shrink id="zone-label">
+										Room
+									</InputLabel>
+									<Select
+										labelId="zone-label"
+										id="zone"
+										value={zone}
+										onChange={handleChange}
+										className={classes.zoneSelect}
+									>
+										<MenuItem value="MainRoom">
+											<em>MainRoom</em>
+										</MenuItem>
+										<MenuItem value="room1">
+											Room 1
+										</MenuItem>
+										<MenuItem value="room2">
+											Room 2
+										</MenuItem>
+										<MenuItem value="room3">
+											Room 3
+										</MenuItem>
+									</Select>
 								</FormControl>
-							)}
+								<SensorIframe
+									id={props.deviceId + 'Gauge'}
+									height={100}
+									width={100}
+								/>
+								<Divider
+									variant="fullWidth"
+									orientation="vertical"
+								/>
+								{props.deviceType === 'switch' && (
+									<FormControl
+										className={clsx(
+											classes.formControl,
+											classes.rotateSwitch
+										)}
+									>
+										<Switch
+											edge="start"
+											onChange={handleToggle}
+											checked={switched}
+											inputProps={{
+												'aria-labelledby':
+													'switch-list-label-wifi',
+											}}
+										/>
+									</FormControl>
+								)}
+							</Box>
 						</Box>
 					</Box>
 
 					<Box display="flex" justifyContent="center">
 						<SensorIframe
-							id={props.deviceId + 'Gauge'}
+							id={props.deviceId}
 							height={180}
+							width={600}
 						/>
-					</Box>
-					<Box display="flex" justifyContent="center">
-						<SensorIframe id={props.deviceId} height={180} />
 					</Box>
 				</Paper>
 			</ListItem>
