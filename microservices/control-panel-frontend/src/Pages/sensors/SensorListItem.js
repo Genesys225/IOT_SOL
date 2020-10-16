@@ -211,10 +211,6 @@ const SensorListItem = (props) => {
 									height={100}
 									width={100}
 								/>
-								<Divider
-									variant="fullWidth"
-									orientation="vertical"
-								/>
 								{props.deviceType === 'switch' && (
 									<FormControl
 										className={clsx(
