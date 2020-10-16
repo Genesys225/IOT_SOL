@@ -13,7 +13,7 @@ import { MuiCtx } from '../components/hooks/muiState';
 import { CssBaseline, ThemeProvider } from '@material-ui/core';
 function DashboardContainer() {
 	// @ts-ignore
-	const sensors = useSelector((state) => state.sensors);
+	const sensors = useSelector((state) => state.sensors.devices);
 	const thunkDispatch = useDispatch();
 	const classes = useStyles();
 	const [open, setOpen] = useState(true);

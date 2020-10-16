@@ -5,22 +5,36 @@ import {
 	UPDATE_SENSOR,
 } from '../actions/sensorsActions';
 
-const initialState = [];
+const initialState = {
+	devices: [],
+	deviceGauges: [],
+};
 
 export const sensorsReducer = (state = initialState, { type, payload }) => {
 	switch (type) {
 		case GET_SENSORS: {
-			return payload.dashboard.panels.map((device) => ({
+			console.log(payload);
+			const devices = payload.dashboard.panels.filter(
+				(device) => device.type === 'graph'
+			);
+			const deviceGauges = payload.dashboard.panels.filter(
+				(device) => device.type === 'gauge'
+			);
+			const transformDevice = (device) => ({
 				...device,
 				deviceId: device.uid,
 				deviceType: device.uid.split('/')[1],
-			}));
+			});
+			return {
+				devices: devices.map(transformDevice),
+				deviceGauges: deviceGauges.map(transformDevice),
+			};
 		}
 
 		case LAST_SENSORS_DATA:
-			let newSensorState = [...state];
+			let newSensorState = [...state.devices];
 			payload.forEach((sensorData) => {
-				const sensorStateIndex = state.findIndex(
+				const sensorStateIndex = state.devices.findIndex(
 					(sensor) => sensor.deviceId === sensorData.id
 				);
 				if (sensorStateIndex !== -1) {
@@ -29,10 +43,13 @@ export const sensorsReducer = (state = initialState, { type, payload }) => {
 				}
 			});
 
-			return newSensorState;
+			return {
+				...state,
+				devices: newSensorState,
+			};
 
 		case UPDATE_SENSOR: {
-			const newSensorState = state.map((sensorState) => {
+			const newSensorState = state.devices.map((sensorState) => {
 				if (payload.id === sensorState.id)
 					return Object.assign({}, sensorState, {
 						meta: payload.meta,
@@ -40,15 +57,21 @@ export const sensorsReducer = (state = initialState, { type, payload }) => {
 				return sensorState;
 			});
 
-			return newSensorState;
+			return {
+				...state,
+				devices: newSensorState,
+			};
 		}
 		case UPDATE_ROOM: {
-			const newSensorState = [...state];
+			const newSensorState = [...state.devices];
 			const sensorStateIndex = state.findIndex(
 				(sensor) => sensor.deviceId === payload.deviceId
 			);
 			newSensorState[sensorStateIndex].roomId = payload.room;
-			return newSensorState;
+			return {
+				...state,
+				devices: newSensorState,
+			};
 		}
 
 		default:

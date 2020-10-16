@@ -119,7 +119,7 @@ const SchedulerCtx = createContext({
 function SchedulerCtxProvider(props) {
 	const switches = useSelector((state) =>
 		// @ts-ignore
-		state.sensors
+		state.sensors.devices
 			.filter((device) => device.deviceType === 'switch')
 			.map((switchInst) => ({
 				...switchInst,

@@ -51,7 +51,9 @@ const useStyles = makeStyles((theme) => ({
 
 const initialState = (props, sensors, alerts) => ({
 	sensorId: props.deviceId,
-	sensor: sensors.find((sensor) => sensor.deviceId === props.deviceId),
+	sensor: sensors.devices.find(
+		(sensor) => sensor.deviceId === props.deviceId
+	),
 	alerts: [
 		...alerts.alerts,
 		{
@@ -155,7 +157,9 @@ function AlertsModal(props) {
 
 	useEffect(() => {
 		const sendUpdateAlerts = async (alerts) => {
-			await thunkDispatch(updateAlerts(alerts, props.deviceId, props.roomId));
+			await thunkDispatch(
+				updateAlerts(alerts, props.deviceId, props.roomId)
+			);
 			// @ts-ignore
 			dispatch({ type: COMMIT_FINISHED });
 		};

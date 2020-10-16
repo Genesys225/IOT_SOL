@@ -12,12 +12,14 @@ import {
 	FormControl,
 	InputLabel,
 	Select,
-	MenuItem, GridList, GridListTile
+	MenuItem,
+	GridList,
+	GridListTile,
 } from '@material-ui/core';
 import CenteredCircular from '../../components/common/CenteredCircular';
 import SensorListItem from './SensorListItem';
 
-const useStyles = makeStyles(({spacing, breakpoints}) => ({
+const useStyles = makeStyles(({ spacing, breakpoints }) => ({
 	root: {
 		width: '100%',
 	},
@@ -38,12 +40,12 @@ const useStyles = makeStyles(({spacing, breakpoints}) => ({
 		width: 150,
 	},
 	gridList: {
-		[breakpoints.up('xl')] : {
-			justifyContent: 'space-evenly'
+		[breakpoints.up('xl')]: {
+			justifyContent: 'space-evenly',
 		},
-		[breakpoints.down('lg')] : {
-			justifyContent: 'center'
-		}
+		[breakpoints.down('lg')]: {
+			justifyContent: 'center',
+		},
 	},
 }));
 
@@ -52,15 +54,16 @@ export default function SensorsList() {
 	// @ts-ignore
 	const availableRooms = useSelector((state) => [
 		// @ts-ignore
-		...new Set(state.sensors.map((device) => device.roomId)),
+		...new Set(state.sensors.devices.map((device) => device.roomId)),
 	]);
 	const sensors = useSelector((state) =>
 		room === 'MainRoom'
 			? // @ts-ignore
-
-			  state.sensors.filter((device) => !device.title.includes('Gauge'))
+			  state.sensors.devices.filter(
+					(device) => !device.title.includes('Gauge')
+			  )
 			: // @ts-ignore
-			  state.sensors.filter((device) => device.room === room)
+			  state.sensors.devices.filter((device) => device.room === room)
 	);
 	const handleChange = useCallback((event) => setRoom(event.target.value), [
 		setRoom,
@@ -123,13 +126,17 @@ export default function SensorsList() {
 				>
 					<Divider key="0" />
 				</List>
-					<GridList cellHeight={200}  cols={{ lg:1, xl: 2}} className={classes.gridList} >
-						{sensors.map((sensor) => (
-							<GridListTile  cols={1} >
-								<SensorListItem {...sensor} key={sensor.deviceId}  />
-							</GridListTile>
-						))}
-					</GridList>
+				<GridList
+					cellHeight={200}
+					cols={{ lg: 1, xl: 2 }}
+					className={classes.gridList}
+				>
+					{sensors.map((sensor) => (
+						<GridListTile cols={1}>
+							<SensorListItem {...sensor} key={sensor.deviceId} />
+						</GridListTile>
+					))}
+				</GridList>
 			</Card>
 		</Suspense>
 	);
