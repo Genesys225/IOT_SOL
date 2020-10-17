@@ -85,7 +85,9 @@ function SensorIframe(props) {
 			)}
 			<iframe
 				className={classes.iframeWrap}
-				src={`http://localhost/grafana/d${
+				src={`http://${window.location.origin
+					.replace('http:', '')
+					.replace('https:', '')}/grafana/d${
 					panelId ? '-solo/MainRoom' : '/' + roomId
 				}/all?orgId=1&refresh=25s&from=now-${timePeriod}&to=now&theme=${
 					theme.palette.type
