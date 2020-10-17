@@ -185,6 +185,8 @@ const SensorListItem = (props) => {
 								width="100%"
 								justifyContent="space-between"
 								alignItems="center"
+								overflow="hidden"
+								height={106}
 							>
 								<FormControl className={classes.formControl}>
 									<InputLabel shrink id="zone-label">
@@ -213,8 +215,10 @@ const SensorListItem = (props) => {
 								</FormControl>
 								<SensorIframe
 									id={props.deviceId + 'Gauge'}
-									height={100}
-									width={100}
+									height={120}
+									width={160}
+									type="gauge"
+									paddingBottom="10px"
 								/>
 								{props.deviceType === 'switch' && (
 									<FormControl
@@ -224,13 +228,8 @@ const SensorListItem = (props) => {
 										)}
 									>
 										<Switch
-											edge="start"
 											onChange={handleToggle}
 											checked={switched}
-											inputProps={{
-												'aria-labelledby':
-													'switch-list-label-wifi',
-											}}
 										/>
 									</FormControl>
 								)}

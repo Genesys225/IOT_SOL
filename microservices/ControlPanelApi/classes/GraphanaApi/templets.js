@@ -359,9 +359,48 @@ var textWidget = function({ id, uid, title, rawSql }) {
 	panelTemplete.type = 'stat';
 	return panelTemplete;
 };
-
+const units = {
+	temp: 'celsius',
+	humidity: 'humidity',
+	hum: 'humidity',
+	co2: 'ppm',
+	lux: 'lux',
+	light: 'lux',
+};
 var gaugeWidget = function({ id, uid, title, rawSql }) {
 	var panelTemplete = panel({ id, title, uid, rawSql });
+	var deviceType = uid.split('/')[1].replace('Gauge', '')
+	panelTemplete.fieldConfig = {
+		defaults: {
+			custom: {},
+			mappings: [],
+			thresholds: {
+				mode: 'percentage',
+				steps: [
+					{
+						color: 'green',
+						value: null
+					},
+					{
+						color: 'red',
+						value: 80
+					}
+				]
+			},
+			unit: units[deviceType]
+		},
+		overrides: []	
+	}
+	panelTemplete.options = {
+		reduceOptions: {
+				calcs: ["last"],
+				fields: "",
+				values: false
+		},
+		showThresholdLabels: false,
+		showThresholdMarkers: true
+		
+	}
 	panelTemplete.type = 'gauge';
 	return panelTemplete;
 };

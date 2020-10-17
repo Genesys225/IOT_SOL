@@ -1,4 +1,4 @@
-import { IconButton, makeStyles, useTheme } from '@material-ui/core';
+import { Box, IconButton, makeStyles, useTheme } from '@material-ui/core';
 import React, { useCallback, useEffect, useState } from 'react';
 import FullscreenIcon from '@material-ui/icons/Fullscreen';
 const useStyles = makeStyles({
@@ -16,16 +16,27 @@ const useStyles = makeStyles({
 });
 
 function SensorIframe(props) {
+	const {
+		id,
+		room,
+		listItemRef,
+		width,
+		height,
+		timePeriod: timePeriodProp,
+		type,
+		...boxProps
+	} = props;
 	const theme = useTheme();
 	const [iframeHover, setIframeHover] = useState(false);
 	const classes = useStyles();
 	// const [time, setTime] = useState(Date.now());
-	const panelId = props.id ? hashCode(props.id) : null;
-	const roomId = props.room;
-	let parentBoundingRect = props.listItemRef && props.listItemRef.current
-		? props.listItemRef.current.getBoundingClientRect()
-		: { width: props.width || '400px' };
-	const timePeriod = props.timePeriod || '6h';
+	const panelId = id ? hashCode(id) : null;
+	const roomId = room;
+	let parentBoundingRect =
+		listItemRef && listItemRef.current
+			? listItemRef.current.getBoundingClientRect()
+			: { width: width || '400px' };
+	const timePeriod = timePeriodProp || '6h';
 
 	const iframeClickHandler = useCallback(
 		function(event) {
@@ -37,8 +48,8 @@ function SensorIframe(props) {
 	);
 	useEffect(() => {
 		window.addEventListener('blur', iframeClickHandler);
-		if (props.listItemRef && props.listItemRef.current)
-			parentBoundingRect = props.listItemRef.current;
+		if (listItemRef && listItemRef.current)
+			parentBoundingRect = listItemRef.current;
 		return () => {
 			window.removeEventListener('blur', iframeClickHandler);
 		};
@@ -57,15 +68,21 @@ function SensorIframe(props) {
 		setIframeHover(false);
 	};
 	return (
-		<div
+		<Box
 			className={classes.iframeWrap}
 			onClick={(event) => event.preventDefault()}
 			onMouseOver={handleIFrameHover}
 			onMouseOut={handleIFrameOut}
+			{...boxProps}
 		>
-			<IconButton color="primary" className={classes.overlayExpandGraph}>
-				<FullscreenIcon />
-			</IconButton>
+			{type !== 'gauge' && (
+				<IconButton
+					color="primary"
+					className={classes.overlayExpandGraph}
+				>
+					<FullscreenIcon />
+				</IconButton>
+			)}
 			<iframe
 				className={classes.iframeWrap}
 				src={`http://localhost:3000/d${
@@ -74,11 +91,11 @@ function SensorIframe(props) {
 					theme.palette.type
 				}&kiosk${panelId && `&panelId=${panelId}`}`}
 				width={parentBoundingRect.width}
-				height={props.height || '300'}
+				height={height || '300'}
 				frameBorder="0"
 				title="grafana"
 			></iframe>
-		</div>
+		</Box>
 	);
 }
 function hashCode(s) {
