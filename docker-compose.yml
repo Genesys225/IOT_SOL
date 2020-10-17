@@ -39,6 +39,9 @@ services:
             - GF_RENDERING_SERVER_URL=http://renderer:8081/render
             - GF_RENDERING_CALLBACK_URL=http://grafana:3000/
             - GF_LOG_FILTERS=rendering:debug
+        labels:
+            - 'traefik.http.routers.grafana.rule=Host(`localhost`) && PathPrefix(`/grafana`)'
+            - 'traefik.http.routers.grafana.entrypoints=frontend'
 
     emqtt:
         user: '$UID:$GID'
@@ -67,13 +70,20 @@ services:
             - ./microservices/control-panel-frontend/:/app/
         ports:
             - '9000:9000'
+        labels:
+            - 'traefik.enable=true'
+            - 'traefik.http.routers.frontend.rule=Host(`localhost`)' #  || Host(`solgraph.ddnsking.com`)
+            - 'traefik.http.routers.frontend.entrypoints=frontend'
+            # - 'traefik.http.routers.frontend.tls.certresolver=myresolver'
         restart: always
+
     nats:
         image: nats
         ports:
             - '4222:4222'
             - '6222:6222'
             - '8222:8222'
+
     microservices:
         user: '$UID:$GID'
         image: node:12-alpine
@@ -88,7 +98,7 @@ services:
         links:
             - emqtt:emqtt-broker
             - mysql:mysql
-        environment:             
+        environment:
             - GRAPHANA_API_KEY=Bearer ${GRAFANA_API_KEY}
             - TZ=Asia/Jerusalem
         command:
@@ -97,3 +107,27 @@ services:
                 '-c',
                 'npm install pm2 -g && cd /app/ && yarn install --production && pm2 start && pm2 logs -f',
             ]
+
+    traefik:
+        image: 'traefik:v2.3'
+        command:
+            #- "--log.level=DEBUG"
+            - '--api.insecure=true'
+            - '--providers.docker=true'
+            - '--providers.docker.exposedbydefault=true'
+            - '--entrypoints.frontend.address=:80'
+            - '--pilot.token=992e4f49-d0f5-4db9-8175-7ad36acca939'
+            # - '--entrypoints.frontendSecure.address=:443'
+            # - '--entrypoints.frontend.http.redirections.entryPoint.to=frontendSecure'
+            # - '--certificatesresolvers.myresolver.acme.tlschallenge=true'
+            # - '--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory'
+            # - '--certificatesresolvers.myresolver.acme.email=gene.korn@gmail.com'
+            # - '--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json'
+
+        volumes:
+            - './letsencrypt:/letsencrypt'
+            - '/var/run/docker.sock:/var/run/docker.sock:ro'
+        ports:
+            - '80:80'
+            # - '443:443'
+            - '8080:8080'
