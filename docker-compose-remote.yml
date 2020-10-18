@@ -40,9 +40,11 @@ services:
             - GF_RENDERING_CALLBACK_URL=http://grafana:3000/
             - GF_LOG_FILTERS=rendering:debug
         labels:
-            - 'traefik.http.routers.grafana.rule=Host(`localhost`) && PathPrefix(`/grafana`)'
-            - 'traefik.http.routers.grafana.entrypoints=frontend'
-            # - 'traefik.http.routers.grafana.tls.certresolver=myresolver'
+            - 'traefik.http.routers.grafana.rule=Host(`sol-iot.tk`) && PathPrefix(`/grafana`)'
+            - 'traefik.http.routers.grafanaApi.rule=PathPrefix(`api`)'
+            - 'traefik.http.routers.grafana.entrypoints=frontendSecure'
+            - 'traefik.http.routers.grafanaApi.entrypoints=frontend'
+            - 'traefik.http.routers.grafana.tls.certresolver=myresolver'
 
     emqtt:
         user: '$UID:$GID'
@@ -73,9 +75,9 @@ services:
             - '9000:9000'
         labels:
             - 'traefik.enable=true'
-            - 'traefik.http.routers.frontend.rule=Host(`localhost`)' #  || Host(`solgraph.ddnsking.com`)
-            - 'traefik.http.routers.frontend.entrypoints=frontend'
-            # - 'traefik.http.routers.frontend.tls.certresolver=myresolver'
+            - 'traefik.http.routers.frontend.rule=Host(`sol-iot.tk`)' #  || Host(`solgraph.ddnsking.com`)
+            - 'traefik.http.routers.frontend.entrypoints=frontendSecure'
+            - 'traefik.http.routers.frontend.tls.certresolver=myresolver'
         restart: always
 
     nats:
@@ -96,6 +98,7 @@ services:
             - grafana
             - emqtt
             - mysql
+        restart: always
         links:
             - emqtt:emqtt-broker
             - mysql:mysql
@@ -118,17 +121,17 @@ services:
             - '--providers.docker.exposedbydefault=true'
             - '--entrypoints.frontend.address=:80'
             - '--pilot.token=992e4f49-d0f5-4db9-8175-7ad36acca939'
-            # - '--entrypoints.frontendSecure.address=:443'
-            # - '--entrypoints.frontend.http.redirections.entryPoint.to=frontendSecure'
-            # - '--certificatesresolvers.myresolver.acme.tlschallenge=true'
-            # - '--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory'
-            # - '--certificatesresolvers.myresolver.acme.email=gene.korn@gmail.com'
-            # - '--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json'
+            - '--entrypoints.frontendSecure.address=:443'
+            #- '--entrypoints.frontend.http.redirections.entryPoint.to=frontendSecure'
+            - '--certificatesresolvers.myresolver.acme.tlschallenge=true'
+            #- '--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory'
+            - '--certificatesresolvers.myresolver.acme.email=genesys225@gmail.com'
+            - '--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json'
 
         volumes:
             - './letsencrypt:/letsencrypt'
             - '/var/run/docker.sock:/var/run/docker.sock:ro'
         ports:
             - '80:80'
-            # - '443:443'
+            - '443:443'
             - '8080:8080'
