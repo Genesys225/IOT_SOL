@@ -122,7 +122,7 @@ services:
             - '--entrypoints.frontend.address=:80'
             - '--pilot.token=992e4f49-d0f5-4db9-8175-7ad36acca939'
             - '--entrypoints.frontendSecure.address=:443'
-            #- '--entrypoints.frontend.http.redirections.entryPoint.to=frontendSecure'
+            - '--entrypoints.frontend.http.redirections.entryPoint.to=frontendSecure'
             - '--certificatesresolvers.myresolver.acme.tlschallenge=true'
             #- '--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory'
             - '--certificatesresolvers.myresolver.acme.email=genesys225@gmail.com'
