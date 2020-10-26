@@ -7,30 +7,30 @@ const nc = await connect({ servers: "nats://nats:4222" });
 
 //const nc = NATS.connect({ url: 'nats://nats:4222', json: true });
 
-const url = 'mqtt://mqtt';
+const url = 'mqtt://emqtt';
 
 //const grabberClient = mqtt.connect(url);
 //const grabberClient = new Client({ url: url }); // Deno and Node.js
 //const fetch = require('node-fetch');
 
-
-
+//
+ 
 class Grabber {
 	devices = []
 	constructor() {
-		this.devices = [];
-	}
+		this.devices = []; 
+	}  
 	setDevices(devices) {
 		this.devices = devices;
 	}
 	async subscribeToDataDevicesStream() {
-		const client = new Client({ url: url }); 
+		
+		const client = new Client({ url: url });  
 		await client.connect();
-
 		await client.subscribe('sensors/#');
 		
 		client.on('message', (topic, payload) => {
-		  console.log(topic,payload.toString());
+		  console.log({topic,payload: payload.toString()});
 		  this.processMessage(topic, payload.toString());
 		});
 	}
@@ -57,7 +57,7 @@ class Grabber {
 	}
 	write({ id, value }) {
 		return new Promise(async (resolve) => {
-		
+			
 			await nc.request('db/mysql.writeDeviceData',sc.encode(JSON.stringify({ deviceId: id, value: value.toString() })), { timeout: 1000 })
 				.then((m) => {
 					//console.log(m)
