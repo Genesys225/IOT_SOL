@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useReducer, useRef } from 'react';
+import React, { useEffect } from 'react';
 import {
 	Backdrop,
 	makeStyles,
@@ -7,25 +7,15 @@ import {
 	Paper,
 	Box,
 	Typography,
-	Select,
-	MenuItem,
-	TextField,
-	FormControl,
-	InputLabel,
 	Button,
 } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
 import { useDispatch, useSelector } from 'react-redux';
-import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
-import {
-	COMMIT_ALERTS,
-	COMMIT_FINISHED,
-	updateAlerts,
-	UPDATE_NEW_ALERT,
-} from '../../store/actions/alertsActions';
+import { updateAlerts } from '../../../store/actions/alertsActions';
 import SaveIcon from '@material-ui/icons/Save';
 import { useState } from 'react';
+import ThresholdConditionsInput from './thresholdConditionsInput';
 
 const useStyles = makeStyles((theme) => ({
 	alert: {
@@ -157,113 +147,11 @@ function AlertsModal(props) {
 						<Typography id="transition-modal-title" variant="h6">
 							if temperature is
 						</Typography>
-						<Box
-							justifyContent="space-evenly"
-							display="flex"
-							flexDirection="row"
-							mb="3"
-						>
-							<Paper className={classes.paper}>
-								<Box
-									justifyContent="space-evenly"
-									display="flex"
-									alignItems="center"
-									flexDirection="row"
-								>
-									{false ? (
-										<Button
-											variant="contained"
-											color="primary"
-											onClick={() => {}}
-											size="large"
-											className={classes.button}
-											startIcon={<AddCircleOutlineIcon />}
-										>
-											Add new alert
-										</Button>
-									) : (
-										<>
-											<FormControl
-												className={classes.formControl}
-											>
-												<InputLabel id="operator-label">
-													Operator
-												</InputLabel>
-												<Select
-													labelId="operator-label"
-													id="operator"
-													value={
-														deviceAlert.length > 0
-															? deviceAlert[0]
-																	.conditions[0]
-																	.evaluator
-																	.type
-															: 'gt'
-													}
-													onChange={(event) => {
-														// @ts-ignore
-														dispatch({
-															type: UPDATE_NEW_ALERT,
-															payload: {
-																op:
-																	event.target
-																		.value,
-																deviceId:
-																	props.deviceId,
-															},
-														});
-													}}
-												>
-													<MenuItem value="eq">
-														Equals
-													</MenuItem>
-													<MenuItem value="gt">
-														Above
-													</MenuItem>
-													<MenuItem value="lt">
-														Less than
-													</MenuItem>
-													<MenuItem value="neq">
-														Not equals
-													</MenuItem>
-												</Select>
-											</FormControl>
-											<FormControl
-												className={classes.formControl}
-											>
-												<TextField
-													id="filled-multiline-static"
-													label="Limit"
-													value={
-														deviceAlert.length > 0
-															? deviceAlert[0]
-																	.conditions[0]
-																	.evaluator
-																	.params[0]
-															: ''
-													}
-													variant="outlined"
-													type="number"
-													onChange={(event) =>
-														// @ts-ignore
-														dispatch({
-															type: UPDATE_NEW_ALERT,
-															payload: {
-																threshold:
-																	event.target
-																		.value,
-																deviceId:
-																	props.deviceId,
-															},
-														})
-													}
-												/>
-											</FormControl>
-										</>
-									)}
-								</Box>
-							</Paper>
-						</Box>
+
+						<ThresholdConditionsInput
+							deviceAlert={deviceAlert}
+							deviceId={props.deviceId}
+						/>
 						<Box className={classes.actionGroup}>
 							<Button
 								variant="contained"

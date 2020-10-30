@@ -1,9 +1,15 @@
+let instance = null;
+
 export default class FetchWrap {
 	constructor(baseUrl = '', baseHeaders = new Headers(), baseParams = {}) {
 		this._baseUrl = baseUrl;
 		this._baseHeaders = this.parseHeaders(baseHeaders);
 		this._baseParams = baseParams;
 		this._requestHeaders = new Headers();
+		if (!instance) {
+			instance = this;
+		}
+		return instance;
 	}
 
 	get baseUrl() {
@@ -30,7 +36,7 @@ export default class FetchWrap {
 		} else return false;
 	}
 
-	setHeaders(argument) {
+	setRequestHeaders(argument) {
 		const parsedHeaders = this.parseHeaders(argument, this._requestHeaders);
 		if (parsedHeaders) {
 			this._requestHeaders = parsedHeaders;
@@ -38,46 +44,66 @@ export default class FetchWrap {
 		} else return false;
 	}
 
-	parseHeaders(argument, currentHeaders = new Headers()) {
-		if (typeof argument === 'function')
-			return argument(currentHeaders, this._baseUrl);
-		else if (typeof argument === 'object')
-			if (argument instanceof Headers) return argument;
-			else {
-				const newHeaders = new Headers();
-				for (let key in argument) {
-					newHeaders.append(
-						this.camelCaseToHeaderKey(key),
-						argument[key]
-					);
-				}
-				return newHeaders;
-			}
-		else return false;
-	}
-
 	get(url, getParamsObj = {}) {
-		url = this.urlHelper(url, getParamsObj);
-		return this.executeRequest(url, {
-			headers: this._baseHeaders,
-		});
+		return this.getOrDelete('GET', url, getParamsObj);
 	}
 
 	post(url, body, getParamsObj = {}) {
-		url = this.urlHelper(url, getParamsObj);
-		return this.executeRequest(url, this.patchOrPostOpts('POST', body));
+		return this.patchOrPostOpts('POST', url, body, getParamsObj);
+	}
+
+	put(url, body, getParamsObj = {}) {
+		return this.patchOrPostOpts('PUT', url, body, getParamsObj);
 	}
 
 	patch(url, body, getParamsObj = {}) {
-		url = this.urlHelper(url, getParamsObj);
-		return this.executeRequest(url, this.patchOrPostOpts('PATCH', body));
+		return this.patchOrPostOpts('PATCH', url, body, getParamsObj);
 	}
 
 	delete(url, getParamsObj = {}) {
+		return this.getOrDelete('DELETE', url, getParamsObj);
+	}
+
+	async executeRequest(url, options = null) {
+		try {
+			const response = options
+				? await fetch(url, options)
+				: await fetch(url);
+			if (!response.ok)
+				throw new Error(
+					'Something went wrong!\n' +
+						JSON.stringify(await response.json())
+				);
+			return response.json();
+		} catch (error) {
+			console.log(error);
+		} finally {
+			this.setRequestHeaders(new Headers());
+		}
+	}
+
+	patchOrPostOpts(method, url, body, getParamsObj) {
+		const headers = this.mergeHeaders(
+			this._baseHeaders,
+			this._requestHeaders
+		);
+		url = this.urlHelper(url, getParamsObj);
+		return this.executeRequest({
+			method,
+			headers,
+			body: body,
+		});
+	}
+
+	getOrDelete(method, url, getParamsObj) {
+		const headers = this.mergeHeaders(
+			this._baseHeaders,
+			this._requestHeaders
+		);
 		url = this.urlHelper(url, getParamsObj);
 		return this.executeRequest(url, {
-			method: 'DELETE',
-			headers: this._baseHeaders,
+			method,
+			headers,
 		});
 	}
 
@@ -100,46 +126,39 @@ export default class FetchWrap {
 		this.setBaseHeaders((baseHeaders) => {
 			if (baseHeaders.get('Authorization'))
 				baseHeaders.set('Authorization', token);
-			else 
-				baseHeaders.append({Authorization: token})
+			else baseHeaders.append('Authorization', token);
 			return baseHeaders;
 		});
 		return this;
 	}
 
-	async executeRequest(url, options = null) {
-		try {
-			const response = options
-				? await fetch(url, options)
-				: await fetch(url);
-			if (!response.ok)
-				throw new Error(
-					'Something went wrong!\n' +
-						JSON.stringify(await response.json())
-				);
-			return response.json();
-		} catch (error) {
-			console.log(error);
-		} finally {
-			this.setHeaders(new Headers());
-		}
+	parseHeaders(argument, currentHeaders = new Headers()) {
+		if (typeof argument === 'function')
+			return argument(currentHeaders, this._baseUrl);
+		else if (typeof argument === 'object')
+			if (argument instanceof Headers) return argument;
+			else {
+				for (let key in argument) {
+					currentHeaders.append(
+						this.camelCaseToHeaderKey(key),
+						argument[key]
+					);
+				}
+				return currentHeaders;
+			}
+		else return false;
 	}
 
-	patchOrPostOpts(method, body) {
-		const headers = new Headers({ 'Content-Type': 'application/json' });
-		[
-			...this._baseHeaders.entries(),
-			...this._requestHeaders.entries(),
-		].forEach((keyValueTuple) => {
-			if (headers.has(keyValueTuple[0]))
-				headers.set(keyValueTuple[0], keyValueTuple[1]);
-			else headers.append(keyValueTuple[0], keyValueTuple[1]);
-		});
-		return {
-			method,
-			headers,
-			body: JSON.stringify({ ...body }),
-		};
+	mergeHeaders(headers, moreHeaders, optionalAppend = {}) {
+		const mergedHeaders = new Headers(optionalAppend);
+		[...headers.entries(), ...moreHeaders.entries()].forEach(
+			(keyValueTuple) => {
+				if (mergedHeaders.has(keyValueTuple[0]))
+					mergedHeaders.set(keyValueTuple[0], keyValueTuple[1]);
+				else mergedHeaders.append(keyValueTuple[0], keyValueTuple[1]);
+			}
+		);
+		return mergedHeaders;
 	}
 
 	camelCaseToHeaderKey(headerKey) {
@@ -150,4 +169,26 @@ export default class FetchWrap {
 	}
 }
 
-export const rest = new FetchWrap();
+export class RestClient extends FetchWrap {
+	constructor(...args) {
+		super(...args);
+	}
+
+	patchOrPostOpts(method, url, body, getParamsObj) {
+		const headers = this.mergeHeaders(
+			this._baseHeaders,
+			this._requestHeaders,
+			{
+				'Content-Type': 'application/json',
+			}
+		);
+		url = this.urlHelper(url, getParamsObj);
+		return this.executeRequest({
+			method,
+			headers,
+			body: JSON.stringify({ ...body }),
+		});
+	}
+}
+
+export const rest = new RestClient();

@@ -11,12 +11,7 @@ const initialState = {
 	alerts: [],
 	schedules: [],
 	controlledParticipants: [],
-	alertChannels: [
-		'hook',
-		'telegram',
-		'sms',
-		'email',
-	],
+	alertChannels: ['hook', 'telegram', 'sms', 'email'],
 	allActionParticipants: [],
 	assignedActionParticipants: [],
 	alertsHistory: [],
@@ -28,12 +23,10 @@ export const alertsReducer = (state = initialState, { type, payload }) => {
 	switch (type) {
 		case UPDATE_NEW_ALERT:
 			const { op, threshold, deviceId } = payload;
-			console.log(op, threshold, deviceId);
 			let updatedAlerts = {};
 			const currentDevice = state.alerts.find(
 				(alert) => alert.deviceId === deviceId
 			);
-			console.log(currentDevice);
 			if (op) {
 				updatedAlerts = {
 					params: currentDevice
@@ -48,10 +41,25 @@ export const alertsReducer = (state = initialState, { type, payload }) => {
 						: 'gt',
 					params: [threshold],
 				};
-			} else return state;
+			}
+			const alertIndex = state.alerts.findIndex(
+				(alert) => alert.deviceId === deviceId
+			);
+			if (alertIndex) {
+				const currentAlerts = [...state.alerts];
+				currentAlerts[alertIndex] = {
+					...state.alerts[alertIndex],
+					conditions: [{ evaluator: updatedAlerts }],
+				};
+				return {
+					...state,
+					alerts: currentAlerts,
+				};
+			}
 			return {
 				...state,
 				alerts: [
+					...state.alerts,
 					{
 						conditions: [{ evaluator: updatedAlerts }],
 						deviceId,

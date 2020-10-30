@@ -1,12 +1,4 @@
-import {
-	Box,
-	Drawer,
-	Grid,
-	List,
-	ListItem,
-	makeStyles,
-	Paper,
-} from '@material-ui/core';
+import { Box, Drawer, Grid, makeStyles } from '@material-ui/core';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import SensorIframe from '../sensors/SensorIframe';
