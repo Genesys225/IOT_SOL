@@ -44,7 +44,6 @@ const useStyles = makeStyles((theme) => ({
 		transform: 'rotate(270deg)',
 	},
 	zoneSelect: {
-		marginTop: theme.spacing(2),
 		width: 120,
 	},
 	listItem: {
@@ -173,7 +172,32 @@ const SensorListItem = (props) => {
 							<ListItemText
 								id="zone-label"
 								primary={props.deviceType}
-								secondary={props.deviceId}
+								secondary={
+									<FormControl
+										className={classes.formControl}
+										style={{ margin: 0 }}
+									>
+										<Select
+											id="zone"
+											value={zone}
+											onChange={handleChange}
+											className={classes.zoneSelect}
+										>
+											<MenuItem value="MainRoom">
+												<em>MainRoom</em>
+											</MenuItem>
+											<MenuItem value="room1">
+												Room 1
+											</MenuItem>
+											<MenuItem value="room2">
+												Room 2
+											</MenuItem>
+											<MenuItem value="room3">
+												Room 3
+											</MenuItem>
+										</Select>
+									</FormControl>
+								}
 							/>
 							<ListItemIcon className={classes.formControl}>
 								<Icon icon={props.deviceType} size="40px" />
@@ -183,36 +207,11 @@ const SensorListItem = (props) => {
 							<Box
 								display="flex"
 								width="100%"
-								justifyContent="space-between"
+								justifyContent="center"
 								alignItems="center"
 								overflow="hidden"
 								height={106}
 							>
-								<FormControl className={classes.formControl}>
-									<InputLabel shrink id="zone-label">
-										Room
-									</InputLabel>
-									<Select
-										labelId="zone-label"
-										id="zone"
-										value={zone}
-										onChange={handleChange}
-										className={classes.zoneSelect}
-									>
-										<MenuItem value="MainRoom">
-											<em>MainRoom</em>
-										</MenuItem>
-										<MenuItem value="room1">
-											Room 1
-										</MenuItem>
-										<MenuItem value="room2">
-											Room 2
-										</MenuItem>
-										<MenuItem value="room3">
-											Room 3
-										</MenuItem>
-									</Select>
-								</FormControl>
 								<SensorIframe
 									id={props.deviceId + 'Gauge'}
 									height={120}

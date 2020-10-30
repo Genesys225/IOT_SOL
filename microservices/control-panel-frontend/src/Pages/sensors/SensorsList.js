@@ -48,8 +48,12 @@ export default function SensorsList() {
 	const [room, setRoom] = React.useState('MainRoom');
 	// @ts-ignore
 	const availableRooms = useSelector((state) => [
+		'MainRoom',
 		// @ts-ignore
-		...new Set(state.sensors.devices.map((device) => device.roomId)),
+		...Object.keys(state.sensors.availableRooms).filter(
+			// @ts-ignore
+			(roomId) => state.sensors.availableRooms[roomId].length > 0
+		),
 	]);
 	const sensors = useSelector((state) =>
 		room === 'MainRoom'
@@ -71,14 +75,14 @@ export default function SensorsList() {
 		const fetchSensors = async () => {
 			await dispatch(getSensors());
 		};
-		const fetchLastData = async () => {
-			await dispatch(getLastData());
-		};
+		// const fetchLastData = async () => {
+		// 	await dispatch(getLastData());
+		// };
 		if (sensors.length <= 0) fetchSensors();
-		const timeout = setTimeout(async () => {
-			await fetchLastData();
-		}, 5000);
-		return () => clearTimeout(timeout);
+		// const timeout = setTimeout(async () => {
+		// 	await fetchLastData();
+		// }, 5000);
+		// return () => clearTimeout(timeout);
 	}, [dispatch, sensors]);
 
 	if (sensors.length <= 0) {
@@ -106,11 +110,7 @@ export default function SensorsList() {
 								>
 									{availableRooms.map((room, i) => (
 										<MenuItem value={room} key={i}>
-											{i > 0 ? (
-												`Room ${i}`
-											) : (
-												<em>MainRoom</em>
-											)}
+											{room}
 										</MenuItem>
 									))}
 								</Select>

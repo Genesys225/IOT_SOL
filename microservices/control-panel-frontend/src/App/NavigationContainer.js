@@ -7,25 +7,15 @@ import MainView from './MainView';
 import TopBar from './TopBar';
 import { useStyles } from '../components/hooks/useStyles';
 import { MainMenu, SecondaryMenu } from './AppDrawer';
-import { getSensors } from '../store/actions/sensorsActions';
-import { useDispatch, useSelector } from 'react-redux';
 import { MuiCtx } from '../components/hooks/muiState';
 import { CssBaseline, ThemeProvider } from '@material-ui/core';
 function DashboardContainer() {
 	// @ts-ignore
-	const sensors = useSelector((state) => state.sensors.devices);
-	const thunkDispatch = useDispatch();
 	const classes = useStyles();
 	const [open, setOpen] = useState(true);
 	const handleDrawerToggle = useCallback(() => {
 		setOpen(!open);
 	}, [open]);
-	useEffect(() => {
-		const fetchSensors = async () => {
-			await thunkDispatch(getSensors());
-		};
-		if (sensors.length <= 0) fetchSensors();
-	}, [thunkDispatch, sensors]);
 
 	return (
 		<div className={classes.root}>

@@ -1,14 +1,19 @@
 import { rest } from '../../restClient/fetchWrapper';
-
+export const COMMIT_ALERTS = 'COMMIT_ALERTS';
+export const COMMIT_FINISHED = 'COMMIT_FINISHED';
+export const INIT_ALERT_CREATION = 'INIT_ALERT_CREATION';
+export const UPDATE_NEW_ALERT = 'UPDATE_NEW_ALERT';
+export const UPDATE_EXISTING_ALERT = 'UPDATE_EXISTING_ALERT';
 export const GET_ALERTS = 'GET_ALERTS';
-export const GET_SCHEDULE = 'GET_SCHEDULE';
-export const CREATE_EVENT = 'CREATE_EVENT';
 export const UPDATE_ALERTS = 'UPDATE_ALERTS';
-export const DELETE_SCHEDULE_EVENT = 'DELETE_SCHEDULE_EVENT';
 
-export const getAlerts = () => {
+export const fetchRoomAlerts = (roomId) => {
 	return async (dispatch) => {
-		const allAlerts = await rest.get('/getAlerts');
+		const roomObj = await rest.get(`/getRoom/${roomId}`);
+		const allAlerts = roomObj.dashboard.panels.filter((device) => {
+			if (device.alert) device.roomId = roomId;
+			return !!device.alert;
+		});
 		dispatch({ type: GET_ALERTS, payload: allAlerts });
 	};
 };
@@ -16,66 +21,23 @@ export const getAlerts = () => {
 export const updateAlerts = (updatedAlerts, deviceId, roomId) => {
 	return async (dispatch) => {
 		const newAlerts = updatedAlerts.map(async (alert) => {
+			const { params, type } = alert.conditions[0].evaluator;
 			const res = await rest.post('/addAlertThreshold', {
 				dashboardID: roomId,
 				deviceId,
-				threshold: alert.threshold,
-				op: alert.op,
+				threshold: parseInt(params[0]),
+				op: type,
 			});
 			console.log({
 				dashboardID: roomId,
 				deviceId,
-				threshold: alert.threshold,
-				op: alert.op,
+				threshold: parseInt(params[0]),
+				op: type,
 			});
 			return res;
 			// alert.id = Date.now();
 			// return alert;
 		});
 		dispatch({ type: UPDATE_ALERTS, payload: newAlerts });
-	};
-};
-
-export const getScheduleEvents = () => {
-	return async (dispatch) => {
-		const events = await rest.get('/getAllEvents');
-		await dispatch({ type: GET_SCHEDULE, payload: events });
-		console.log(events);
-	};
-};
-
-export const deleteScheduleEvent = (title) => {
-	return async (dispatch) => {
-		const res = await rest.post('/deleteScheduleEvent', {
-			title,
-		});
-		console.log(res);
-		dispatch({ type: DELETE_SCHEDULE_EVENT, payload: title });
-	};
-};
-
-export const setScheduleEvent = (
-	{ title, deviceId, roomId, startDate, endDate },
-	edit = false
-) => {
-	return async (dispatch) => {
-		console.log({
-			title,
-			deviceId,
-			roomId,
-			startDate,
-			endDate,
-			edit,
-		});
-		const response = await rest.post('/setTimingStartEnd', {
-			edit,
-			title,
-			deviceId,
-			roomId,
-			startDate,
-			endDate,
-		});
-		console.log(response);
-		dispatch({ type: 'non' });
 	};
 };

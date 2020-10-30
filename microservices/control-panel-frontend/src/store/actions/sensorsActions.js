@@ -1,4 +1,5 @@
 import { rest } from '../../restClient/fetchWrapper';
+import { fetchRoomAlerts } from './alertsActions';
 
 export const GET_SENSORS = 'GET_SENSORS';
 export const LAST_SENSORS_DATA = 'LAST_SENSORS_DATA';
@@ -10,6 +11,19 @@ export const getSensors = () => {
 		const allPanels = await rest.get('/getRoom');
 		console.log(allPanels);
 		dispatch({ type: GET_SENSORS, payload: allPanels });
+		const scannedRooms = [];
+		allPanels.dashboard &&
+			allPanels.dashboard.panels.forEach((device) => {
+				if (
+					device.type === 'graph' &&
+					device.roomId &&
+					device.roomId !== 'MainRoom' &&
+					!scannedRooms.includes(device.roomId)
+				) {
+					scannedRooms.push(device.roomId);
+					dispatch(fetchRoomAlerts(device.roomId));
+				}
+			});
 	};
 };
 
@@ -17,8 +31,8 @@ export const getLastData = () => {
 	return async (dispatch) => {
 		const allSensorsData = await rest.get('/getLastData');
 		if (allSensorsData.length > 0)
-			dispatch({ type: LAST_SENSORS_DATA, payload: allSensorsData });
-		return 'SUCCESS';
+			// dispatch({ type: LAST_SENSORS_DATA, payload: allSensorsData });
+			return 'SUCCESS';
 	};
 };
 

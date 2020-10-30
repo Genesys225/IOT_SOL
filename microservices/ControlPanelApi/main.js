@@ -180,9 +180,9 @@ const app = setupExpress();
 
 
 	/*********************************NEW DEVICES API****************************************************/
-	app.get('/getRoom', async (req, res) => {
-		console.log(req.query) 
-		return res.send(await devicesApi.getRoom(req.query.roomId));
+	app.get('/getRoom/:roomId?', async (req, res) => {
+		console.log(req.query);
+		return res.send(await devicesApi.getRoom(req.params.roomId));
 	});
 
 

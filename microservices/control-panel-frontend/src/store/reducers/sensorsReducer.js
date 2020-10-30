@@ -8,24 +8,38 @@ import {
 const initialState = {
 	devices: [],
 	deviceGauges: [],
+	availableRooms: {},
 };
 
 export const sensorsReducer = (state = initialState, { type, payload }) => {
 	switch (type) {
 		case GET_SENSORS: {
 			console.log(payload);
-			const devices = payload.dashboard.panels.filter(
-				(device) => device.type === 'graph'
-			);
+			let availableRooms = {};
+			const devices = payload.dashboard.panels.filter((device) => {
+				return device.type === 'graph';
+			});
 			const deviceGauges = payload.dashboard.panels.filter(
 				(device) => device.type === 'gauge'
 			);
-			const transformDevice = (device) => ({
-				...device,
-				deviceId: device.uid,
-				deviceType: device.uid.split('/')[1],
-			});
+			const transformDevice = (device) => {
+				if (
+					device.type === 'graph' &&
+					device.roomId &&
+					device.roomId !== 'MainRoom'
+				) {
+					availableRooms[device.roomId]
+						? availableRooms[device.roomId].push(device.uid)
+						: (availableRooms[device.roomId] = [device.uid]);
+				}
+				return {
+					...device,
+					deviceId: device.uid,
+					deviceType: device.uid.split('/')[1],
+				};
+			};
 			return {
+				availableRooms,
 				devices: devices.map(transformDevice),
 				deviceGauges: deviceGauges.map(transformDevice),
 			};
@@ -68,9 +82,18 @@ export const sensorsReducer = (state = initialState, { type, payload }) => {
 				(sensor) => sensor.deviceId === payload.deviceId
 			);
 			newSensorState[sensorStateIndex].roomId = payload.room;
+			let newAvailableRooms = { ...state.availableRooms };
+			if (payload.room === 'MainRoom')
+				newAvailableRooms[payload.room].filter(
+					(deviceId) => deviceId === payload.deviceId
+				);
+			else if (newAvailableRooms[payload.room])
+				newAvailableRooms[payload.room].push(payload.deviceId);
+			else newAvailableRooms[payload.room] = [payload.deviceId];
 			return {
 				...state,
 				devices: newSensorState,
+				availableRooms: newAvailableRooms,
 			};
 		}
 

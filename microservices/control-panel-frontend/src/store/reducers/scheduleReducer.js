@@ -1,8 +1,4 @@
-import {
-	DELETE_SCHEDULE_EVENT,
-	GET_SCHEDULE,
-	UPDATE_ALERTS,
-} from '../actions/alertsActions';
+import { DELETE_SCHEDULE_EVENT, GET_SCHEDULE } from '../actions/schedule';
 
 const initialState = {
 	data: [],

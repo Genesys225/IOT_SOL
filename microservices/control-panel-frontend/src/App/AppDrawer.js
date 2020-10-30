@@ -39,8 +39,12 @@ export const MainMenu = (
 
 export const SecondaryMenu = (props) => {
 	const rooms = useSelector((state) => [
+		'MainRoom',
 		// @ts-ignore
-		...new Set(state.sensors.devices.map((device) => device.roomId)),
+		...Object.keys(state.sensors.availableRooms).filter(
+			// @ts-ignore
+			(roomId) => state.sensors.availableRooms[roomId].length > 0
+		),
 	]);
 
 	return (
