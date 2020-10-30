@@ -30,8 +30,8 @@ class Grabber {
 		await client.subscribe('sensors/#');
 		
 		client.on('message', (topic, payload) => {
-		  console.log({topic,payload: payload.toString()});
-		  this.processMessage(topic, payload.toString());
+		  //console.log({topic,payload:  new TextDecoder("utf-8").decode(payload)});
+		  this.processMessage(topic, new TextDecoder("utf-8").decode(payload));
 		});
 	}
 
