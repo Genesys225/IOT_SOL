@@ -11,7 +11,7 @@ const HelloWorld = require('./classes/HelloWorld');
 ///var SensorsApi = require('./classes/SensorsApi');
 
 const GraphanaApi = require('./classes/GraphanaApi/GraphanaApi');
-z
+
 const CalendarApi = require('./classes/CalendarApi');
 
 const calendarApi = new CalendarApi()
