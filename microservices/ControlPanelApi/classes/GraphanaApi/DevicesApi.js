@@ -32,6 +32,8 @@ class DevicesApi {
 
     async updateRoom(roomJsonData) { return this.send('grafana:3000/api/dashboards/db', roomJsonData) }
 
+    async getAlerts(roomJsonData) { return this.send('grafana:3000/api/alerts/') }
+
     // DEVICES
     async addNewDevice(id) {
         var room = await this.getRoom('MainRoom');
