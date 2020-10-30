@@ -11,7 +11,7 @@ const HelloWorld = require('./classes/HelloWorld');
 ///var SensorsApi = require('./classes/SensorsApi');
 
 const GraphanaApi = require('./classes/GraphanaApi/GraphanaApi');
-
+z
 const CalendarApi = require('./classes/CalendarApi');
 
 const calendarApi = new CalendarApi()
@@ -184,7 +184,13 @@ const app = setupExpress();
 		console.log(req.query) 
 		return res.send(await devicesApi.getRoom(req.query.roomId));
 	});
-	
+
+
+	app.get('/getAlerts', async (req, res) => {
+		console.log(req.query) 
+		return res.send(await devicesApi.getAlerts());
+	});
+
 })();
 
 // setInterval(() => {
