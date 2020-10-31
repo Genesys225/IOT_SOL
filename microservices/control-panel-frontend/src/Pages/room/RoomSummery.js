@@ -58,7 +58,6 @@ function RoomSummery() {
 
 	const handleMouseMove = useCallback((e) => {
 		const newWidth = document.body.offsetWidth - e.clientX;
-		console.log(e.clientX, document.body.offsetWidth - e.clientX);
 		if (newWidth > minDrawerWidth && newWidth < maxDrawerWidth) {
 			setDrawerWidth(newWidth);
 		}

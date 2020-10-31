@@ -10,10 +10,11 @@ import RoomSummery from '../Pages/room/RoomSummery';
 
 const MainView = () => {
 	const classes = useStyles();
-	const {breakpoints:{up, down}} = useTheme()
+	const {
+		breakpoints: { up, down },
+	} = useTheme();
 	const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-	const maxWidth = up('xl') ? 'xl' : 'lg'
-	console.log(maxWidth)
+	const maxWidth = up('xl') ? 'xl' : 'lg';
 	return (
 		<>
 			<CssBaseline />
@@ -21,17 +22,26 @@ const MainView = () => {
 				<div className={classes.appBarSpacer} />
 				<Switch>
 					<Route path="/scheduler">
-						<Container maxWidth={maxWidth} className={classes.container}>
+						<Container
+							maxWidth={maxWidth}
+							className={classes.container}
+						>
 							<Scheduler />
 						</Container>
 					</Route>
 					<Route path="/sensors">
-						<Container maxWidth={maxWidth} className={classes.container}>
+						<Container
+							maxWidth={maxWidth}
+							className={classes.container}
+						>
 							<SensorsList />
 						</Container>
 					</Route>
 					<Route path="/rooms/:room">
-						<Container maxWidth={maxWidth} className={classes.container}>
+						<Container
+							maxWidth={maxWidth}
+							className={classes.container}
+						>
 							<RoomSummery />
 						</Container>
 					</Route>

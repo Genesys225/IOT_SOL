@@ -30,7 +30,6 @@ const initialState = {
 };
 
 export const schedulerReducer = (state = initialState, { type, payload }) => {
-	console.log(type);
 	switch (type) {
 		case GET_SCHEDULE:
 			return {
@@ -42,7 +41,6 @@ export const schedulerReducer = (state = initialState, { type, payload }) => {
 				loading: false,
 			};
 		case 'addAlert':
-			console.log(payload);
 			return {
 				...state,
 				addedAppointment: payload,
@@ -57,13 +55,11 @@ export const schedulerReducer = (state = initialState, { type, payload }) => {
 
 		case 'commitAddedAlert':
 			let data = [...state.data];
-			console.log(data, payload.added);
 			data = [...data, { id: new Date(), ...payload.added }];
 			return { ...state, data };
 
 		case 'commitChangesToAlert': {
 			const data = state.data.map((appointment) => {
-				console.log(payload.changes);
 				return payload.changes[appointment.id]
 					? { ...appointment, ...payload.changes[appointment.id] }
 					: appointment;
@@ -75,7 +71,6 @@ export const schedulerReducer = (state = initialState, { type, payload }) => {
 			return { ...state, mainResourceName };
 
 		case 'deleteAlert': {
-			console.log(payload);
 			const data = state.data.filter(
 				(appointment) => appointment.id !== payload
 			);

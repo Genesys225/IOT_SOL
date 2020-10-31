@@ -16,6 +16,7 @@ import { updateAlerts } from '../../../store/actions/alertsActions';
 import SaveIcon from '@material-ui/icons/Save';
 import { useState } from 'react';
 import ThresholdConditionsInput from './thresholdConditionsInput';
+import ActionsInput from './actionsInput';
 
 const useStyles = makeStyles((theme) => ({
 	alert: {
@@ -26,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 	modal: {
 		display: 'flex',
+		// @ts-ignore
 		alignItems: (props) => (props.showAlert ? 'flex-end' : 'center'),
 		justifyContent: 'center',
 	},
@@ -33,8 +35,10 @@ const useStyles = makeStyles((theme) => ({
 		backgroundColor: theme.palette.background.paper,
 		border: '1px solid #fafafa',
 		width: '410px',
+		maxHeight: 'calc(100vh - 180px)',
 		boxShadow: theme.shadows[5],
 		padding: theme.spacing(2, 4, 3),
+		marginBottom: theme.spacing(2),
 		borderRadius: 'borderRadius',
 	},
 	formControl: {
@@ -53,22 +57,18 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function AlertsModal(props) {
-	// @ts-ignore
 	const [deviceAlert, setDeviceAlert] = useState([]);
-	const { controls } = useSelector((state) => state);
+	// @ts-ignore
+	const { alerts } = useSelector((state) => state);
 	const [updatedAlertsToCommit, setUpdatedAlertsToCommit] = useState([]);
 	// @ts-ignore
 	const devices = useSelector((state) => state.sensors);
+	// @ts-ignore
 	const availableDevices = Object.values(devices.availableRooms).reduce(
 		(roomDevices, availableDevices) => {
 			return [...availableDevices, ...roomDevices];
 		},
 		[]
-	);
-	const alerts = useSelector(
-		(state) =>
-			// @ts-ignore
-			state.alerts
 	);
 
 	const dispatch = useDispatch();
@@ -77,12 +77,10 @@ function AlertsModal(props) {
 	const classes = useStyles({ showAlert });
 
 	const handleClose = () => {
-		// @ts-ignore
 		props.onClose();
 	};
 
 	const handleSave = () => {
-		// @ts-ignore
 		setUpdatedAlertsToCommit(deviceAlert);
 	};
 	useEffect(() => {
@@ -90,7 +88,6 @@ function AlertsModal(props) {
 		const sendUpdateAlerts = async (alerts) => {
 			await setUpdatedAlertsToCommit([]);
 			await dispatch(updateAlerts(alerts, props.deviceId, props.roomId));
-			// @ts-ignore
 			props.onClose();
 		};
 		if (updatedAlertsToCommit.length > 0) {
@@ -152,6 +149,7 @@ function AlertsModal(props) {
 							deviceAlert={deviceAlert}
 							deviceId={props.deviceId}
 						/>
+						<ActionsInput />
 						<Box className={classes.actionGroup}>
 							<Button
 								variant="contained"

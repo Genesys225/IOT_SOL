@@ -126,8 +126,8 @@ export default function SensorsList() {
 					cols={{ lg: 1, xl: 2 }}
 					className={classes.gridList}
 				>
-					{sensors.map((sensor) => (
-						<GridListTile cols={1}>
+					{sensors.map((sensor, index) => (
+						<GridListTile key={index} cols={1}>
 							<SensorListItem {...sensor} key={sensor.deviceId} />
 						</GridListTile>
 					))}

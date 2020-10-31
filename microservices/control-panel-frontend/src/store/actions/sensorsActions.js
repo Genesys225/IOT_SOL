@@ -9,7 +9,6 @@ export const UPDATE_ROOM = 'UPDATE_ROOM';
 export const getSensors = () => {
 	return async (dispatch) => {
 		const allPanels = await rest.get('/getRoom');
-		console.log(allPanels);
 		dispatch({ type: GET_SENSORS, payload: allPanels });
 		const scannedRooms = [];
 		allPanels.dashboard &&

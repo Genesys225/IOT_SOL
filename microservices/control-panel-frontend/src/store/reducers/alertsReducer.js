@@ -23,6 +23,7 @@ export const alertsReducer = (state = initialState, { type, payload }) => {
 	switch (type) {
 		case UPDATE_NEW_ALERT:
 			const { op, threshold, deviceId } = payload;
+			console.log(op, threshold, deviceId);
 			let updatedAlerts = {};
 			const currentDevice = state.alerts.find(
 				(alert) => alert.deviceId === deviceId
@@ -45,7 +46,7 @@ export const alertsReducer = (state = initialState, { type, payload }) => {
 			const alertIndex = state.alerts.findIndex(
 				(alert) => alert.deviceId === deviceId
 			);
-			if (alertIndex) {
+			if (alertIndex !== -1) {
 				const currentAlerts = [...state.alerts];
 				currentAlerts[alertIndex] = {
 					...state.alerts[alertIndex],

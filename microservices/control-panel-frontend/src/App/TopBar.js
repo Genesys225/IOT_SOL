@@ -45,7 +45,6 @@ const TopBar = (props) => {
 					audience: `https://${domain}/api/v2/`,
 					scope: 'read:current_user',
 				});
-				console.log(accessToken);
 				setToken(accessToken);
 				rest.setAuthToken(`Bearer ${accessToken}`);
 			} catch (e) {

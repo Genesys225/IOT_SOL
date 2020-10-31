@@ -55,7 +55,6 @@ const SchedulerContainer = () => {
 	const classes = useScheduleStyles();
 	const [currentView, setCurrentView] = useState('Week');
 	const commitChanges = ({ added, changed, deleted }) => {
-		console.log(added);
 		if (added) {
 			dispatch(addScheduleEvent(added));
 		}

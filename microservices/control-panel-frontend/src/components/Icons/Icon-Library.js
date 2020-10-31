@@ -13,6 +13,10 @@ import pulseOutline from '@iconify/icons-ion/pulse-outline';
 import warehouseIcon from '@iconify/icons-mdi/warehouse';
 import powerIcon from '@iconify/icons-mdi/power';
 import calendarMultiselect from '@iconify/icons-mdi/calendar-multiselect';
+import telegramIcon from '@iconify/icons-logos/telegram';
+import emailIcon from '@iconify/icons-fxemoji/email';
+import smsIcon from '@iconify/icons-fa-solid/sms';
+import slackIcon from '@iconify/icons-logos/slack-icon';
 
 const useStyles = makeStyles((_theme) => ({
 	// @ts-ignore
@@ -37,6 +41,11 @@ addIcon('hum', codropsIcon);
 addIcon('lux', sunIcon);
 addIcon('light', sunIcon);
 addIcon('co2', moleculeCo2);
+/** notification channels */
+addIcon('telegram', telegramIcon);
+addIcon('email', emailIcon);
+addIcon('sms', smsIcon);
+addIcon('slack', slackIcon);
 
 export function Icon(props) {
 	const size = props.size || '24px';

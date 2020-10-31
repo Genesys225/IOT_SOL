@@ -1,15 +1,9 @@
-let instance = null;
-
 export default class FetchWrap {
 	constructor(baseUrl = '', baseHeaders = new Headers(), baseParams = {}) {
 		this._baseUrl = baseUrl;
 		this._baseHeaders = this.parseHeaders(baseHeaders);
 		this._baseParams = baseParams;
 		this._requestHeaders = new Headers();
-		if (!instance) {
-			instance = this;
-		}
-		return instance;
 	}
 
 	get baseUrl() {
@@ -17,7 +11,20 @@ export default class FetchWrap {
 	}
 
 	get baseHeaders() {
-		return this._baseHeaders;
+		const headers = [...this._baseHeaders.entries()];
+		return headers.length > 0
+			? headers.reduce(
+					(headersObj, headerTuple) => ({
+						...headersObj,
+						[headerTuple[0]]: headerTuple[1],
+					}),
+					{}
+			  )
+			: {};
+	}
+
+	get baseParams() {
+		return this._baseParams;
 	}
 
 	setBaseParams(argument) {
@@ -183,7 +190,7 @@ export class RestClient extends FetchWrap {
 			}
 		);
 		url = this.urlHelper(url, getParamsObj);
-		return this.executeRequest({
+		return super.executeRequest(url, {
 			method,
 			headers,
 			body: JSON.stringify({ ...body }),

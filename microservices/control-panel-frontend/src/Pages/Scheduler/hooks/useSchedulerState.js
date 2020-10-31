@@ -66,13 +66,10 @@ const reducer = (state, { type, payload }) => {
 		case 'selectEditedAlert':
 			return { ...state, editingAppointment: payload };
 		case 'commitAddedAlert':
-			console.log(payload);
-
 			let { data } = state;
 			data = [...data, { id: new Date(), ...payload.added }];
 			return { ...state, data };
 		case 'commitChangesToAlert': {
-			console.log(payload);
 			const data = state.data.map((appointment) =>
 				payload.changes[appointment.id]
 					? { ...appointment, ...payload.changes[appointment.id] }
@@ -101,7 +98,6 @@ const reducer = (state, { type, payload }) => {
 		}
 		case 'lazyInit': {
 			const { switches, events } = payload;
-			console.log(switches, events);
 
 			if (switches && events) return init({ switches, events });
 			else return state;
