@@ -3,7 +3,7 @@ import { Switch, Route } from 'react-router-dom';
 import { Container, Grid, CssBaseline, useTheme } from '@material-ui/core';
 import SensorsList from '../Pages/sensors/SensorsList';
 import Dashboard from '../Pages/Dashboard/Dashboard';
-import clsx from 'clsx';
+// import clsx from 'clsx';
 import { useStyles } from '../components/hooks/useStyles';
 import Scheduler from '../Pages/Scheduler/Scheduler';
 import RoomSummery from '../Pages/room/RoomSummery';
@@ -11,9 +11,9 @@ import RoomSummery from '../Pages/room/RoomSummery';
 const MainView = () => {
 	const classes = useStyles();
 	const {
-		breakpoints: { up, down },
+		breakpoints: { up },
 	} = useTheme();
-	const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+	// const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 	const maxWidth = up('xl') ? 'xl' : 'lg';
 	return (
 		<>

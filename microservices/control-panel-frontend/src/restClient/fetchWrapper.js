@@ -177,10 +177,6 @@ export default class FetchWrap {
 }
 
 export class RestClient extends FetchWrap {
-	constructor(...args) {
-		super(...args);
-	}
-
 	patchOrPostOpts(method, url, body, getParamsObj) {
 		const headers = this.mergeHeaders(
 			this._baseHeaders,

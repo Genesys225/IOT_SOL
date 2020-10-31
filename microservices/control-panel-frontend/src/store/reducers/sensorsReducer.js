@@ -14,7 +14,6 @@ const initialState = {
 export const sensorsReducer = (state = initialState, { type, payload }) => {
 	switch (type) {
 		case GET_SENSORS: {
-			console.log(payload);
 			let availableRooms = {};
 			const devices = payload.dashboard.panels.filter((device) => {
 				return device.type === 'graph';

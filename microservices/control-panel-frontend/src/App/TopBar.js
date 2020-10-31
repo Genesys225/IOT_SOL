@@ -52,7 +52,7 @@ const TopBar = (props) => {
 			}
 		};
 		if (!token && isAuthenticated) getUserMetadata();
-	}, [token, isAuthenticated]);
+	}, [token, isAuthenticated, getAccessTokenSilently]);
 	return (
 		<>
 			<CssBaseline />

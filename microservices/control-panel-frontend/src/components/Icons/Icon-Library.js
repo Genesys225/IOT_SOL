@@ -17,6 +17,7 @@ import telegramIcon from '@iconify/icons-logos/telegram';
 import emailIcon from '@iconify/icons-fxemoji/email';
 import smsIcon from '@iconify/icons-fa-solid/sms';
 import slackIcon from '@iconify/icons-logos/slack-icon';
+import gearIcon from '@iconify/icons-noto/gear';
 
 const useStyles = makeStyles((_theme) => ({
 	// @ts-ignore
@@ -46,6 +47,8 @@ addIcon('telegram', telegramIcon);
 addIcon('email', emailIcon);
 addIcon('sms', smsIcon);
 addIcon('slack', slackIcon);
+/** general UI */
+addIcon('gear', gearIcon);
 
 export function Icon(props) {
 	const size = props.size || '24px';

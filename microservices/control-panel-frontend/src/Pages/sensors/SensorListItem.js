@@ -78,14 +78,14 @@ const SensorListItem = (props) => {
 	const classes = useStyles();
 	const dispatch = useDispatch();
 
-	const units = {
-		temp: 'C°',
-		humidity: 'R/H%',
-		hum: 'R/H%',
-		co2: 'PPM',
-		lux: 'Lux',
-		light: 'Lux',
-	};
+	// const units = {
+	// 	temp: 'C°',
+	// 	humidity: 'R/H%',
+	// 	hum: 'R/H%',
+	// 	co2: 'PPM',
+	// 	lux: 'Lux',
+	// 	light: 'Lux',
+	// };
 
 	const handleChange = (event) => {
 		setZone(event.target.value);
@@ -107,18 +107,18 @@ const SensorListItem = (props) => {
 		);
 	};
 
-	const handleClick = (event) => {
-		const tagName = (event.target.tagName || '').toLowerCase();
-		if (
-			tagName &&
-			tagName !== 'li' &&
-			tagName !== 'path' &&
-			tagName !== 'svg' &&
-			tagName !== 'button' &&
-			tagName !== 'input'
-		)
-			setOpen(!open);
-	};
+	// const handleClick = (event) => {
+	// 	const tagName = (event.target.tagName || '').toLowerCase();
+	// 	if (
+	// 		tagName &&
+	// 		tagName !== 'li' &&
+	// 		tagName !== 'path' &&
+	// 		tagName !== 'svg' &&
+	// 		tagName !== 'button' &&
+	// 		tagName !== 'input'
+	// 	)
+	// 		setOpen(!open);
+	// };
 
 	const handleEdit = (event) => {
 		event.stopPropagation();
@@ -163,6 +163,9 @@ const SensorListItem = (props) => {
 							<ListItemText
 								id="zone-label"
 								primary={props.deviceType}
+								secondaryTypographyProps={{
+									component: 'div',
+								}}
 								secondary={
 									<FormControl
 										className={classes.formControl}

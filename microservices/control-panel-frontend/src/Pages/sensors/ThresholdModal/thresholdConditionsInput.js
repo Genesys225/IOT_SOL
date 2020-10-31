@@ -1,5 +1,5 @@
 import {
-	Box,
+	Badge,
 	Button,
 	FormControl,
 	InputLabel,
@@ -47,7 +47,12 @@ function ThresholdConditionsInput({ deviceId, deviceAlert }) {
 	const classes = useStyles();
 
 	return (
-		<div className={classes.root}>
+		<Badge
+			color="secondary"
+			badgeContent=" "
+			invisible={false}
+			className={classes.root}
+		>
 			<Paper className={classes.paper}>
 				{false ? (
 					<Button
@@ -119,7 +124,7 @@ function ThresholdConditionsInput({ deviceId, deviceAlert }) {
 					</>
 				)}
 			</Paper>
-		</div>
+		</Badge>
 	);
 }
 

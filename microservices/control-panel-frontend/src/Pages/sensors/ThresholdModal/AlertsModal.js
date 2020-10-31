@@ -8,6 +8,7 @@ import {
 	Box,
 	Typography,
 	Button,
+	Badge,
 } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
@@ -83,6 +84,7 @@ function AlertsModal(props) {
 	const handleSave = () => {
 		setUpdatedAlertsToCommit(deviceAlert);
 	};
+
 	useEffect(() => {
 		let timeout = 0;
 		const sendUpdateAlerts = async (alerts) => {
@@ -105,7 +107,7 @@ function AlertsModal(props) {
 			);
 		}
 		return () => timeout && clearTimeout(timeout);
-	}, [updatedAlertsToCommit, dispatch, alerts]);
+	}, [updatedAlertsToCommit, dispatch, alerts, showAlert, props]);
 
 	return (
 		<Modal
@@ -136,9 +138,16 @@ function AlertsModal(props) {
 								id="transition-modal-title"
 								variant="h5"
 							>
-								Alerts{' '}
+								Alerts{'  '}
 							</Typography>
-							<NotificationsActiveIcon />
+							<Badge
+								color="secondary"
+								badgeContent=" "
+								variant="dot"
+								invisible={true}
+							>
+								<NotificationsActiveIcon />
+							</Badge>
 						</Box>
 
 						<Typography id="transition-modal-title" variant="h6">

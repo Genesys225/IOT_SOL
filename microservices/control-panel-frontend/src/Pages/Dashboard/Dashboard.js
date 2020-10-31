@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 function RoomSummery() {
 	const [drawerWidth, setDrawerWidth] = useState(defaultDrawerWidth);
-	const [drawerHeight, setDrawerHeight] = useState(defaultDrawerHeight);
+	const [/**drawerHeight, */ setDrawerHeight] = useState(defaultDrawerHeight);
 
 	const ref = useRef(null);
 	const classes = useStyles({ drawerWidth });

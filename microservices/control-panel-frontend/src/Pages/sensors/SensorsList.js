@@ -1,6 +1,8 @@
 import React, { Suspense, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getSensors, getLastData } from '../../store/actions/sensorsActions';
+import {
+	getSensors /* , getLastData */,
+} from '../../store/actions/sensorsActions';
 import { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
@@ -15,6 +17,7 @@ import {
 	MenuItem,
 	GridList,
 	GridListTile,
+	useTheme,
 } from '@material-ui/core';
 import CenteredCircular from '../../components/common/CenteredCircular';
 import SensorListItem from './SensorListItem';
@@ -45,6 +48,10 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
 }));
 
 export default function SensorsList() {
+	const {
+		breakpoints: { up },
+	} = useTheme();
+	const cols = up('xl') ? 2 : 1;
 	const [room, setRoom] = React.useState('MainRoom');
 	// @ts-ignore
 	const availableRooms = useSelector((state) => [
@@ -123,11 +130,11 @@ export default function SensorsList() {
 				</List>
 				<GridList
 					cellHeight={200}
-					cols={{ lg: 1, xl: 2 }}
+					cols={cols}
 					className={classes.gridList}
 				>
 					{sensors.map((sensor, index) => (
-						<GridListTile key={index} cols={1}>
+						<GridListTile key={index} cols={1} component="div">
 							<SensorListItem {...sensor} key={sensor.deviceId} />
 						</GridListTile>
 					))}
