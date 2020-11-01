@@ -81,7 +81,7 @@ const app = setupExpress();
 			var evalMatches = req.body.evalMatches
 			var message = evalMatches[0].value
 			var deviceId = evalMatches[0].metric
-			return res.send(await executeApi.sensorExecute(deviceId, message))
+			return res.send(await executeApi.sensorExecute(req.body.tags.deviceId, req.body.tags.message))
 		
 	
 	}
@@ -123,6 +123,7 @@ const app = setupExpress();
 				deviceId: req.body.deviceId,
 				threshold: req.body.threshold,
 				op: req.body.op,
+				action : req.body.action
 			})
 		);
 	});
