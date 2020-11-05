@@ -148,7 +148,7 @@ class DevicesApi {
         return await this.updateRoom(myDashboard);
     }
 
-    async addAlertThreshold({ dashboardID, deviceId, threshold, op }) {
+    async addAlertThreshold({ dashboardID, deviceId, threshold, op , action}) {
         var myDashboard = await this.getRoom(dashboardID);
 
         var uid = (deviceId);
@@ -164,7 +164,14 @@ class DevicesApi {
         where uid != "${uid}"
         `, [myDashboard.dashboard.panels]);
         newPanelToAdd.alert = alertT({ threshold, op });
-        console.log( JSON.stringify(newPanelToAdd.alert) , 988989889)
+        console.log( JSON.stringify(newPanelToAdd.alert) , 988989889);
+
+        newPanelToAdd.alert['alertRuleTags'] = {
+            "deviceId":action.deviceID,
+            "message": action.message
+          },
+
+
         newPanelToAdd["thresholds"] = [
             {
                 "colorMode": "critical",
