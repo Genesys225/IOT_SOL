@@ -7,8 +7,8 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { CircularProgress } from '@material-ui/core';
 import { MuiCtxProvider } from './components/hooks/muiState';
 import { Auth0Provider } from '@auth0/auth0-react';
-import { HTML5Backend } from 'react-dnd-html5-backend'
-import { DndProvider } from 'react-dnd'
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { DndProvider } from 'react-dnd';
 
 function App() {
 	return (

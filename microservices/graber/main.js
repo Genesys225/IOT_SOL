@@ -45,15 +45,16 @@ class Grabber {
 	} 
 	async processMessage(topic = [], message) {
 		var deviceData = topic.split('/');
-		var deviceType = deviceData[2];
+		var deviceType = deviceData[2].includes('switch') && !deviceData[1].includes(':') ? deviceData[2] + deviceData[3] : deviceData[2];
 		var deviceName = deviceData[1];
 		var systemDeviceId = deviceName + '/' + deviceType;
-		if (this.devices.includes(systemDeviceId)) {
-			this.write({ id: systemDeviceId, value: message });
-		} else {
-			await this.addDevice(topic);
-			await this.setAllDevices();
-		}
+		if (!systemDeviceId.includes('wifi'))
+			if (this.devices.includes(systemDeviceId)) {
+				this.write({ id: systemDeviceId, value: message });
+			} else {
+				await this.addDevice(systemDeviceId);
+				await this.setAllDevices();
+			}
 	}
 	write({ id, value }) {
 		return new Promise(async (resolve) => {
