@@ -48,10 +48,10 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
 }));
 
 export default function SensorsList() {
-	const {
-		breakpoints: { up },
-	} = useTheme();
-	const cols = up('xl') ? 2 : 1;
+	// const {
+	// 	breakpoints: { up },
+	// } = useTheme();
+	// const cols = up('xl') ? 2 : 1;
 	const [room, setRoom] = React.useState('MainRoom');
 	// @ts-ignore
 	const availableRooms = useSelector((state) => [
@@ -130,7 +130,7 @@ export default function SensorsList() {
 				</List>
 				<GridList
 					cellHeight={200}
-					cols={cols}
+					cols={{xl: 2, lg:1}}
 					className={classes.gridList}
 				>
 					{sensors.map((sensor, index) => (
