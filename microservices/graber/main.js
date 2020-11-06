@@ -45,7 +45,7 @@ class Grabber {
 	} 
 	async processMessage(topic = [], message) {
 		var deviceData = topic.split('/');
-		var deviceType = deviceData[2].includes('switch') ? deviceData[2] + deviceData[3] : deviceData[2];
+		var deviceType = deviceData[2].includes('switch') ? `${deviceData[2]}/${deviceData[3]}` : deviceData[2];
 		var deviceName = deviceData[1];
 		var systemDeviceId = deviceName + '/' + deviceType;
 		if (!systemDeviceId.includes('wifi'))
