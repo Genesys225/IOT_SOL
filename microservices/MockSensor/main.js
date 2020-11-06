@@ -47,7 +47,7 @@ mockDevice.on('connect', function () {
 
       // SWITCH
       setInterval(() => {
-        mockDevice.publish('sensors/SOL-25:11:11:11:11:11/switch/0', switch1Status)
+        mockDevice.publish("sensors/SOL-25:11:11:11:11:11/switch/0", switch1Status)
       }, 10000);
       // **************************SENSORS*****************************************
 
@@ -57,12 +57,12 @@ mockDevice.on('connect', function () {
       // **************************SWITCHES*****************************************
       mockDevice.on('message', function (topic, message) {
         // message is Buffer
-        if (topic == "sensors/SOL-25:11:11:11:11:11/switch/0/set" && message.toString() == '1') {
+        if (topic === "sensors/SOL-25:11:11:11:11:11/switch/0/set" && message.toString() == 'on') {
           switch1Status = '1'
           mockDevice.publish("sensors/SOL-25:11:11:11:11:11/switch/0", switch1Status)
         }
         
-        if (topic == "sensors/SOL-25:11:11:11:11:11/switch/0" && message.toString() == '0') {
+        if (topic === "sensors/SOL-25:11:11:11:11:11/switch/0" && message.toString() == 'off') {
           switch1Status = '0'
           mockDevice.publish("sensors/SOL-25:11:11:11:11:11/switch/0", switch1Status)
         }
