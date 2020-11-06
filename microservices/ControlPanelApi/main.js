@@ -10,13 +10,13 @@ const HelloWorld = require('./classes/HelloWorld');
 
 ///var SensorsApi = require('./classes/SensorsApi');
 
-const GraphanaApi = require('./classes/GraphanaApi/GraphanaApi');
+// const GraphanaApi = require('./classes/GraphanaApi/GraphanaApi');
 
 const CalendarApi = require('./classes/CalendarApi');
 
 const calendarApi = new CalendarApi()
 
-const graphanaApi = new GraphanaApi();
+// const graphanaApi = new GraphanaApi();
 
 const sensorsApi = new SensorsApi();
 
@@ -38,7 +38,7 @@ nc.subscribe('ControlPanelApi/devicesApi/addNewDevice', async (msg, reply, subje
 
 
 const clientConnectionParams = {
-	services: { sensorsApi, graphanaApi },
+	services: { sensorsApi },
 	name: 'ControlPanelApi',
 	mqttSetting: {
 		url: 'mqtt://emqtt',
