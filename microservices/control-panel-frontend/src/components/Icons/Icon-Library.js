@@ -36,6 +36,7 @@ addIcon('room', warehouseIcon);
 addIcon('sensors', pulseOutline);
 /** Sensors */
 addIcon('temp', thermometerIcon);
+addIcon('temperature', thermometerIcon);
 addIcon('switch', powerIcon);
 addIcon('humidity', codropsIcon);
 addIcon('hum', codropsIcon);

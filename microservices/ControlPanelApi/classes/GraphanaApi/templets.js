@@ -359,14 +359,17 @@ var textWidget = function({ id, uid, title, rawSql }) {
 	panelTemplete.type = 'stat';
 	return panelTemplete;
 };
+
 const units = {
 	temp: 'celsius',
+	temperature: 'celsius',
 	humidity: 'humidity',
 	hum: 'humidity',
 	co2: 'ppm',
 	lux: 'lux',
 	light: 'lux',
 };
+
 var gaugeWidget = function({ id, uid, title, rawSql }) {
 	var panelTemplete = panel({ id, title, uid, rawSql });
 	var deviceType = uid.split('/')[1].replace('Gauge', '')
