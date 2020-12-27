@@ -2,7 +2,7 @@ import React, { Suspense } from 'react';
 import { Provider } from 'react-redux';
 import './App.css';
 import configureStore from './store/store';
-import NavigationContainer from './App/NavigationContainer';
+import Layout from './App/Layout';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { CircularProgress } from '@material-ui/core';
 import { MuiCtxProvider } from './components/hooks/muiState';
@@ -24,7 +24,7 @@ function App() {
 					<MuiCtxProvider>
 						<Provider store={configureStore()}>
 							<DndProvider backend={HTML5Backend}>
-								<NavigationContainer />
+								<Layout />
 							</DndProvider>
 						</Provider>
 					</MuiCtxProvider>

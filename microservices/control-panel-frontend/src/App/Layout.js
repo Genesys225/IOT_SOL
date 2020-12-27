@@ -6,7 +6,7 @@ import Divider from '@material-ui/core/Divider';
 import MainView from './MainView';
 import TopBar from './TopBar';
 import { useStyles } from '../components/hooks/useStyles';
-import { MainMenu, SecondaryMenu } from './AppDrawer';
+import { MainMenu, SecondaryMenu } from './Drawer';
 import { MuiCtx } from '../components/hooks/muiState';
 import { CssBaseline, ThemeProvider } from '@material-ui/core';
 function DashboardContainer() {

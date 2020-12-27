@@ -1,6 +1,7 @@
-import { SEND_COMMAND } from '../actions/controls';
+import { SEND_COMMAND, REGISTER_DEVICE } from '../actions/controls';
 
 const initialState = {
+	switchesAvailable: [],
 	switched: [],
 };
 
@@ -16,7 +17,15 @@ export const controlsReducer = (state = initialState, { type, payload }) => {
 				);
 
 			return updatedState;
-
+		case REGISTER_DEVICE: {
+			const updatedState = { ...state };
+			if (
+				updatedState.switchesAvailable.findIndex(
+					(device) => device.uid === payload.uid
+				) === -1
+			) updatedState.switchesAvailable.push(payload)
+				return updatedState;
+		}
 		default:
 			return state;
 	}

@@ -1,5 +1,6 @@
 import { rest } from '../../restClient/fetchWrapper';
 import { fetchRoomAlerts } from './alertsActions';
+import { registerDevice } from './controls';
 
 export const GET_SENSORS = 'GET_SENSORS';
 export const LAST_SENSORS_DATA = 'LAST_SENSORS_DATA';
@@ -21,6 +22,14 @@ export const getSensors = () => {
 				) {
 					scannedRooms.push(device.roomId);
 					dispatch(fetchRoomAlerts(device.roomId));
+				}
+				if (
+					device.type === 'graph' &&
+					device.roomId &&
+					device.roomId === 'MainRoom' &&
+					device.uid.includes('switch')
+				) {
+					dispatch(registerDevice(device));
 				}
 			});
 	};

@@ -1,4 +1,4 @@
-import React, { Suspense, useCallback } from 'react';
+import React, { Suspense, useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
 	getSensors /* , getLastData */,
@@ -48,6 +48,7 @@ const useStyles = makeStyles(({ spacing, breakpoints }) => ({
 }));
 
 export default function SensorsList() {
+	const [fetched, setFetched] = useState(false)
 	// const {
 	// 	breakpoints: { up },
 	// } = useTheme();
@@ -69,7 +70,7 @@ export default function SensorsList() {
 					(device) => !device.title.includes('Gauge')
 			  )
 			: // @ts-ignore
-			  state.sensors.devices.filter((device) => device.room === room)
+			  state.sensors.devices.filter((device) => device.roomId === room)
 	);
 	const handleChange = useCallback((event) => setRoom(event.target.value), [
 		setRoom,
@@ -85,12 +86,13 @@ export default function SensorsList() {
 		// const fetchLastData = async () => {
 		// 	await dispatch(getLastData());
 		// };
-		if (sensors.length <= 0) fetchSensors();
+		if (!fetched) fetchSensors();
+		setFetched(true)
 		// const timeout = setTimeout(async () => {
 		// 	await fetchLastData();
 		// }, 5000);
 		// return () => clearTimeout(timeout);
-	}, [dispatch, sensors]);
+	}, [dispatch, fetched]);
 
 	if (sensors.length <= 0) {
 		return <CenteredCircular />;
