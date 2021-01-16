@@ -16,7 +16,7 @@ import { useStyles } from '../components/hooks/useStyles';
 import Brightness4Icon from '@material-ui/icons/Brightness4';
 import { MuiCtx, setPaletteType } from '../components/hooks/muiState';
 import { useAuth0 } from '@auth0/auth0-react';
-import { rest } from '../restClient/fetchWrapper';
+import { rest } from '../restClient';
 
 const TopBar = (props) => {
 	const {

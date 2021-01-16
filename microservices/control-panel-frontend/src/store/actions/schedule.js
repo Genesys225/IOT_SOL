@@ -1,4 +1,3 @@
-import { rest } from '../../restClient/fetchWrapper';
 
 export const GET_SCHEDULE = 'GET_SCHEDULE';
 export const CREATE_EVENT = 'CREATE_EVENT';
@@ -13,7 +12,7 @@ export const getScheduleEvents = () => {
 };
 
 export const deleteScheduleEvent = (title) => {
-	return async (dispatch) => {
+	return async (dispatch, _, rest) => {
 		const res = await rest.post('/deleteScheduleEvent', {
 			title,
 		});
@@ -29,7 +28,7 @@ export const addScheduleEvent = ({
 	startDate,
 	endDate,
 }) => {
-	return async (dispatch) => {
+	return async (dispatch, _, rest) => {
 		console.log({
 			title,
 			deviceId: device,

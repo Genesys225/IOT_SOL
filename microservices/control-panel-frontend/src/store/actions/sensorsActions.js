@@ -1,4 +1,3 @@
-import { rest } from '../../restClient/fetchWrapper';
 import { fetchRoomAlerts } from './alertsActions';
 import { registerDevice } from './controls';
 
@@ -8,7 +7,7 @@ export const UPDATE_SENSOR = 'UPDATE_SENSOR';
 export const UPDATE_ROOM = 'UPDATE_ROOM';
 
 export const getSensors = () => {
-	return async (dispatch) => {
+	return async (dispatch, _, rest) => {
 		const allPanels = await rest.get('/getRoom');
 		dispatch({ type: GET_SENSORS, payload: allPanels });
 		const scannedRooms = [];
@@ -45,7 +44,7 @@ export const getLastData = () => {
 };
 
 export const updateSensor = ({ id, meta }) => {
-	return async (dispatch) => {
+	return async (dispatch, _, rest) => {
 		const resObj = await rest.post('/updateSensor', { id, meta });
 		console.log(JSON.stringify({ id, meta }, null, 2));
 		console.log(resObj);
@@ -54,7 +53,7 @@ export const updateSensor = ({ id, meta }) => {
 };
 
 export const updateDeviceZone = ({ idFrom, idTo, deviceId }) => {
-	return async (dispatch) => {
+	return async (dispatch, _, rest) => {
 		const res = await rest.post('/addDeviceFromDashboardToDashboard', {
 			idFrom,
 			idTo,

@@ -1,6 +1,6 @@
 import React, { createContext, useEffect, useReducer } from 'react';
 import { useSelector } from 'react-redux';
-import { rest } from '../../../restClient/fetchWrapper';
+import { rest } from '../../../restClient';
 
 export function commitChangesToAlert(changes) {
 	return {

@@ -61,7 +61,7 @@ services:
             [
                 'ash',
                 '-c',
-                'cd /app/ && ls -la && yarn && PORT=9000 npm start && sleep 10',
+                'cd /app/ && ls -la && yarn && PORT=9000 yarn start && sleep 10',
             ]
         volumes:
             - ./microservices/control-panel-frontend/:/app/

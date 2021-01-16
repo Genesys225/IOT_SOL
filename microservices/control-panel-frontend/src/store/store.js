@@ -5,6 +5,7 @@ import { sensorsReducer } from './reducers/sensorsReducer';
 import { controlsReducer } from './reducers/controls';
 import { alertsReducer } from './reducers/alertsReducer';
 import { schedulerReducer } from './reducers/scheduleReducer';
+import { rest } from '../restClient';
 
 const rootReducer = combineReducers({
 	alerts: alertsReducer,
@@ -13,7 +14,7 @@ const rootReducer = combineReducers({
 	schedule: schedulerReducer,
 });
 export default function configureStore(preloadedState = {}) {
-	const middlewares = [thunkMiddleware];
+	const middlewares = [ thunkMiddleware.withExtraArgument(rest) ];
 
 	const composedEnhancers = composeWithDevTools(
 		applyMiddleware(...middlewares)

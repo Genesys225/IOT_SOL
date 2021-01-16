@@ -71,9 +71,9 @@ const SensorListItem = (props) => {
 		// @ts-ignore
 		state.controls.switched.includes(props.deviceId)
 	);
-	const [open, setOpen] = useState(false);
-	const [showAlertsModal, setShowAlertModal] = useState(false);
-	const [zone, setZone] = useState(props.roomId || '');
+	const [ open, setOpen ] = useState(false);
+	const [ showAlertsModal, setShowAlertModal ] = useState(false);
+	const [ zone, setZone ] = useState(props.roomId || '');
 	const listItemRef = useRef(null);
 	const classes = useStyles();
 	const dispatch = useDispatch();
@@ -129,7 +129,46 @@ const SensorListItem = (props) => {
 
 	const closeAlertsModal = useCallback(() => {
 		setShowAlertModal(false);
-	}, [setShowAlertModal]);
+	}, [ setShowAlertModal ]);
+
+
+	const RenderAlertTBtn = () => {
+		if (props.deviceType !== 'switch')
+			return <ListItemIcon onClick={handleEdit}>
+				<IconButton
+					aria-label="alerts"
+					color="secondary"
+				>
+					<NotificationsActiveIcon />
+				</IconButton>
+			</ListItemIcon>;
+		return null;
+	};
+
+	const RenderRoomSelect = () => (<FormControl
+		className={classes.formControl}
+		style={{ margin: 0 }}
+	>
+		<Select
+			id="zone"
+			value={zone}
+			onChange={handleChange}
+			className={classes.zoneSelect}
+		>
+			<MenuItem value="MainRoom">
+				<em>MainRoom</em>
+			</MenuItem>
+			<MenuItem value="room1">
+				Room 1
+			</MenuItem>
+			<MenuItem value="room2">
+				Room 2
+			</MenuItem>
+			<MenuItem value="room3">
+				Room 3
+			</MenuItem>
+		</Select>
+	</FormControl>);
 
 	return (
 		<>
@@ -141,16 +180,7 @@ const SensorListItem = (props) => {
 							flexDirection="row-reverse"
 							justifyContent="start"
 						>
-							{props.deviceType !== 'switch' && (
-								<ListItemIcon onClick={handleEdit}>
-									<IconButton
-										aria-label="alerts"
-										color="secondary"
-									>
-										<NotificationsActiveIcon />
-									</IconButton>
-								</ListItemIcon>
-							)}
+							<RenderAlertTBtn />
 							<ListItemIcon>
 								<IconButton
 									aria-label="edit"
@@ -166,32 +196,7 @@ const SensorListItem = (props) => {
 								secondaryTypographyProps={{
 									component: 'div',
 								}}
-								secondary={
-									<FormControl
-										className={classes.formControl}
-										style={{ margin: 0 }}
-									>
-										<Select
-											id="zone"
-											value={zone}
-											onChange={handleChange}
-											className={classes.zoneSelect}
-										>
-											<MenuItem value="MainRoom">
-												<em>MainRoom</em>
-											</MenuItem>
-											<MenuItem value="room1">
-												Room 1
-											</MenuItem>
-											<MenuItem value="room2">
-												Room 2
-											</MenuItem>
-											<MenuItem value="room3">
-												Room 3
-											</MenuItem>
-										</Select>
-									</FormControl>
-								}
+								secondary={<RenderRoomSelect />}
 							/>
 							<ListItemIcon className={classes.formControl}>
 								<Icon icon={props.deviceType} size="40px" />
