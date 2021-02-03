@@ -5,7 +5,7 @@ import { sensorsReducer } from './reducers/sensorsReducer';
 import { controlsReducer } from './reducers/controls';
 import { alertsReducer } from './reducers/alertsReducer';
 import { schedulerReducer } from './reducers/scheduleReducer';
-import { rest } from '../restClient';
+import { rest } from '../restClient/lib/rest-client';
 
 const rootReducer = combineReducers({
 	alerts: alertsReducer,

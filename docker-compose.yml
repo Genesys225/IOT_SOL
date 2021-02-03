@@ -138,6 +138,10 @@ services:
                 '-c',
                 'apk add nodejs npm;npm install pm2 yarn -g && cd /app/ && yarn install --production && pm2 start && pm2 logs -f',
             ]
+    renderer:
+        image: grafana/grafana-image-renderer:latest
+        ports:
+            - 8081
 
     certbot:
         image: certbot/certbot

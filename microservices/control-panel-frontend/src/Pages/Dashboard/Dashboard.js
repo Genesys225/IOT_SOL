@@ -1,5 +1,6 @@
 import { CssBaseline, Drawer, makeStyles } from '@material-ui/core';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
+
 import SensorIframe from '../sensors/SensorIframe';
 const defaultDrawerWidth = 778;
 const defaultDrawerHeight = 1000;

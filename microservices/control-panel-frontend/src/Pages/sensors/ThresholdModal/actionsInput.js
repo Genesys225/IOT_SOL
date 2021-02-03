@@ -1,23 +1,14 @@
 import {
 	Badge,
-	Box,
 	Checkbox,
-	Chip,
 	FormControl,
 	FormControlLabel,
 	FormLabel,
-	IconButton,
-	Input,
-	InputLabel,
-	ListItemIcon,
 	makeStyles,
-	MenuItem,
 	Paper,
-	Select,
 } from '@material-ui/core';
 import clsx from 'clsx';
 import React, { useState } from 'react';
-import { Icon } from '../../../components/Icons/Icon-Library';
 import DeviceSelector from './deviceSelector';
 import NotificationsChannelSelector from './notificationsSelector';
 const useStyles = makeStyles((theme) => ({

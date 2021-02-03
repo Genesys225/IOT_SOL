@@ -25,6 +25,8 @@
 		"@testing-library/jest-dom": "^4.2.4",
 		"@testing-library/react": "^9.3.2",
 		"@testing-library/user-event": "^7.1.2",
+		"ag-grid-community": "^25.0.1",
+		"ag-grid-react": "^25.0.1",
 		"mqtt-react": "^0.0.3",
 		"object.omit": "^3.0.0",
 		"react": "^16.13.1",
@@ -64,5 +66,8 @@
 		]
 	},
 	"proxy": "http://microservices:6000",
-	"devDependencies": {}
+	"devDependencies": {
+		"progress-bar-webpack-plugin": "^2.1.0",
+		"webpack-bundle-analyzer": "^4.3.0"
+	}
 }

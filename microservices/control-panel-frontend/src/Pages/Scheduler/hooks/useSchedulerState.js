@@ -1,6 +1,6 @@
 import React, { createContext, useEffect, useReducer } from 'react';
 import { useSelector } from 'react-redux';
-import { rest } from '../../../restClient';
+import { rest } from '../../../restClient/lib/rest-client';
 
 export function commitChangesToAlert(changes) {
 	return {
@@ -11,7 +11,7 @@ export function commitChangesToAlert(changes) {
 
 const initialState = {
 	data: [],
-	rooms: ['room1', 'room2', 'room3'],
+	rooms: [ 'room1', 'room2', 'room3' ],
 	currentDate: new Date(),
 	addedAppointment: {},
 	appointmentChanges: {},
@@ -54,7 +54,7 @@ const reducer = (state, { type, payload }) => {
 					...payload,
 					room:
 						(payload.device &&
-							state.resources[1].instances[0].room) ||
+							state.resources[ 1 ].instances[ 0 ].room) ||
 						'',
 				},
 			};
@@ -67,12 +67,12 @@ const reducer = (state, { type, payload }) => {
 			return { ...state, editingAppointment: payload };
 		case 'commitAddedAlert':
 			let { data } = state;
-			data = [...data, { id: new Date(), ...payload.added }];
+			data = [ ...data, { id: new Date(), ...payload.added } ];
 			return { ...state, data };
 		case 'commitChangesToAlert': {
 			const data = state.data.map((appointment) =>
-				payload.changes[appointment.id]
-					? { ...appointment, ...payload.changes[appointment.id] }
+				payload.changes[ appointment.id ]
+					? { ...appointment, ...payload.changes[ appointment.id ] }
 					: appointment
 			);
 			return { ...state, data };
@@ -123,7 +123,7 @@ function SchedulerCtxProvider(props) {
 				text: switchInst.title,
 			}))
 	);
-	const [state, dispatch] = useReducer(
+	const [ state, dispatch ] = useReducer(
 		reducer,
 		{ switches, events: [] },
 		init
@@ -137,9 +137,9 @@ function SchedulerCtxProvider(props) {
 				payload: { switches, events },
 			});
 		};
-		if (switches.length !== state.resources[1].instances.length)
+		if (switches.length !== state.resources[ 1 ].instances.length)
 			fetchSensors();
-	}, [switches, state]);
+	}, [ switches, state ]);
 
 	return (
 		<SchedulerCtx.Provider value={{ state, dispatch }}>

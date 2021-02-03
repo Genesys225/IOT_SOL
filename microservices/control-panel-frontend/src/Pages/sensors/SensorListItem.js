@@ -23,6 +23,14 @@ import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
 import AlertsModal from './ThresholdModal/AlertsModal';
 
 const useStyles = makeStyles((theme) => ({
+	iframeContainer: {
+		display: 'flex',
+		width: '100%',
+		justifyContent: 'center',
+		alignItems: 'center',
+		overflow: 'hidden',
+		height: 106,
+	},
 	paper: {
 		margin: theme.spacing(1),
 	},
@@ -50,6 +58,11 @@ const useStyles = makeStyles((theme) => ({
 		minWidth: '795px',
 		width: '100%',
 	},
+	listItemPrimary: {
+		display: 'flex',
+		flexDirection: 'row-reverse',
+		justifyContent: 'start',
+	},
 	listItemSecondary: {
 		display: 'flex',
 		width: '100%',
@@ -71,9 +84,9 @@ const SensorListItem = (props) => {
 		// @ts-ignore
 		state.controls.switched.includes(props.deviceId)
 	);
-	const [ open, setOpen ] = useState(false);
-	const [ showAlertsModal, setShowAlertModal ] = useState(false);
-	const [ zone, setZone ] = useState(props.roomId || '');
+	const [open, setOpen] = useState(false);
+	const [showAlertsModal, setShowAlertModal] = useState(false);
+	const [zone, setZone] = useState(props.roomId || '');
 	const listItemRef = useRef(null);
 	const classes = useStyles();
 	const dispatch = useDispatch();
@@ -120,7 +133,7 @@ const SensorListItem = (props) => {
 	// 		setOpen(!open);
 	// };
 
-	const handleEdit = (event) => {
+	const openAlertsModal = (event) => {
 		event.stopPropagation();
 		event.nativeEvent.stopImmediatePropagation();
 		event.preventDefault();
@@ -129,64 +142,47 @@ const SensorListItem = (props) => {
 
 	const closeAlertsModal = useCallback(() => {
 		setShowAlertModal(false);
-	}, [ setShowAlertModal ]);
-
+	}, [setShowAlertModal]);
 
 	const RenderAlertTBtn = () => {
 		if (props.deviceType !== 'switch')
-			return <ListItemIcon onClick={handleEdit}>
-				<IconButton
-					aria-label="alerts"
-					color="secondary"
-				>
-					<NotificationsActiveIcon />
-				</IconButton>
-			</ListItemIcon>;
+			return (
+				<ListItemIcon onClick={openAlertsModal}>
+					<IconButton aria-label="alerts" color="secondary">
+						<NotificationsActiveIcon />
+					</IconButton>
+				</ListItemIcon>
+			);
 		return null;
 	};
 
-	const RenderRoomSelect = () => (<FormControl
-		className={classes.formControl}
-		style={{ margin: 0 }}
-	>
-		<Select
-			id="zone"
-			value={zone}
-			onChange={handleChange}
-			className={classes.zoneSelect}
-		>
-			<MenuItem value="MainRoom">
-				<em>MainRoom</em>
-			</MenuItem>
-			<MenuItem value="room1">
-				Room 1
-			</MenuItem>
-			<MenuItem value="room2">
-				Room 2
-			</MenuItem>
-			<MenuItem value="room3">
-				Room 3
-			</MenuItem>
-		</Select>
-	</FormControl>);
+	const RenderRoomSelect = () => (
+		<FormControl className={classes.formControl} style={{ margin: 0 }}>
+			<Select
+				id="zone"
+				value={zone}
+				onChange={handleChange}
+				className={classes.zoneSelect}
+			>
+				<MenuItem value="MainRoom">
+					<em>MainRoom</em>
+				</MenuItem>
+				<MenuItem value="room1">Room 1</MenuItem>
+				<MenuItem value="room2">Room 2</MenuItem>
+				<MenuItem value="room3">Room 3</MenuItem>
+			</Select>
+		</FormControl>
+	);
 
 	return (
 		<>
 			<ListItem ref={listItemRef}>
 				<Paper className={classes.listItem}>
 					<Box className={classes.listItemData}>
-						<Box
-							display="flex"
-							flexDirection="row-reverse"
-							justifyContent="start"
-						>
+						<Box className={classes.listItemPrimary}>
 							<RenderAlertTBtn />
 							<ListItemIcon>
-								<IconButton
-									aria-label="edit"
-									color="primary"
-									onClick={handleEdit}
-								>
+								<IconButton aria-label="edit" color="primary">
 									<EditIcon />
 								</IconButton>
 							</ListItemIcon>
@@ -203,14 +199,7 @@ const SensorListItem = (props) => {
 							</ListItemIcon>
 						</Box>
 						<Box className={classes.listItemSecondary}>
-							<Box
-								display="flex"
-								width="100%"
-								justifyContent="center"
-								alignItems="center"
-								overflow="hidden"
-								height={106}
-							>
+							<Box className={classes.iframeContainer}>
 								<SensorIframe
 									id={props.deviceId + 'Gauge'}
 									height={120}

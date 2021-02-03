@@ -7,6 +7,7 @@ import Dashboard from '../Pages/Dashboard/Dashboard';
 import { useStyles } from '../components/hooks/useStyles';
 import Scheduler from '../Pages/Scheduler/Scheduler';
 import RoomSummery from '../Pages/room/RoomSummery';
+import AgDashboard from '../Pages/AgGrid/AgDashboard';
 
 const MainView = () => {
 	const classes = useStyles();
@@ -35,6 +36,14 @@ const MainView = () => {
 							className={classes.container}
 						>
 							<SensorsList />
+						</Container>
+					</Route>
+					<Route path="/ag-grid">
+						<Container
+							maxWidth={maxWidth}
+							className={classes.container}
+						>
+							<AgDashboard />
 						</Container>
 					</Route>
 					<Route path="/rooms/:room">

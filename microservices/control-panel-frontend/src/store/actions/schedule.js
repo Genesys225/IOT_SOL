@@ -1,10 +1,9 @@
-
 export const GET_SCHEDULE = 'GET_SCHEDULE';
 export const CREATE_EVENT = 'CREATE_EVENT';
 export const DELETE_SCHEDULE_EVENT = 'DELETE_SCHEDULE_EVENT';
 
 export const getScheduleEvents = () => {
-	return async (dispatch) => {
+	return async (dispatch, _, rest) => {
 		const events = await rest.get('/getAllEvents');
 		await dispatch({ type: GET_SCHEDULE, payload: events });
 		console.log(events);

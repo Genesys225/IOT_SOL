@@ -35,7 +35,7 @@ export const getSensors = () => {
 };
 
 export const getLastData = () => {
-	return async (dispatch) => {
+	return async (dispatch, _, rest) => {
 		const allSensorsData = await rest.get('/getLastData');
 		if (allSensorsData.length > 0)
 			// dispatch({ type: LAST_SENSORS_DATA, payload: allSensorsData });

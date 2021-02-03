@@ -1,168 +1,144 @@
-const webhookNotification = function(){
-return {
-	id: 1,
-	uid: 'webhook',
-	name: 'webhook',
-	type: 'webhook',
-	isDefault: true,
-	sendReminder: true,
-	disableResolveMessage: false,
-	frequency: '15s',
-	settings: {
-	  autoResolve: true,
-		httpMethod: 'POST',
-		severity: "critical",
-	  uploadImage: false,
-	  url: 'http://microservices:6000/webhook'
-	}
-  }
-}
-
-
-const alertT = function({ threshold, op }) {
+const webhookNotification = function () {
 	return {
-		"alertRuleTags": {},
-		"conditions": [
-		  {
-			"evaluator": {
-			  "params": [
-					parseInt(threshold)
-			  ],
-			  "type": op
-			},
-			"operator": {
-			  "type": "and"
-			},
-			"query": {
-			  "params": [
-				"A",
-				"5m",
-				"now"
-			  ]
-			},
-			"reducer": {
-				'params': [],
-			  'type': 'avg',
-			},
-			"type": "query"
-		  }
-		],
-		"executionErrorState": "alerting",
-		"for": "5m",
-		"frequency": "1m",
-		"handler": 1,
-		"name": "my alert",
-		"noDataState": "keep_state",
-		"notifications": [
-			{
-				"uid": "webhook"
-			}
-		]
-	}
+		id: 1,
+		uid: 'webhook',
+		name: 'webhook',
+		type: 'webhook',
+		isDefault: true,
+		sendReminder: true,
+		disableResolveMessage: false,
+		frequency: '15s',
+		settings: {
+			autoResolve: true,
+			httpMethod: 'POST',
+			severity: 'critical',
+			uploadImage: false,
+			url: 'http://microservices:6000/webhook',
+		},
+	};
 };
-const timingAlert = function({deviceId, threshold, op}){
-	var alertObject =       {
-		  "alertRuleTags": {},
-		  "conditions": [
+
+const alertT = function ({ threshold, op }) {
+	return {
+		alertRuleTags: {},
+		conditions: [
 			{
-			  "evaluator": {
-				"params": [
-				  0.9,
-					0.1
-				],
-				"type": "outside_range"
-			  },
-			  "operator": {
-				"type": "and"
-			  },
-			  "query": {
-				"params": [
-				  "B",
-				  "1m",
-				  "now"
-				]
-			  },
-			  "reducer": {
-				"params": [],
-				"type": "avg"
-			  },
-			  "type": "query"
-			}
-		  ],
-		  "executionErrorState": "keep_state",
-		  "for": "1s",
-		  "frequency": "1s",
-		  "handler": 1,
-		  "name": deviceId+"Alert",
-		  "noDataState": "ok",
-		  "notifications": [
+				evaluator: {
+					params: [parseInt(threshold)],
+					type: op,
+				},
+				operator: {
+					type: 'and',
+				},
+				query: {
+					params: ['A', '5m', 'now'],
+				},
+				reducer: {
+					params: [],
+					type: 'avg',
+				},
+				type: 'query',
+			},
+		],
+		executionErrorState: 'alerting',
+		for: '5m',
+		frequency: '1m',
+		handler: 1,
+		name: 'my alert',
+		noDataState: 'keep_state',
+		notifications: [
+			{
+				uid: 'webhook',
+			},
+		],
+	};
+};
+const timingAlert = function ({ deviceId, threshold, op }) {
+	var alertObject = {
+		alertRuleTags: {},
+		conditions: [
+			{
+				evaluator: {
+					params: [0.9, 0.1],
+					type: 'outside_range',
+				},
+				operator: {
+					type: 'and',
+				},
+				query: {
+					params: ['B', '1m', 'now'],
+				},
+				reducer: {
+					params: [],
+					type: 'avg',
+				},
+				type: 'query',
+			},
+		],
+		executionErrorState: 'keep_state',
+		for: '1s',
+		frequency: '1s',
+		handler: 1,
+		name: deviceId + 'Alert',
+		noDataState: 'ok',
+		notifications: [
+			{
+				uid: 'webhook',
+			},
+		],
+	};
+
+	const pannelTargetObject = {
+		format: 'time_series',
+		group: [
+			{
+				params: ['1s', 'previous'],
+				type: 'time',
+			},
+		],
+		metricColumn: 'sensor_id',
+		rawQuery: true,
+		rawSql:
+			'SELECT\n  $__timeGroupAlias(ts,1s,previous),\n  sensor_id AS metric,\n  avg(value) AS "value"\nFROM timers\nWHERE\n  $__timeFilter(ts) AND\n  sensor_id = \'' +
+			deviceId +
+			"' \nGROUP BY 1,2\nORDER BY $__timeGroup(ts,1s,previous)",
+		refId: 'B',
+		select: [
+			[
 				{
-					"uid": "webhook"
-				}
-			]
-		}
-        
-	  const pannelTargetObject =  {
-			"format": "time_series",
-			"group": [
-				{
-					"params": [
-						"1s",
-						"previous"
-					],
-					"type": "time"
-				}
-			],
-			"metricColumn": "sensor_id",
-			"rawQuery": true,
-			"rawSql": "SELECT\n  $__timeGroupAlias(ts,1s,previous),\n  sensor_id AS metric,\n  avg(value) AS \"value\"\nFROM timers\nWHERE\n  $__timeFilter(ts) AND\n  sensor_id = '"+deviceId+"' \nGROUP BY 1,2\nORDER BY $__timeGroup(ts,1s,previous)",
-			"refId": "B",
-			"select": [
-				[
-					{
-						"params": [
-							"value"
-						],
-						"type": "column"
-					},
-					{
-						"params": [
-							"avg"
-						],
-						"type": "aggregate"
-					},
-					{
-						"params": [
-							"value"
-						],
-						"type": "alias"
-					}
-				]
-			],
-			"table": "timers",
-			"timeColumn": "ts",
-			"timeColumnType": "timestamp",
-			"where": [
-				{
-					"name": "$__timeFilter",
-					"params": [],
-					"type": "macro"
+					params: ['value'],
+					type: 'column',
 				},
 				{
-					"datatype": "varchar",
-					"name": "",
-					"params": [
-						"sensor_id",
-						"=",
-						`"${deviceId}"`
-					],
-					"type": "expression"
-				}
-			]
-	  }
-	  return {alertObject, pannelTargetObject}
-}
-var dashboard = function({ id, uid, panels, title }) {
+					params: ['avg'],
+					type: 'aggregate',
+				},
+				{
+					params: ['value'],
+					type: 'alias',
+				},
+			],
+		],
+		table: 'timers',
+		timeColumn: 'ts',
+		timeColumnType: 'timestamp',
+		where: [
+			{
+				name: '$__timeFilter',
+				params: [],
+				type: 'macro',
+			},
+			{
+				datatype: 'varchar',
+				name: '',
+				params: ['sensor_id', '=', `"${deviceId}"`],
+				type: 'expression',
+			},
+		],
+	};
+	return { alertObject, pannelTargetObject };
+};
+var dashboard = function ({ id, uid, panels, title }) {
 	const dashboard = {
 		dashboard: {
 			id: id || null,
@@ -224,7 +200,7 @@ var dashboard = function({ id, uid, panels, title }) {
 	return dashboard;
 };
 
-var panel = function({ id,uid,  title, rawSql }) {
+var panel = function ({ id, uid, title, rawSql }) {
 	var panelTemplete = {
 		uid: uid,
 		aliasColors: {},
@@ -248,6 +224,7 @@ var panel = function({ id,uid,  title, rawSql }) {
 		},
 		hiddenSeries: false,
 		id: id,
+		interval: '10s',
 		legend: {
 			avg: false,
 			current: false,
@@ -259,6 +236,7 @@ var panel = function({ id,uid,  title, rawSql }) {
 		},
 		lines: true,
 		linewidth: 1,
+		maxDataPoints: 400,
 		nullPointMode: 'null as zero',
 		percentage: false,
 		pluginVersion: '7.1.5',
@@ -302,7 +280,7 @@ var panel = function({ id,uid,  title, rawSql }) {
 		timeRegions: [],
 		timeShift: null,
 		title: title,
-		
+
 		type: 'graph',
 		xaxis: {
 			buckets: null,
@@ -341,7 +319,7 @@ var panel = function({ id,uid,  title, rawSql }) {
 	return panelTemplete;
 };
 
-var textWidget = function({ id, uid, title, rawSql }) {
+var textWidget = function ({ id, uid, title, rawSql }) {
 	var panelTemplete = panel({ id, uid, title, rawSql });
 
 	panelTemplete.options = {
@@ -370,9 +348,9 @@ const units = {
 	light: 'lux',
 };
 
-var gaugeWidget = function({ id, uid, title, rawSql }) {
+var gaugeWidget = function ({ id, uid, title, rawSql }) {
 	var panelTemplete = panel({ id, title, uid, rawSql });
-	var deviceType = uid.split('/')[1].replace('Gauge', '')
+	var deviceType = uid.split('/')[1].replace('Gauge', '');
 	panelTemplete.fieldConfig = {
 		defaults: {
 			custom: {},
@@ -382,30 +360,38 @@ var gaugeWidget = function({ id, uid, title, rawSql }) {
 				steps: [
 					{
 						color: 'green',
-						value: null
+						value: null,
 					},
 					{
 						color: 'red',
-						value: 80
-					}
-				]
+						value: 80,
+					},
+				],
 			},
-			unit: units[deviceType]
+			unit: units[deviceType],
 		},
-		overrides: []	
-	}
+		overrides: [],
+	};
 	panelTemplete.options = {
 		reduceOptions: {
-				calcs: ["last"],
-				fields: "",
-				values: false
+			calcs: ['last'],
+			fields: '',
+			values: false,
 		},
 		showThresholdLabels: false,
-		showThresholdMarkers: true
-		
-	}
+		showThresholdMarkers: true,
+	};
 	panelTemplete.type = 'gauge';
+	panelTemplete.maxDataPoints = 20;
 	return panelTemplete;
 };
 
-module.exports = { dashboard, panel, alertT, textWidget, gaugeWidget , timingAlert, webhookNotification};
+module.exports = {
+	dashboard,
+	panel,
+	alertT,
+	textWidget,
+	gaugeWidget,
+	timingAlert,
+	webhookNotification,
+};

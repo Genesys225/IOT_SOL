@@ -16,7 +16,7 @@ import { useStyles } from '../components/hooks/useStyles';
 import Brightness4Icon from '@material-ui/icons/Brightness4';
 import { MuiCtx, setPaletteType } from '../components/hooks/muiState';
 import { useAuth0 } from '@auth0/auth0-react';
-import { rest } from '../restClient';
+import { rest } from '../restClient/lib/rest-client';
 
 const TopBar = (props) => {
 	const {
@@ -26,8 +26,8 @@ const TopBar = (props) => {
 		getAccessTokenSilently,
 	} = useAuth0();
 	const { dispatch } = useContext(MuiCtx);
-	const [token, setToken] = useState(null);
-	const [darkTheme, setDarkTheme] = useState(false);
+	const [ token, setToken ] = useState(null);
+	const [ darkTheme, setDarkTheme ] = useState(false);
 	const handleSwitchPalette = () => {
 		setDarkTheme(!darkTheme);
 		dispatch(
@@ -52,7 +52,7 @@ const TopBar = (props) => {
 			}
 		};
 		if (!token && isAuthenticated) getUserMetadata();
-	}, [token, isAuthenticated, getAccessTokenSilently]);
+	}, [ token, isAuthenticated, getAccessTokenSilently ]);
 	return (
 		<>
 			<CssBaseline />
@@ -85,15 +85,15 @@ const TopBar = (props) => {
 								Log In
 							</Button>
 						) : (
-							<Button
-								color="inherit"
-								onClick={() =>
-									logout({ returnTo: window.location.origin })
-								}
-							>
-								Log Out
-							</Button>
-						)}
+								<Button
+									color="inherit"
+									onClick={() =>
+										logout({ returnTo: window.location.origin })
+									}
+								>
+									Log Out
+								</Button>
+							)}
 						<IconButton color="inherit">
 							<Badge badgeContent={4} color="secondary">
 								<NotificationsIcon />

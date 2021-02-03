@@ -39,7 +39,7 @@ function SensorIframe(props) {
 	const timePeriod = timePeriodProp || '6h';
 
 	const iframeClickHandler = useCallback(
-		function(event) {
+		function (event) {
 			if (iframeHover) {
 				event.preventDefault();
 			}
@@ -87,9 +87,9 @@ function SensorIframe(props) {
 				className={classes.iframeWrap}
 				src={`${window.location.origin}/grafana/d${
 					panelId ? '-solo/MainRoom' : '/' + roomId
-				}/all?orgId=1&refresh=25s&from=now-${timePeriod}&to=now&theme=${
+				}?orgId=1&refresh=25s&from=now-${timePeriod}&to=now&theme=${
 					theme.palette.type
-				}&kiosk${panelId && `&panelId=${panelId}`}`}
+				}&kiosk=1${panelId && `&panelId=${panelId}`}`}
 				width={parentBoundingRect.width}
 				height={height || '300'}
 				frameBorder="0"
@@ -99,7 +99,7 @@ function SensorIframe(props) {
 	);
 }
 function hashCode(s) {
-	return s.split('').reduce(function(a, b) {
+	return s.split('').reduce(function (a, b) {
 		a = (a << 5) - a + b.charCodeAt(0);
 		return a & a;
 	}, 0);

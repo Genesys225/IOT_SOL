@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import { Icon } from '../components/Icons/Icon-Library';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Box, Typography, Link as MuiLink } from '@material-ui/core';
 import { Link } from 'react-router-dom';
+import { getSensors } from '../store/actions/sensorsActions';
 
 function ListItemLink(props) {
 	return <ListItem button component={Link} {...props} />;
@@ -27,6 +28,12 @@ export const MainMenu = (
 			</ListItemIcon>
 			<ListItemText primary="Sensors" />
 		</ListItemLink>
+		<ListItemLink to="/ag-grid">
+			<ListItemIcon>
+				<Icon icon="ag-grid" />
+			</ListItemIcon>
+			<ListItemText primary="ag-grid" />
+		</ListItemLink>
 
 		<ListItemLink to="/scheduler">
 			<ListItemIcon>
@@ -38,6 +45,15 @@ export const MainMenu = (
 );
 
 export const SecondaryMenu = (props) => {
+	const dispatch = useDispatch();
+	const [fetched, setFetched] = useState(false);
+	useEffect(() => {
+		const fetchSensors = async () => {
+			await dispatch(getSensors());
+		};
+		if (!fetched) fetchSensors();
+		setFetched(true);
+	}, [dispatch, fetched]);
 	const rooms = useSelector((state) => [
 		'MainRoom',
 		// @ts-ignore

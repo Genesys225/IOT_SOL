@@ -1,7 +1,14 @@
-const fetch = require('node-fetch');
-const { Headers } = require('node-fetch');
+let fetch = {};
+let Headers = {};
+if (!window) {
+	// fetch = require('node-fetch').default;
+	// Headers = require('node-fetch').Headers;
+} else {
+	fetch = window.fetch;
+	Headers = window.Headers;
+}
 class FetchWrap {
-	constructor (baseUrl = '', baseHeaders = new Headers(), baseParams = {}) {
+	constructor(baseUrl = '', baseHeaders = new Headers(), baseParams = {}) {
 		this._baseUrl = baseUrl;
 		this._baseHeaders = this.parseHeaders(baseHeaders);
 		this._baseParams = baseParams;
@@ -13,15 +20,15 @@ class FetchWrap {
 	}
 
 	get baseHeaders() {
-		const headers = [ ...this._baseHeaders.entries() ];
+		const headers = [...this._baseHeaders.entries()];
 		return headers.length > 0
 			? headers.reduce(
-				(headersObj, headerTuple) => ({
-					...headersObj,
-					[ headerTuple[ 0 ] ]: headerTuple[ 1 ],
-				}),
-				{}
-			)
+					(headersObj, headerTuple) => ({
+						...headersObj,
+						[headerTuple[0]]: headerTuple[1],
+					}),
+					{}
+			  )
 			: {};
 	}
 
@@ -81,7 +88,7 @@ class FetchWrap {
 			if (!response.ok)
 				throw new Error(
 					'Something went wrong!\n' +
-					JSON.stringify(await response.json())
+						JSON.stringify(await response.json())
 				);
 			return response;
 		} catch (error) {
@@ -124,7 +131,7 @@ class FetchWrap {
 			const paramsQuery = paramsKeys.reduce((paramsQuery, paramKey) => {
 				paramsQuery !== '?' && (paramsQuery += '&');
 				return (paramsQuery +=
-					paramKey + '=' + encodeURIComponent(params[ paramKey ]));
+					paramKey + '=' + encodeURIComponent(params[paramKey]));
 			}, '?');
 			return url + paramsQuery;
 		}
@@ -150,7 +157,7 @@ class FetchWrap {
 				for (let key in argument) {
 					currentHeaders.append(
 						this.camelCaseToHeaderKey(key),
-						argument[ key ]
+						argument[key]
 					);
 				}
 				return currentHeaders;
@@ -160,23 +167,22 @@ class FetchWrap {
 
 	mergeHeaders(headers, moreHeaders, optionalAppend = {}) {
 		const mergedHeaders = new Headers(optionalAppend);
-		[ ...headers.entries(), ...moreHeaders.entries() ].forEach(
+		[...headers.entries(), ...moreHeaders.entries()].forEach(
 			(keyValueTuple) => {
-				if (mergedHeaders.has(keyValueTuple[ 0 ]))
-					mergedHeaders.set(keyValueTuple[ 0 ], keyValueTuple[ 1 ]);
-				else mergedHeaders.append(keyValueTuple[ 0 ], keyValueTuple[ 1 ]);
+				if (mergedHeaders.has(keyValueTuple[0]))
+					mergedHeaders.set(keyValueTuple[0], keyValueTuple[1]);
+				else mergedHeaders.append(keyValueTuple[0], keyValueTuple[1]);
 			}
 		);
 		return mergedHeaders;
 	}
 
 	camelCaseToHeaderKey(headerKey) {
-		if (/^[a-z][A-Za-z]*$/.test(headerKey)) {
-			const result = headerKey.charAt(0)
-				+ headerKey.slice(1).replace(/(?<!-)([A-Z])/g, '-$1');
-			return result.charAt(0).toUpperCase() + result.slice(1);
-		} else return headerKey;
+		const result =
+			headerKey.charAt(0) +
+			headerKey.slice(1).replace(/(?<!-)([A-Z])/g, '-$1');
+		return result.charAt(0).toUpperCase() + result.slice(1);
 	}
 }
 
-module.exports = { FetchWrap };
+export { FetchWrap };

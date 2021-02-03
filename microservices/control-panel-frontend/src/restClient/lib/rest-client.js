@@ -1,4 +1,4 @@
-const { FetchWrap } = require('./fetchWrapper');
+import { FetchWrap } from './fetchWrapper';
 
 class RestClient extends FetchWrap {
   async executeRequest(...args) {
@@ -24,4 +24,4 @@ class RestClient extends FetchWrap {
 
 const rest = new RestClient();
 
-module.exports = { RestClient, rest };
+export { RestClient, rest };

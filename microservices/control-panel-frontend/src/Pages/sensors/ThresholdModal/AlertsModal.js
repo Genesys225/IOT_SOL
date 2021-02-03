@@ -125,63 +125,83 @@ function AlertsModal(props) {
 			}}
 		>
 			<Fade in={props.in}>
-				{showAlert ? (
-					<div className={classes.alert}>
-						<Alert severity="info">
-							This is an info alert — check it out!
-						</Alert>
-					</div>
-				) : (
-					<Paper className={classes.paper}>
-						<Box display="flex" flexDirection="row">
-							<Typography
-								id="transition-modal-title"
-								variant="h5"
-							>
-								Alerts{'  '}
-							</Typography>
-							<Badge
-								color="secondary"
-								badgeContent=" "
-								variant="dot"
-								invisible={true}
-							>
-								<NotificationsActiveIcon />
-							</Badge>
-						</Box>
-
-						<Typography id="transition-modal-title" variant="h6">
-							if temperature is
-						</Typography>
-
-						<ThresholdConditionsInput
+				<Fade>
+					<>
+						<RenderAlert showAlert={showAlert} in={props.in} />
+						<RenderForm
+							{...props}
 							deviceAlert={deviceAlert}
-							deviceId={props.deviceId}
+							showAlert={showAlert}
+							handleSave={handleSave}
 						/>
-						<ActionsInput />
-						<Box className={classes.actionGroup}>
-							<Button
-								variant="contained"
-								// @ts-ignore
-								color="secondary"
-								onClick={() => props.onClose()}
-							>
-								Cancel
-							</Button>
-							<Button
-								variant="contained"
-								color="primary"
-								startIcon={<SaveIcon />}
-								onClick={handleSave}
-							>
-								Save
-							</Button>
-						</Box>
-					</Paper>
-				)}
+					</>
+				</Fade>
 			</Fade>
 		</Modal>
 	);
 }
 
+const RenderAlert = (props) => {
+	const classes = useStyles({});
+	if (props.showAlert)
+		return (
+			<div className={classes.alert}>
+				<Alert severity="info">
+					This is an info alert — check it out!
+				</Alert>
+			</div>
+		);
+	return null;
+};
+
+const RenderForm = (props) => {
+	const classes = useStyles({});
+	if (!props.showAlert)
+		return (
+			<Paper className={classes.paper}>
+				<Box display="flex" flexDirection="row">
+					<Typography id="transition-modal-title" variant="h5">
+						Alerts{'  '}
+					</Typography>
+					<Badge
+						color="secondary"
+						badgeContent=" "
+						variant="dot"
+						invisible={true}
+					>
+						<NotificationsActiveIcon />
+					</Badge>
+				</Box>
+
+				<Typography id="transition-modal-title" variant="h6">
+					if "{props.deviceType}" is
+				</Typography>
+
+				<ThresholdConditionsInput
+					deviceAlert={props.deviceAlert}
+					deviceId={props.deviceId}
+				/>
+				<ActionsInput />
+				<Box className={classes.actionGroup}>
+					<Button
+						variant="contained"
+						// @ts-ignore
+						color="secondary"
+						onClick={() => props.onClose()}
+					>
+						Cancel
+					</Button>
+					<Button
+						variant="contained"
+						color="primary"
+						startIcon={<SaveIcon />}
+						onClick={props.handleSave}
+					>
+						Save
+					</Button>
+				</Box>
+			</Paper>
+		);
+	return null;
+};
 export default AlertsModal;
