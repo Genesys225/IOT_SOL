@@ -1,12 +1,12 @@
-let fetch = {};
-let Headers = {};
-if (!window) {
-	// fetch = require('node-fetch').default;
-	// Headers = require('node-fetch').Headers;
-} else {
-	fetch = window.fetch;
-	Headers = window.Headers;
-}
+// let fetch = {};
+// let Headers = {};
+// if (!window) {
+// 	// fetch = import('node-fetch').default;
+// 	// Headers = import('node-fetch').Headers;
+// } else {
+// 	fetch = window.fetch;
+// 	Headers = window.Headers;
+// }
 class FetchWrap {
 	constructor(baseUrl = '', baseHeaders = new Headers(), baseParams = {}) {
 		this._baseUrl = baseUrl;
@@ -20,26 +20,24 @@ class FetchWrap {
 	}
 
 	get baseHeaders() {
-		const headers = [...this._baseHeaders.entries()];
-		return headers.length > 0
-			? headers.reduce(
-					(headersObj, headerTuple) => ({
-						...headersObj,
-						[headerTuple[0]]: headerTuple[1],
-					}),
-					{}
-			  )
-			: {};
+		return [...this._baseHeaders.entries()].reduce(
+			(headersObj, [key, value]) => ({
+				...headersObj,
+				[key]: value,
+			}),
+			new BaseHeaders()
+		);
 	}
 
 	get baseParams() {
-		return this._baseParams;
+		return new BaseParams(this._baseParams);
 	}
 
 	setBaseParams(argument) {
 		if (typeof argument === 'function')
 			this._baseParams = argument(this._baseParams, this._baseUrl);
-		else if (typeof argument === 'object') this._baseParams = argument;
+		else if (typeof argument === 'object' && !(argument instanceof Array))
+			this._baseParams = argument;
 		else return false;
 		return this;
 	}
@@ -80,11 +78,12 @@ class FetchWrap {
 		return this.getOrDelete('DELETE', url, getParamsObj);
 	}
 
-	async executeRequest(url, options = null) {
+	async executeRequest(url, options = false) {
 		try {
-			const response = options
-				? await fetch(url, options)
-				: await fetch(url);
+			const response =
+				typeof options === 'object'
+					? await fetch(url, options)
+					: await fetch(url);
 			if (!response.ok)
 				throw new Error(
 					'Something went wrong!\n' +
@@ -139,42 +138,38 @@ class FetchWrap {
 	}
 
 	setAuthToken(token) {
-		this.setBaseHeaders((baseHeaders) => {
-			if (baseHeaders.get('Authorization'))
-				baseHeaders.set('Authorization', token);
-			else baseHeaders.append('Authorization', token);
-			return baseHeaders;
-		});
+		this.setBaseHeaders({ Authorization: token });
 		return this;
 	}
 
 	parseHeaders(argument, currentHeaders = new Headers()) {
 		if (typeof argument === 'function')
 			return argument(currentHeaders, this._baseUrl);
-		else if (typeof argument === 'object')
+		else if (typeof argument === 'object' && !(argument instanceof Array))
 			if (argument instanceof Headers) return argument;
 			else {
-				for (let key in argument) {
-					currentHeaders.append(
-						this.camelCaseToHeaderKey(key),
-						argument[key]
-					);
-				}
-				return currentHeaders;
+				return this.setOrAppendHeaders(currentHeaders, argument);
 			}
 		else return false;
 	}
 
+	setOrAppendHeaders(currentHeaders, appendHeaders) {
+		if (!(appendHeaders instanceof Array))
+			appendHeaders = Object.entries(appendHeaders);
+		for (const [key, value] of appendHeaders) {
+			if (currentHeaders.has(key)) currentHeaders.set(key, value);
+			else currentHeaders.append(key, value);
+		}
+		return currentHeaders;
+	}
+
 	mergeHeaders(headers, moreHeaders, optionalAppend = {}) {
-		const mergedHeaders = new Headers(optionalAppend);
-		[...headers.entries(), ...moreHeaders.entries()].forEach(
-			(keyValueTuple) => {
-				if (mergedHeaders.has(keyValueTuple[0]))
-					mergedHeaders.set(keyValueTuple[0], keyValueTuple[1]);
-				else mergedHeaders.append(keyValueTuple[0], keyValueTuple[1]);
-			}
-		);
-		return mergedHeaders;
+		const mergedHeaders =
+			optionalAppend.length > 0
+				? this.parseHeaders(optionalAppend)
+				: new Headers();
+		const allHeaders = [...headers.entries(), ...moreHeaders.entries()];
+		return this.setOrAppendHeaders(mergedHeaders, allHeaders);
 	}
 
 	camelCaseToHeaderKey(headerKey) {
@@ -186,3 +181,12 @@ class FetchWrap {
 }
 
 export { FetchWrap };
+
+function BaseHeaders() {
+	return this;
+}
+
+function BaseParams(params) {
+	for (const [key, value] of Object.entries(params)) this[key] = value;
+	return this;
+}

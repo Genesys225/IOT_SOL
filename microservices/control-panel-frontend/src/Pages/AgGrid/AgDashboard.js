@@ -5,6 +5,8 @@ import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import { Icon } from '../../components/Icons/Icon-Library';
 import { AgGridColumn, AgGridReact } from 'ag-grid-react';
 import { useSelector } from 'react-redux';
+// import PartialMatchFilter from './partialMatchFilter.jsx';
+import selectInputFilter from './selectInputFilter';
 
 const useStyles = makeStyles({
 	cellStyle: {
@@ -23,7 +25,6 @@ const AgDashboard = () => {
 	const sensors = useSelector((state) => state.sensors.devices);
 	const [gridColumnApi, setGridColumnApi] = useState(null);
 
-	console.log(sensors);
 	const onGridReady = (params) => {
 		setGridApi(params.api);
 		setGridColumnApi(params.columnApi);
@@ -47,10 +48,10 @@ const AgDashboard = () => {
 				rowData={sensors}
 				defaultColDef={defaultColDef}
 				rowHeight={60}
+				auto
+				frameworkComponents={{ renderIcon, selectInputFilter }}
 				// events
 				onGridReady={onGridReady}
-				auto
-				frameworkComponents={{ renderIcon }}
 			>
 				<AgGridColumn
 					field="deviceType"
@@ -61,9 +62,12 @@ const AgDashboard = () => {
 						justifyContent: 'center',
 					}}
 				></AgGridColumn>
-				<AgGridColumn field="roomId"></AgGridColumn>
-				<AgGridColumn field="deviceType"></AgGridColumn>
+				<AgGridColumn
+					field="roomId"
+					filter="selectInputFilter"
+				></AgGridColumn>
 				<AgGridColumn field="deviceId"></AgGridColumn>
+				<AgGridColumn field="deviceType"></AgGridColumn>
 			</AgGridReact>
 		</div>
 	);

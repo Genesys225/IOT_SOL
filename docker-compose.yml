@@ -138,6 +138,7 @@ services:
                 '-c',
                 'apk add nodejs npm;npm install pm2 yarn -g && cd /app/ && yarn install --production && pm2 start && pm2 logs -f',
             ]
+            
     renderer:
         image: grafana/grafana-image-renderer:latest
         ports:
@@ -149,3 +150,18 @@ services:
         volumes:
             - ./data/certbot/conf:/etc/letsencrypt
             - ./data/certbot/www:/var/www/certbot
+
+    code-server:
+        image: ghcr.io/linuxserver/code-server
+        environment:
+            - PUID=1000
+            - PGID=1000
+            - TZ=Asia/Jerusalem
+            - PASSWORD=Fuck_sett1ng_pa55w0rds #optional
+            # - HASHED_PASSWORD= #optional
+            # - SUDO_PASSWORD=password #optional
+            # - SUDO_PASSWORD_HASH= #optional
+            - PROXY_DOMAIN=localhost #optional
+        volumes:
+            - ./:/app/
+        restart: unless-stopped
