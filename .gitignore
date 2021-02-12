@@ -11,3 +11,4 @@ grafana-provisioning/
 !tmp/
 tmp/*
 !tmp/config/
+.env
