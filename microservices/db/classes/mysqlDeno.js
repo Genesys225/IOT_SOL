@@ -19,7 +19,7 @@ class Mysql {
 			hostname: "mysql",
 			username: "root",
 			db: "sol_db",
-			poolSize: 3, // connection limit
+			poolSize: 10, // connection limit
 			password: "password",
 		  });
 	}
