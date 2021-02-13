@@ -122,6 +122,7 @@ services:
         image: certbot/certbot
         entrypoint: "${CERT_BOT_ENTRY}"
         volumes:
+            - "./router:/router"
             - ./data/certbot/conf:/etc/letsencrypt
             - ./data/certbot/www:/var/www/certbot
 
