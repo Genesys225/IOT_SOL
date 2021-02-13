@@ -22,7 +22,6 @@ services:
 
     grafana:
         image: grafana/grafana:latest
-        user: '$UID:$GID'
         ports:
             - '3000:3000'
         volumes:
@@ -42,7 +41,6 @@ services:
             - GF_LOG_FILTERS=rendering:debug
 
     emqtt:
-        user: '$UID:$GID'
         image: raymondmm/emqtt
         ports:
             - '1883:1883'
