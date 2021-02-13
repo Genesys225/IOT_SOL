@@ -107,6 +107,7 @@ services:
             - grafana
             - frontend
             - mysql
+            - code-server
         links:
             - microservices:microservices
             - grafana:grafana
