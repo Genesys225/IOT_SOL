@@ -1,4 +1,4 @@
-#!/bin sh
+#!/usr/bin/env sh
 
 echo "################################## Run CERTBOT"
 trap exit TERM; 
