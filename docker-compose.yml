@@ -111,6 +111,7 @@ services:
             - microservices:microservices
             - grafana:grafana
             - frontend:frontend
+            - code-server:code-server
         environment:
             - NGINX_HOST=${NGINX_HOST}
             - NGINX_PORT=80
