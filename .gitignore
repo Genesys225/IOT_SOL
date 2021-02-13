@@ -11,4 +11,7 @@ grafana-provisioning/
 !tmp/
 tmp/*
 !tmp/config/
+!tmp/vscode-server/
+tmp/vscode-server/config/.cache
 .env
+*.log

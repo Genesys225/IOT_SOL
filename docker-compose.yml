@@ -168,4 +168,5 @@ services:
             - PROXY_DOMAIN=localhost #optional
         volumes:
             - ./:/app/
+            - /tmp/vscode-server/appdata/config:/config
         restart: unless-stopped
