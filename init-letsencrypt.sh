@@ -5,7 +5,7 @@ if ! [ -x "$(command -v docker-compose)" ]; then
   exit 1
 fi
 
-domains=(sol-iot.tk)
+domains=(sol-iot.tk git.sol-iot.tk)
 rsa_key_size=4096
 data_path="./data/certbot"
 email="gene.korn@gmail.com" # Adding a valid address is strongly recommended
