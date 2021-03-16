@@ -113,6 +113,7 @@ services:
             - grafana:grafana
             - frontend:frontend
             - code-server:code-server
+            - gitlab:gitlab
         environment:
             - NGINX_HOST=${NGINX_HOST}
             - ENV_MODE=${ENV_MODE}
@@ -170,3 +171,18 @@ services:
             - ./:/app/
             - /tmp/vscode-server/appdata/config:/config
         restart: unless-stopped
+
+    gitlab:
+        image: 'gitlab/gitlab-ee:latest'
+        restart: always
+        hostname: 'git.bobby-womac.com'
+        environment:
+            GITLAB_OMNIBUS_CONFIG: external_url 'https://git.bobby-womac.com'
+        ports:
+            - '8080:80'
+            - '9443:443'
+            - '8022:22'
+        volumes:
+            - './gitlab/config:/etc/gitlab'
+            - './gitlab/logs:/var/log/gitlab'
+            - './gitlab/data:/var/opt/gitlab'

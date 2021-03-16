@@ -165,7 +165,7 @@ class FetchWrap {
 
 	mergeHeaders(headers, moreHeaders, optionalAppend = {}) {
 		const mergedHeaders =
-			optionalAppend.length > 0
+			Object.keys(optionalAppend).length > 0
 				? this.parseHeaders(optionalAppend)
 				: new Headers();
 		const allHeaders = [...headers.entries(), ...moreHeaders.entries()];
