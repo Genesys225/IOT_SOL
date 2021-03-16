@@ -173,7 +173,7 @@ services:
         restart: unless-stopped
 
     gitlab:
-        image: 'gitlab/gitlab-ee:latest'
+        image: 'gitlab/gitlab-ce:latest'
         restart: always
         hostname: 'git.bobby-womac.com'
         environment:
