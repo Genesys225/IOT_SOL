@@ -175,9 +175,9 @@ services:
     gitlab:
         image: 'gitlab/gitlab-ce:latest'
         restart: always
-        hostname: 'git.bobby-womac.com'
+        hostname: 'git.sol-iot.tk'
         environment:
-            GITLAB_OMNIBUS_CONFIG: external_url 'https://git.bobby-womac.com'
+            GITLAB_OMNIBUS_CONFIG: external_url 'https://git.sol-iot.tk'
         ports:
             - '8080:80'
             - '9443:443'
