@@ -101,6 +101,7 @@ services:
             - ./data/certbot/www:/var/www/certbot
         ports:
             - '80:80'
+            - '8022:8022'
             - '443:443'
         depends_on:
             - microservices
@@ -157,7 +158,7 @@ services:
             - 8081
 
     code-server:
-        image: ghcr.io/linuxserver/code-server
+        image: ghcr.io/linuxserver/code-server:latest
         environment:
             - PUID=$USER
             - PGID=$USER
@@ -181,7 +182,6 @@ services:
         ports:
             - '8080:80'
             - '9443:443'
-            - '8022:22'
         volumes:
             - './gitlab/config:/etc/gitlab'
             - './gitlab/logs:/var/log/gitlab'
